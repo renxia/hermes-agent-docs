@@ -1,0 +1,8 @@
+{
+  "label": "入门指南",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "几分钟内即可上手使用 Hermes Agent。"
+  }
+}

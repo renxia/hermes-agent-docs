@@ -43,3 +43,19 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 ## Diagram Linting
 
 CI runs `ascii-guard` to lint docs for ASCII box diagrams. Use Mermaid (````mermaid`) or plain lists/tables instead of ASCII boxes to avoid CI failures.
+
+## Translations
+
+```bash
+# 翻译整个 docs 目录（默认英文到中文）
+npm run translate -- -p docs/
+
+# 翻译单个文件
+npm run translate -- -p docs/getting-started/quickstart.md
+
+# 指定源语言和目标语言
+npm run translate -- -p docs/ -s en -t zh-CN
+
+# 指定 LLM 参数
+npm run translate -- -p docs/ -u http://localhost:11434/v1 -m qwen3.5:27b -k your-api-key
+```

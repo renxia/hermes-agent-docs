@@ -14,26 +14,33 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
     "lint:diagrams": "ascii-guard lint docs",
-    "translate": "bun run scripts/translate-docs.ts"
+    "translate": "bun run scripts/translate-docs.ts",
+    "extract-skills": "bun run scripts/extract-skills.ts"
   },
   "dependencies": {
-    "@docusaurus/core": "3.9.2",
-    "@docusaurus/preset-classic": "3.9.2",
-    "@docusaurus/theme-mermaid": "^3.9.2",
+    "@docusaurus/core": "3.10.0",
+    "@docusaurus/preset-classic": "3.10.0",
+    "@docusaurus/theme-mermaid": "3.10.0",
     "@easyops-cn/docusaurus-search-local": "^0.55.1",
-    "@mdx-js/react": "^3.0.0",
-    "clsx": "^2.0.0",
-    "prism-react-renderer": "^2.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "openai": "^6.34.0"
+    "@mdx-js/react": "^3.1.1",
+    "clsx": "^2.1.1",
+    "openai": "^6.34.0",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.9.2",
-    "@docusaurus/tsconfig": "3.9.2",
-    "@docusaurus/types": "3.9.2",
-    "typescript": "~5.6.2",
-    "commander": "^14.0.3"
+    "@docusaurus/module-type-aliases": "3.10.0",
+    "@docusaurus/tsconfig": "3.10.0",
+    "@docusaurus/types": "3.10.0",
+    "@lzwme/fe-utils": "^1.9.2",
+    "commander": "^14.0.3",
+    "dotenv": "^17.4.2",
+    "js-yaml": "^4.1.1",
+    "typescript": "~6.0.3"
+  },
+  "resolutions": {
+    "webpack": "5.95.0"
   },
   "browserslist": {
     "production": [

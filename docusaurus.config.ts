@@ -3,12 +3,13 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Hermes Agent',
+  title: 'Hermes Agent中文文档',
   tagline: 'The self-improving AI agent',
   favicon: 'img/favicon.ico',
 
   url: 'https://hermes-agent.lzw.me',
   baseUrl: '/docs/',
+  // baseUrl: '/',
 
   organizationName: 'NousResearch',
   projectName: 'hermes-agent',
@@ -24,7 +25,15 @@ const config: Config = {
 
   i18n: {
     defaultLocale: 'zh-CN',
-    locales: ['zh-CN', 'en'],
+    locales: ['en', 'zh-CN'],
+    localeConfigs: {
+      'en': {
+        label: 'English',
+      },
+      'zh-CN': {
+        label: '简体中文',
+      },
+    },
   },
 
   themes: [
@@ -95,13 +104,22 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/NousResearch/hermes-agent',
-          label: 'GitHub',
+          href: 'https://lzw.me/docs/',
+          label: '更多学习资源',
           position: 'right',
         },
+        // {
+        //   href: 'https://github.com/NousResearch/hermes-agent',
+        //   label: 'GitHub',
+        //   position: 'right',
+        // },
         {
           href: 'https://discord.gg/NousResearch',
           label: 'Discord',
+          position: 'right',
+        },
+        {
+          type: 'localeDropdown',
           position: 'right',
         },
       ],
@@ -130,11 +148,11 @@ const config: Config = {
           title: 'More',
           items: [
             { label: 'GitHub', href: 'https://github.com/NousResearch/hermes-agent' },
-            { label: 'Nous Research', href: 'https://nousresearch.com' },
+            { label: '中文学习文档', href: 'https://lzw.me/docs/' },
           ],
         },
       ],
-      copyright: `Built by <a href="https://nousresearch.com">Nous Research</a> · MIT License · ${new Date().getFullYear()}`,
+      copyright: `Built by <a href="https://hermes-agent.nousresearch.com">Nous Research</a> · MIT License · ${new Date().getFullYear()}`,
     },
     prism: {
       theme: prismThemes.github,
