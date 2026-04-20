@@ -36,7 +36,7 @@ Stdout 专用于 ACP JSON-RPC 传输。人类可读的日志输出到 stderr。
 
 ### `HermesACPAgent`
 
-`acp_adapter/server.py` 实现了 ACP 代理协议。
+`acp_adapter/server.py` 实现了 ACP 智能体协议。
 
 职责：
 
@@ -125,7 +125,7 @@ prompt(..., session_id)
   -> 安装回调 + 批准桥接
   -> 在 ThreadPoolExecutor 中运行 AIAgent
   -> 更新会话历史
-  -> 发射最终的代理消息块
+  -> 发射最终的智能体消息块
 ```
 
 ### 取消 (Cancelation)

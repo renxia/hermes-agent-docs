@@ -1,87 +1,94 @@
 ---
 sidebar_position: 10
 title: "钉钉"
-description: "设置 Hermes Agent 为钉钉聊天机器人"
+description: "将 Hermes Agent 设置为钉钉聊天机器人"
 ---
 
 # 钉钉设置
 
-Hermes Agent 集成了钉钉 (DingTalk) 作为聊天机器人，让您可以通过私聊或群聊与您的 AI 助手聊天。该机器人通过钉钉的流模式（Stream Mode）连接——这是一种无需公共 URL 或 Webhook 服务器的长期 WebSocket 连接——并通过钉钉的会话 Webhook API 使用 markdown 格式的消息进行回复。
+Hermes Agent 集成了钉钉（DingTalk）作为聊天机器人，允许您通过私信或群聊直接与 AI 助手对话。该机器人通过钉钉的 Stream Mode（流式模式）连接——一种无需公开 URL 或 webhook 服务器的持久 WebSocket 连接——并通过钉钉的会话 webhook API 以 markdown 格式回复消息。
 
-在设置之前，这是大多数人想知道的部分：当 Hermes 进入您的钉钉工作区后，它会如何运行。
+在开始设置之前，这里先解答大多数人最关心的问题：一旦 Hermes 被添加到您的钉钉工作区后，它的行为是怎样的。
 
 ## Hermes 的行为方式
 
 | 上下文 | 行为 |
 |---------|----------|
-| **私聊 (1:1)** | Hermes 会回复每一条消息。无需 `@提及`。每条私聊都有独立的会话。 |
-| **群聊** | 只有当您 `@提及` 它时，Hermes 才会回复。如果没有提及，Hermes 会忽略该消息。 |
-| **包含多个用户的共享群组** | 默认情况下，Hermes 会在群组内为每个用户隔离会话历史记录。除非您明确禁用，否则群组中交谈的两个人不会共享同一份聊天记录。 |
+| **私信（1:1 聊天）** | Hermes 会回复每一条消息。无需 `@提及`。每条私信都有独立的会话。 |
+| **群聊** | 只有当您 `@提及` 它时，Hermes 才会回复。未提及时，Hermes 会忽略消息。 |
+| **多人共享群聊** | 默认情况下，Hermes 会在群聊中为每个用户隔离会话历史记录。同一群聊中两个人之间的对话不会共享同一个记录，除非您明确关闭此功能。 |
 
 ### 钉钉中的会话模型
 
 默认情况下：
 
-- 每条私聊都有其独立的会话
-- 共享群聊中的每个用户都在该群组内拥有自己的会话
+- 每条私信都会创建独立会话
+- 在共享群聊中，每位用户拥有各自的独立会话
 
-这由 `config.yaml` 控制：
+此行为由 `config.yaml` 控制：
 
 ```yaml
 group_sessions_per_user: true
 ```
 
-只有当您明确希望整个群组共享一个对话记录时，才将其设置为 `false`：
+仅当您需要整个群聊共享一个统一对话时才设为 `false`：
 
 ```yaml
 group_sessions_per_user: false
 ```
 
-本指南将引导您完成完整的设置流程——从创建钉钉机器人到发送您的第一条消息。
+本指南将逐步引导您完成完整设置流程——从创建钉钉机器人到发送第一条消息。
 
-## 先决条件
+## 前提条件
 
 安装所需的 Python 包：
 
 ```bash
-pip install dingtalk-stream httpx
+pip install "hermes-agent[dingtalk]"
 ```
 
-- `dingtalk-stream` — 钉钉的官方 SDK，用于流模式（基于 WebSocket 的实时消息传递）
-- `httpx` — 用于通过会话 Webhook 发送回复的异步 HTTP 客户端
+或者单独安装：
+
+```bash
+pip install dingtalk-stream httpx alibabacloud-dingtalk
+```
+
+- `dingtalk-stream` — 钉钉官方 SDK，支持 Stream Mode（基于 WebSocket 的实时消息）
+- `httpx` — 用于通过会话 webhook 发送回复的异步 HTTP 客户端
+- `alibabacloud-dingtalk` — 钉钉开放平台 SDK，支持 AI 卡片、表情反应和媒体下载
 
 ## 步骤 1：创建钉钉应用
 
-1. 访问 [钉钉开发者控制台](https://open-dev.dingtalk.com/)。
+1. 访问 [钉钉开发者后台](https://open-dev.dingtalk.com/)。
 2. 使用您的钉钉管理员账号登录。
-3. 点击 **应用开发** → **自定义应用** → **通过 H5 小程序创建应用**（或根据您的控制台版本选择 **机器人**）。
+3. 点击 **应用开发** → **自定义应用** → **通过 H5 微应用创建**（或根据控制台版本选择 **机器人**）。
 4. 填写以下信息：
-   - **应用名称**: 例如 `Hermes Agent`
-   - **描述**: 可选
-5. 创建后，导航到 **凭证与基础信息** 查找您的 **客户端 ID** (AppKey) 和 **客户端密钥** (AppSecret)。复制两者。
+   - **应用名称**：例如 `Hermes Agent`
+   - **描述**：（可选）
+5. 创建完成后，进入 **凭证与基础信息** 页面，找到您的 **Client ID**（AppKey）和 **Client Secret**（AppSecret），并复制保存。
 
 :::warning[凭证仅显示一次]
-客户端密钥在创建应用时只显示一次。如果您丢失了它，您需要重新生成。切勿公开分享这些凭证或将它们提交到 Git。
+Client Secret 仅在创建应用时显示一次。如果丢失，需重新生成。切勿公开分享这些凭据或将它们提交至 Git 仓库。
 :::
 
 ## 步骤 2：启用机器人能力
 
-1. 在您的应用设置页面，转到 **添加能力** → **机器人**。
+1. 在应用设置页面，进入 **添加能力** → **机器人**。
 2. 启用机器人能力。
-3. 在 **消息接收模式** 下，选择 **流模式**（推荐——无需公共 URL）。
+3. 在 **消息接收模式** 中选择 **Stream Mode**（推荐——无需公网 URL）。
 
 :::tip
-流模式是推荐的设置。它使用从您的机器发起的长期 WebSocket 连接，因此您不需要公共 IP、域名或 Webhook 端点。这可以在 NAT、防火墙和本地机器后工作。
+Stream Mode 是推荐的配置方式。它通过从您的机器发起的长连接 WebSocket 实现，因此不需要公网 IP、域名或 webhook 端点。即使在 NAT、防火墙之后或本地机器上也能正常工作。
 :::
 
-## 步骤 3：查找您的钉钉用户 ID
+## 步骤 3：获取您的钉钉 User ID
 
-Hermes Agent 使用您的钉钉用户 ID 来控制谁可以与机器人互动。钉钉用户 ID 是由您组织管理员设置的字母数字字符串。
+Hermes Agent 使用您的钉钉 User ID 来控制谁可以与机器人交互。钉钉 User ID 是由组织管理员设置的字母数字字符串。
 
-查找方法：
+获取方法如下：
 
-1. 询问您的钉钉组织管理员——用户 ID 在钉钉管理员控制台的 **联系人** → **成员** 下配置。
-2. 或者，机器人会在每条传入消息中记录 `sender_id`。启动网关，向机器人发送一条消息，然后检查日志以获取您的 ID。
+1. 向您的钉钉组织管理员咨询——User ID 可在钉钉管理后台 **通讯录** → **成员** 中查看。
+2. 或者，机器人会在每条收到的消息日志中记录 `sender_id`。启动网关后，向机器人发送一条消息，然后查看日志即可看到您的 ID。
 
 ## 步骤 4：配置 Hermes Agent
 
@@ -93,31 +100,38 @@ Hermes Agent 使用您的钉钉用户 ID 来控制谁可以与机器人互动。
 hermes gateway setup
 ```
 
-当提示时选择 **钉钉**，然后按照提示粘贴您的客户端 ID、客户端密钥和允许的用户 ID。
+按提示选择 **DingTalk**。设置向导可通过以下两种方式授权：
+
+- **二维码设备流（推荐）**。使用钉钉移动应用扫描终端打印的二维码——系统会自动返回 Client ID 和 Client Secret，并写入 `~/.hermes/.env` 文件。无需再次访问开发者控制台。
+- **手动粘贴**。如果您已有凭据（或二维码扫描不便），按提示粘贴 Client ID、Client Secret 和允许的用户 ID。
+
+:::note openClaw 品牌披露说明
+由于钉钉 API 层将 `verification_uri_complete` 硬编码为 openClaw 身份标识，当前 QR 码会显示为 `openClaw` 来源，直到阿里巴巴/钉钉真实 AI 注册 Hermes 专用模板服务端。这仅是钉钉展示同意页面的方式——您创建的机器人完全属于您，仅对您所在租户私有。
+:::
 
 ### 选项 B：手动配置
 
-将以下内容添加到您的 `~/.hermes/.env` 文件中：
+在 `~/.hermes/.env` 文件中添加以下内容：
 
 ```bash
-# 必需
+# 必需项
 DINGTALK_CLIENT_ID=your-app-key
 DINGTALK_CLIENT_SECRET=your-app-secret
 
-# 安全：限制谁可以与机器人互动
+# 安全限制：限定可交互的用户
 DINGTALK_ALLOWED_USERS=user-id-1
 
 # 多个允许用户（逗号分隔）
 # DINGTALK_ALLOWED_USERS=user-id-1,user-id-2
 ```
 
-在 `~/.hermes/config.yaml` 中的可选行为设置：
+在 `~/.hermes/config.yaml` 中添加可选行为设置：
 
 ```yaml
 group_sessions_per_user: true
 ```
 
-- `group_sessions_per_user: true` 在共享群聊中保持每个参与者的上下文隔离
+- `group_sessions_per_user: true` 表示在共享群聊中保持各参与者的上下文隔离
 
 ### 启动网关
 
@@ -127,66 +141,120 @@ group_sessions_per_user: true
 hermes gateway
 ```
 
-机器人应在几秒内连接到钉钉的流模式。发送一条消息——无论是私聊还是在已添加的群聊中——进行测试。
+机器人应在几秒内连接到钉钉的 Stream Mode。发送一条消息（私信或在已添加机器人的群聊中）进行测试。
 
 :::tip
-您可以将 `hermes gateway` 作为后台进程或 systemd 服务运行，以实现持久运行。有关详细信息，请参阅部署文档。
+您可以将 `hermes gateway` 作为后台进程或 systemd 服务运行以实现持久化操作。详见部署文档。
 :::
+
+## 功能特性
+
+### AI 卡片
+
+Hermes 可使用钉钉 AI 卡片替代纯文本 markdown 消息进行回复。卡片提供更丰富的结构化展示，并支持流式更新（随着代理生成响应而动态更新内容）。
+
+要启用 AI 卡片，请在 `config.yaml` 中配置卡片模板 ID：
+
+```yaml
+platforms:
+  dingtalk:
+    enabled: true
+    extra:
+      card_template_id: "your-card-template-id"
+```
+
+您可以在钉钉开发者后台的应用 AI 卡片设置中找到模板 ID。启用后，所有回复将以带流式文本更新的卡片形式发送。
+
+### 表情反应
+
+Hermes 会自动为您的消息添加表情反应以显示处理状态：
+
+- 🤔思考中 — 机器人开始处理消息时添加
+- 🥳已完成 — 响应完成后添加（替换思考中表情）
+
+这些反应在私信和群聊中均有效。
+
+### 显示设置
+
+您可以独立定制钉钉的显示行为：
+
+```yaml
+display:
+  platforms:
+    dingtalk:
+      show_reasoning: false   # 是否在回复中显示模型推理/思考过程
+      streaming: true         # 启用流式响应（兼容 AI 卡片）
+      tool_progress: all      # 显示工具执行进度（all/new/off）
+      interim_assistant_messages: true  # 显示中间评论消息
+```
+
+如需更简洁的体验，可关闭工具和中间消息：
+
+```yaml
+display:
+  platforms:
+    dingtalk:
+      tool_progress: off
+      interim_assistant_messages: false
+```
 
 ## 故障排除
 
-### 机器人没有响应消息
+### 机器人无响应
 
-**原因**: 机器人能力未启用，或 `DINGTALK_ALLOWED_USERS` 中不包含您的用户 ID。
+**原因**：未启用机器人能力，或 `DINGTALK_ALLOWED_USERS` 未包含您的 User ID。
 
-**修复**: 验证应用设置中是否启用了机器人能力，并确认选择了流模式。检查您的用户 ID 是否包含在 `DINGTALK_ALLOWED_USERS` 中。重启网关。
+**解决方法**：确认应用设置中启用了机器人能力并选择了 Stream Mode。检查您的 User ID 是否已在 `DINGTALK_ALLOWED_USERS` 中。重启网关。
 
 ### "dingtalk-stream not installed" 错误
 
-**原因**: 未安装 `dingtalk-stream` Python 包。
+**原因**：未安装 `dingtalk-stream` Python 包。
 
-**修复**: 安装它：
+**解决方法**：安装该包：
 
 ```bash
 pip install dingtalk-stream httpx
 ```
 
-### "DINGTALK_CLIENT_ID and DINGTALK_CLIENT_SECRET required"
+### "DINGTALK_CLIENT_ID and DINGTALK_CLIENT_SECRET required" 错误
 
-**原因**: 凭证未在您的环境或 `.env` 文件中设置。
+**原因**：环境变量或 `.env` 文件中未正确设置凭据。
 
-**修复**: 验证 `DINGTALK_CLIENT_ID` 和 `DINGTALK_CLIENT_SECRET` 是否已在 `~/.hermes/.env` 中正确设置。客户端 ID 是您的 AppKey，客户端密钥是您在钉钉开发者控制台中的 AppSecret。
+**解决方法**：确认 `~/.hermes/.env` 中正确设置了 `DINGTALK_CLIENT_ID`（AppKey）和 `DINGTALK_CLIENT_SECRET`（AppSecret）。
 
-### 流断开/重连循环
+### 流断开 / 重连循环
 
-**原因**: 网络不稳定、钉钉平台维护或凭证问题。
+**原因**：网络不稳定、钉钉平台维护或凭据问题。
 
-**修复**: 适配器会自动使用指数退避（2秒 → 5秒 → 10秒 → 30秒 → 60秒）重新连接。请检查您的凭证是否有效，以及您的应用是否被停用。验证您的网络是否允许出站 WebSocket 连接。
+**解决方法**：适配器会自动使用指数退避策略重连（2s → 5s → 10s → 30s → 60s）。请确保凭据有效且应用未被禁用。验证网络是否允许出站 WebSocket 连接。
 
 ### 机器人离线
 
-**原因**: Hermes 网关未运行，或连接失败。
+**原因**：Hermes 网关未运行或连接失败。
 
-**修复**: 检查 `hermes gateway` 是否正在运行。查看终端输出中的错误消息。常见问题：凭证错误、应用停用、未安装 `dingtalk-stream` 或 `httpx`。
+**解决方法**：确认 `hermes gateway` 正在运行。查看终端输出中的错误信息。常见问题：凭据错误、应用被禁用、未安装 `dingtalk-stream` 或 `httpx`。
 
 ### "No session_webhook available"
 
-**原因**: 机器人尝试回复但没有会话 Webhook URL。这通常发生在 Webhook 过期，或者在接收消息和发送回复之间重启了机器人。
+**原因**：机器人尝试回复但缺少会话 webhook URL。通常发生在 webhook 过期或机器人在收到消息与发送回复之间重启时。
 
-**修复**: 向机器人发送一条新消息——每条传入消息都会提供用于回复的新会话 Webhook。这是一个正常的钉钉限制；机器人只能回复最近收到的消息。
+**解决方法**：向机器人发送新消息——每条收到的消息都会提供新的会话 webhook 用于回复。这是钉钉的正常限制；机器人只能回复最近收到的消息。
 
-## 安全性
+## 安全须知
 
 :::warning
-始终设置 `DINGTALK_ALLOWED_USERS` 以限制谁可以与机器人互动。如果没有设置，网关默认会拒绝所有用户作为安全措施。只添加您信任的人的 User ID——授权用户对代理的所有功能（包括工具使用和系统访问）都拥有完全访问权限。
+务必设置 `DINGTALK_ALLOWED_USERS` 来限制可交互的用户。默认情况下网关会拒绝所有用户以确保安全。仅添加您信任用户的 User ID——授权用户拥有完整的代理能力访问权限，包括工具使用和系统访问。
 :::
 
-有关保护您的 Hermes Agent 部署的更多信息，请参阅 [安全指南](../security.md)。
+有关保护 Hermes Agent 部署的更多信息，请参见 [安全指南](../security.md)。
 
 ## 备注
 
-- **流模式**: 无需公共 URL、域名或 Webhook 服务器。连接通过 WebSocket 从您的机器发起，因此它可以在 NAT 和防火墙后工作。
-- **Markdown 回复**: 回复使用钉钉的 markdown 格式进行富文本显示。
-- **消息去重**: 适配器使用 5 分钟窗口对消息进行去重，以防止重复处理同一条消息。
-- **自动重连**: 如果流连接中断，适配器会自动使用指数退避进行重连。
-- **消息长度限制**: 每条消息的回复限制为 20,000 个字符。更长的回复将被截断。
+- **Stream Mode**：无需公网 URL、域名或 webhook 服务器。连接通过 WebSocket 从您的机器发起，因此在 NAT 和防火墙后仍可工作。
+- **AI 卡片**：可选择性地使用富 AI 卡片而非纯 markdown 回复。通过 `card_template_id` 配置。
+- **表情反应**：自动添加 🤔思考中/🥳已完成 反应以显示处理状态。
+- **Markdown 回复**：回复采用钉钉支持的 markdown 格式以实现富文本显示。
+- **媒体支持**：收到的图片和文件会被自动解析，可由视觉工具处理。
+- **消息去重**：适配器使用 5 分钟窗口对消息进行去重，防止重复处理。
+- **自动重连**：若流连接中断，适配器会自动使用指数退避策略重连。
+- **消息长度限制**：每条回复最多 20,000 字符，超长部分将被截断。

@@ -40,7 +40,7 @@ class MyMemoryProvider(MemoryProvider):
         return bool(os.environ.get("MY_API_KEY"))
 
     def initialize(self, session_id: str, **kwargs) -> None:
-        """在代理启动时调用一次。
+        """在智能体启动时调用一次。
 
         kwargs 始终包含：
           hermes_home (str): 当前 HERMES_HOME 路径。用于存储。
@@ -58,10 +58,10 @@ class MyMemoryProvider(MemoryProvider):
 | 方法 | 调用时机 | 是否必须实现？ |
 |--------|-----------|-----------------|
 | `name` (属性) | 始终 | **是** |
-| `is_available()` | 代理初始化，激活前 | **是** — 不进行网络调用 |
-| `initialize(session_id, **kwargs)` | 代理启动时 | **是** |
+| `is_available()` | 智能体初始化，激活前 | **是** — 不进行网络调用 |
+| `initialize(session_id, **kwargs)` | 智能体启动时 | **是** |
 | `get_tool_schemas()` | 初始化后，用于工具注入 | **是** |
-| `handle_tool_call(name, args)` | 代理使用您的工具时 | **是** (如果提供了工具) |
+| `handle_tool_call(name, args)` | 智能体使用您的工具时 | **是** (如果提供了工具) |
 
 ### 配置
 

@@ -206,7 +206,7 @@ python environments/benchmarks/terminalbench_2/terminalbench2_env.py evaluate \
 
 ### TBLite (OpenThoughts Terminal Bench Lite)
 
-**100 个难度校准的任务** — 相比 TerminalBench2 更快的代理。
+**100 个难度校准的任务** — 相比 TerminalBench2 更快的智能体。
 
 | | |
 |---|---|
@@ -515,6 +515,6 @@ environments/
 │
 └── benchmarks/                 # 评估基准
     ├── terminalbench_2/        # 89 个终端任务，Modal 沙箱
-    ├── tblite/                 # 100 个校准任务（快速 TB2 代理）
+    ├── tblite/                 # 100 个校准任务（快速 TB2 智能体）
     └── yc_bench/               # 长周期战略基准
 ```

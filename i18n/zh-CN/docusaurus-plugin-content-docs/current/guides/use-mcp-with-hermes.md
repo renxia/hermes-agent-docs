@@ -27,7 +27,7 @@ description: "关于连接 MCP 服务器到 Hermes Agent、过滤其工具并在
 
 将 MCP 视为一个适配器层：
 
-- Hermes 保持作为代理 (agent) 的角色
+- Hermes 保持作为智能体 (agent) 的角色
 - MCP 服务器贡献工具
 - Hermes 在启动或重新加载时发现这些工具
 - 模型可以像使用普通工具一样使用它们
