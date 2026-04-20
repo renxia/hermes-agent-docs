@@ -16,6 +16,10 @@ const config: Config = {
 
   onBrokenLinks: 'warn',
 
+  scripts: [
+    'https://lzw.me/x/lib/utils/h5-common.min.js?v=3da9ebdd',
+  ],
+
   markdown: {
     mermaid: true,
     hooks: {

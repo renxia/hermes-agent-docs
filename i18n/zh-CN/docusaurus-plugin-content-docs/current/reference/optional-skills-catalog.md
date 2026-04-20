@@ -110,7 +110,7 @@ hermes skills uninstall <skill-name>
 | **llava** | 大型语言和视觉助手 — 结合 CLIP 视觉和 LLaMA 语言模型的视觉指令微调和基于图像的对话。 |
 | **modal** | 无服务器 GPU 云平台，用于运行 ML 工作负载。按需 GPU 访问，无需基础设施管理，ML 模型部署为 API 或批处理作业，支持自动扩展。 |
 | **nemo-curator** | LLM 训练的 GPU 加速数据整理。模糊去重（快 16 倍）、质量过滤（30+ 启发式）、语义去重、PII 遮蔽。与 RAPIDS 一起扩展。 |
-| **peft-fine-tuning** | 使用 LoRA、QLoRA 和 25+ 方法进行 LLM 参数高效微调。在有限 GPU 内存下训练 <1% 的参数，7B–70B 模型精度损失最小。HuggingFace 官方 PEFT 库。 |
+| **peft-fine-tuning** | 使用 LoRA、QLoRA 和 25+ 方法进行 LLM 参数高效微调。在有限 GPU 内存下训练 < 1% 的参数，7B–70B 模型精度损失最小。HuggingFace 官方 PEFT 库。 |
 | **pinecone** | 生产级 AI 向量数据库。自动扩展、混合搜索（密集 + 稀疏）、元数据过滤和低延迟（p95 低于 100ms）。 |
 | **pytorch-fsdp** | PyTorch FSDP 全分片数据并行训练的专门指导 — 参数分片、混合精度、CPU 卸载、FSDP2。 |
 | **pytorch-lightning** | 高级 PyTorch 框架，Trainer 类、自动分布式训练（DDP/FSDP/DeepSpeed）、回调和最小样板代码。 |

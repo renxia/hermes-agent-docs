@@ -666,8 +666,8 @@ hermes mcp <subcommand>
 
 | 子命令 | 描述 |
 |------------|-------------|
-| `serve [-v|--verbose]` | 以 MCP 服务器身份运行 Hermes - 向其他代理暴露对话。 |
-| `add <name> [--url URL] [--command CMD] [--args ...] [--auth oauth|header]` | 添加具有自动工具发现的 MCP 服务器。 |
+| `serve [-v\|--verbose]` | 以 MCP 服务器身份运行 Hermes - 向其他代理暴露对话。 |
+| `add <name> [--url URL] [--command CMD] [--args ...] [--auth oauth\|header]` | 添加具有自动工具发现的 MCP 服务器。 |
 | `remove <name>`（别名：`rm`） | 从配置中移除 MCP 服务器。 |
 | `list`（别名：`ls`） | 列出配置的 MCP 服务器。 |
 | `test <name>` | 测试与 MCP 服务器的连接。 |
