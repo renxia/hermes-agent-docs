@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, relative, extname } from 'node:path';
 import env from 'dotenv';
-import { md5, NLogger, color } from '@lzwme/fe-utils';
+import { md5, NLogger, color, concurrency } from '@lzwme/fe-utils';
 
 env.config();
 
@@ -24,6 +24,7 @@ program
   .option('-s, --source-lang <lang>', 'Source language', 'en')
   .option('-t, --target-lang <lang>', 'Target language', 'zh-CN')
   .option('--timeout <ms>', 'Timeout in milliseconds. default: 300_000')
+  .option('-c, --concurrency <thread>', 'Concurrency. default: 1', 1)
   .option('-u, --base-url <url>', 'LLM base URL', process.env.OPENAI_BASE_URL || 'http://localhost:11434/v1')
   .option('-m, --model <model>', 'LLM model', process.env.OPENAI_MODEL || 'qwen3.5:latest')
   .option('-k, --api-key <key>', 'API key', process.env.OPENAI_API_KEY || '');
@@ -102,7 +103,10 @@ async function translateFile(filePath: string, sourceLang: string, targetLang: s
   console.log(`- [${idx}/${total}] Translating ${color.cyan(filePath)}, [content length: ${color.yellow(content.length)}] ...`);
   let translatedContent = await translateText(content, sourceLang, targetLang);
 
-  if (!translatedContent) return;
+  if (!translatedContent) {
+    console.log(color.red(`- [${idx}/${total}] Translating ${color.cyan(filePath)} failed!`));
+    return;
+  }
 
   // Ensure directory exists
   const targetDir = dirname(targetPath);
@@ -123,7 +127,7 @@ async function translateFile(filePath: string, sourceLang: string, targetLang: s
 }
 
 async function main() {
-  const { path: inputPath, sourceLang, targetLang } = options;
+  const { path: inputPath, sourceLang, targetLang, concurrency: threads = 1 } = options;
 
   if (!existsSync(inputPath)) {
     logger.error(`Path does not exist: ${color.red(inputPath)}`);
@@ -149,13 +153,8 @@ async function main() {
   let current = 0;
   const total = filesToTranslate.length;
 
-  for (const file of filesToTranslate) {
-    try {
-      await translateFile(file, sourceLang, targetLang, ++current, total);
-    } catch (error) {
-      logger.error(`Error translating ${file}:`, error);
-    }
-  }
+  const tasks = filesToTranslate.map(file => () => translateFile(file, sourceLang, targetLang, ++current, total).catch(error => logger.error(`Error translating ${file}:`, error)));
+  await concurrency(tasks, Number(process.env.TRANSLATE_CONCURRENCY || threads));
 
   logger.log(color.greenBright('Translation completed!'));
 }

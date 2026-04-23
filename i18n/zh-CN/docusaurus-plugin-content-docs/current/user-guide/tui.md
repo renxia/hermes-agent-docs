@@ -1,14 +1,14 @@
 ---
 sidebar_position: 2
 title: "TUI"
-description: "启动 Hermes 的现代终端用户界面 —— 支持鼠标操作、丰富的覆盖层以及非阻塞输入。"
+description: "为 Hermes 启动现代终端用户界面 —— 支持鼠标操作、丰富的覆盖层以及非阻塞式输入。"
 ---
 
 # TUI
 
-TUI 是 Hermes 的现代前端界面，基于与 [经典 CLI](cli.md) 相同的 Python 运行时构建的终端用户界面。使用同一代理、同一会话、同一斜杠命令；提供更清晰、更响应的交互体验。
+TUI 是 Hermes 的现代前端界面 —— 一个由与[经典 CLI](cli.md) 相同的 Python 运行时支持的终端用户界面。相同的智能体、相同的会话、相同的斜杠命令；为您提供更简洁、响应更快的交互界面。
 
-它是交互式运行 Hermes 的首选方式。
+这是推荐以交互方式运行 Hermes 的方法。
 
 ## 启动
 
@@ -16,7 +16,7 @@ TUI 是 Hermes 的现代前端界面，基于与 [经典 CLI](cli.md) 相同的 
 # 启动 TUI
 hermes --tui
 
-# 恢复最新的 TUI 会话（如果不存在则回退到最新的经典会话）
+# 恢复最新的 TUI 会话（若不存在则回退到最新的经典会话）
 hermes --tui -c
 hermes --tui --continue
 
@@ -28,7 +28,7 @@ hermes --tui --resume "my t0p session"
 hermes --tui --dev
 ```
 
-您也可以通过环境变量启用：
+您也可以通过环境变量启用它：
 
 ```bash
 export HERMES_TUI=1
@@ -36,30 +36,30 @@ hermes          # 现在使用 TUI
 hermes chat     # 同样适用
 ```
 
-经典 CLI 仍作为默认选项。[CLI 接口](cli.md) 中记录的所有功能 —— 斜杠命令、快速命令、技能预加载、人格设定、多行输入、中断操作等，在 TUI 中完全一致。
+经典 CLI 仍作为默认选项保留。[CLI 接口](cli.md)中记录的所有内容 —— 斜杠命令、快捷命令、技能预加载、人格设定、多行输入、中断操作 —— 在 TUI 中的行为完全一致。
 
-## 为什么选择 TUI
+## 为何选择 TUI
 
-- **即时首帧显示** —— 横幅图在应用加载完成前就已渲染，因此 Hermes 启动时终端不会卡顿。
-- **非阻塞输入** —— 可以在会话就绪前输入并排队消息。第一个提示词会在代理上线后立即发送。
+- **即时首帧渲染** —— 应用完成加载前即绘制横幅，因此 Hermes 启动时终端永远不会显得卡顿。
+- **非阻塞式输入** —— 在会话就绪前即可输入并排队消息。一旦智能体上线，您的第一个提示会立即发送。
 - **丰富的覆盖层** —— 模型选择器、会话选择器、审批和澄清提示均以模态面板形式呈现，而非内联流程。
-- **实时会话面板** —— 工具和技能会随着初始化逐步填充。
-- **友好的鼠标选择** —— 拖动高亮文本时使用统一背景色，而非 SGR 反显。使用终端正常的复制手势即可复制。
-- **备用屏幕渲染** —— 差分更新确保流式传输时不闪烁，退出后不留滚动历史。
-- **编辑器辅助功能** —— 长片段内联粘贴折叠、从剪贴板粘贴图像（`Alt+V`）、安全括号粘贴。
+- **实时会话面板** —— 工具和技能在初始化过程中逐步填充显示。
+- **支持鼠标的选择操作** —— 拖拽高亮时使用统一背景色，而非 SGR 反色。使用终端正常的复制手势进行复制。
+- **备用屏幕渲染** —— 差异更新意味着流式传输时无闪烁，退出后无滚动历史杂乱。
+- **编辑器增强功能** —— 长代码片段的内联粘贴折叠、`Cmd+V` / `Ctrl+V` 文本粘贴（带剪贴板图像回退）、括号粘贴安全机制，以及图像/文件路径附件的规范化处理。
 
-[皮肤](features/skins.md) 和 [人格](features/personality.md) 完全兼容。可在会话中随时切换 `/skin ares`、`/personality pirate`，界面会实时重绘。[`example-skin.yaml`](https://github.com/NousResearch/hermes-agent/blob/main/docs/skins/example-skin.yaml) 中标注了皮肤键为 `(both)`、`(classic)` 或 `(tui)`，一目了然地显示其适用范围。TUI 遵循横幅调色板、UI 颜色、提示符号/颜色、会话展示、补全菜单、选中背景、`tool_prefix` 和 `help_header`。
+相同的[皮肤](features/skins.md)和[人格](features/personality.md)适用。可通过 `/skin ares`、`/personality pirate` 在会话中途切换，UI 会实时重绘。请参阅[皮肤与主题](features/skins.md)查看完整的可自定义键列表，以及哪些键适用于经典 CLI 或 TUI —— TUI 会遵循横幅调色板、UI 颜色、提示符字形/颜色、会话显示、补全菜单、选择背景色、`tool_prefix` 和 `help_header` 的设置。
 
 ## 要求
 
-- **Node.js** ≥ 20 —— TUI 作为子进程由 Python CLI 启动。`hermes doctor` 可验证此条件。
-- **TTY** —— 如同经典 CLI，在非交互式环境中重定向 stdin 或使用管道时会回退到单查询模式。
+- **Node.js** ≥ 20 —— TUI 作为由 Python CLI 启动的子进程运行。`hermes doctor` 会验证此要求。
+- **TTY** —— 与经典 CLI 类似，管道输入 stdin 或在非交互环境中运行时会回退到单查询模式。
 
-首次启动时，Hermes 会将 TUI 的 Node 依赖安装到 `ui-tui/node_modules`（一次性操作，几秒钟）。后续启动速度更快。若拉取新版本 Hermes，当源码比 dist 更新时，TUI 包会自动重建。
+首次启动时，Hermes 会将 TUI 的 Node 依赖项安装到 `ui-tui/node_modules`（一次性操作，耗时几秒）。后续启动速度很快。如果您拉取了新的 Hermes 版本，当源码比 dist 更新时，TUI 包会自动重建。
 
 ### 外部预构建
 
-分发版若提供预构建包（Nix、系统包），可指向 Hermes：
+分发包含预构建包（如 Nix、系统包）的版本可指向 Hermes：
 
 ```bash
 export HERMES_TUI_DIR=/path/to/prebuilt/ui-tui
@@ -68,75 +68,76 @@ hermes --tui
 
 该目录必须包含 `dist/entry.js` 和最新的 `node_modules`。
 
-## 快捷键
+## 键绑定
 
-快捷键与 [经典 CLI](cli.md#keybindings) 完全一致。唯一行为差异：
+键绑定与[经典 CLI](cli.md#keybindings)完全一致。唯一的行为差异如下：
 
-- **鼠标拖拽** 高亮文本时使用统一选择背景。
-- **`Ctrl+V`** 直接从剪贴板粘贴文本到编辑器；多行粘贴保持在一行内，直到您展开它们。
-- **斜杠自动补全** 以浮动面板形式打开，带描述，而非内联下拉框。
+- **鼠标拖拽** 使用统一的选择背景色高亮文本。
+- **`Cmd+V` / `Ctrl+V`** 首先尝试普通文本粘贴，然后回退到 OSC52/原生剪贴板读取，最后当剪贴板或粘贴内容解析为图像时执行图像附件操作。
+- **`/terminal-setup`** 为本地 VS Code / Cursor / Windsurf 终端安装绑定，以在 macOS 上实现更好的 `Cmd+Enter` 和撤销/重做一致性。
+- **斜杠自动补全** 以带描述的浮动面板形式打开，而非内联下拉菜单。
 
 ## 斜杠命令
 
-所有斜杠命令均无变化。部分为 TUI 特有 —— 输出更丰富或以内联面板形式渲染：
+所有斜杠命令的行为保持不变。其中部分命令由 TUI 专属 —— 它们会生成更丰富的输出或以覆盖层形式呈现，而非内联面板：
 
 | 命令 | TUI 行为 |
 |---------|--------------|
-| `/help` | 带分类命令的覆盖层，可用方向键导航 |
-| `/sessions` | 模态会话选择器 —— 预览、标题、令牌总数，内联恢复 |
-| `/model` | 按提供商分组的模态模型选择器，含成本提示 |
-| `/skin` | 实时预览 —— 主题变更浏览时即生效 |
-| `/details` | 在转录中切换详细工具调用信息 |
-| `/usage` | 丰富的令牌/成本/上下文面板 |
+| `/help` | 分类命令覆盖层，支持方向键导航 |
+| `/sessions` | 模态会话选择器 —— 预览、标题、令牌总数、内联恢复 |
+| `/model` | 按提供商分组的模态模型选择器，附带成本提示 |
+| `/skin` | 实时预览 —— 浏览时主题更改立即生效 |
+| `/details` | 在转录中切换详细的工具调用信息 |
+| `/usage` | 丰富的令牌 / 成本 / 上下文面板 |
 
-其余所有斜杠命令（包括已安装技能、快速命令和人格切换）与经典 CLI 完全一致。详见 [斜杠命令参考](../reference/slash-commands.md)。
+其他所有斜杠命令（包括已安装的技能、快捷命令和人格切换）的行为与经典 CLI 完全相同。请参阅[斜杠命令参考](../reference/slash-commands.md)。
 
 ## 状态栏
 
-TUI 的状态栏实时跟踪代理状态：
+TUI 的状态栏实时跟踪智能体状态：
 
 | 状态 | 含义 |
 |--------|---------|
-| `starting agent…` | 会话 ID 已激活；工具和技能仍在上线中。可输入 —— 消息会排队并在就绪后发送。 |
-| `ready` | 代理空闲，等待输入。 |
-| `thinking…` / `running…` | 代理正在推理或运行工具。 |
-| `interrupted` | 当前回合被取消；按 Enter 重新发送。 |
-| `forging session…` / `resuming…` | 初始连接或 `--resume` 握手。 |
+| `starting agent…` | 会话 ID 已生效；工具和技能仍在上线中。您可以输入 —— 消息会排队并在就绪时发送。 |
+| `ready` | 智能体空闲，接受输入。 |
+| `thinking…` / `running…` | 智能体正在推理或运行工具。 |
+| `interrupted` | 当前轮次已取消；按 Enter 重新发送。 |
+| `forging session…` / `resuming…` | 初始连接或 `--resume` 握手过程。 |
 
-每套皮肤的 status-bar 颜色和阈值与经典 CLI 共享 —— 详见 [皮肤](features/skins.md) 自定义。
+每种皮肤的状态栏颜色和阈值与经典 CLI 共享 —— 请参阅[皮肤](features/skins.md)进行自定义。
 
 ## 配置
 
-TUI 遵循所有标准 Hermes 配置：`~/.hermes/config.yaml`、配置文件、人格、皮肤、快速命令、凭证池、内存提供者、工具/技能启用设置。无专门的 TUI 配置文件。
+TUI 遵循所有标准 Hermes 配置：`~/.hermes/config.yaml`、配置文件、人格、皮肤、快捷命令、凭据池、内存提供程序、工具/技能启用状态。不存在 TUI 专用的配置文件。
 
-少数键值专门调整 TUI 界面：
+少量键专门用于调整 TUI 界面：
 
 ```yaml
 display:
-  skin: default          # 任意内置或自定义皮肤
+  skin: default          # 任何内置或自定义皮肤
   personality: helpful
-  details_mode: compact  # 或 "verbose" —— 默认工具调用详情级别
-  mouse_tracking: true   # 若终端与鼠标报告冲突则禁用
+  details_mode: compact  # 或 "verbose" —— 默认工具调用详细级别
+  mouse_tracking: true   # 如果您的终端与鼠标报告冲突，请禁用
 ```
 
 `/details on` / `/details off` / `/details cycle` 可在运行时切换此设置。
 
 ## 会话
 
-TUI 和经典 CLI 共享会话 —— 两者都写入同一个 `~/.hermes/state.db`。可在一个界面开始会话，在另一个中恢复。会话选择器会同时显示来自两个来源的会话，并标注来源标签。
+TUI 和经典 CLI 共享会话 —— 两者均写入相同的 `~/.hermes/state.db`。您可以在一个界面中启动会话，在另一个界面中恢复。会话选择器会显示来自两个来源的会话，并带有来源标签。
 
-详见 [会话](sessions.md) 生命周期、搜索、压缩和导出。
+请参阅[会话](sessions.md)了解生命周期、搜索、压缩和导出。
 
 ## 回退到经典 CLI
 
-不带 `--tui` 参数启动 `hermes` 将停留在经典 CLI。若要让机器默认使用 TUI，请在 shell 配置文件中设置 `HERMES_TUI=1`。要切换回来，取消该设置即可。
+启动 `hermes`（不带 `--tui`）将保持在经典 CLI。要让机器优先使用 TUI，请在 shell 配置文件中设置 `HERMES_TUI=1`。要恢复，请取消设置该变量。
 
-若 TUI 启动失败（无 Node、包缺失、TTY 问题），Hermes 会打印诊断信息并回退 —— 不会让您陷入困境。
+如果 TUI 启动失败（无 Node、缺少包、TTY 问题），Hermes 会打印诊断信息并回退 —— 而不会让您陷入困境。
 
-## 另见
+## 另请参阅
 
-- [CLI 接口](cli.md) —— 完整的斜杠命令和快捷键参考（共享）
-- [会话](sessions.md) —— 恢复、分支和历史
-- [皮肤与主题](features/skins.md) —— 定制横幅、状态栏和覆盖层
-- [语音模式](features/voice-mode.md) —— 两种界面均支持
-- [配置](configuration.md) —— 所有配置项
+- [CLI 接口](cli.md) —— 完整的斜杠命令和键绑定参考（共享）
+- [会话](sessions.md) —— 恢复、分支和历史记录
+- [皮肤与主题](features/skins.md) —— 为主题化横幅、状态栏和覆盖层
+- [语音模式](features/voice-mode.md) —— 在两个界面中均适用
+- [配置](configuration.md) —— 所有配置键

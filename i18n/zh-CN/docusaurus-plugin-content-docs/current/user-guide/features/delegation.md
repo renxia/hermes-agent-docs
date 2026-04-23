@@ -1,14 +1,14 @@
 ---
 sidebar_position: 7
-title: "子代理委托"
-description: "使用 delegate_task 为并行工作流生成隔离的子代理"
+title: "子智能体委派"
+description: "使用 delegate_task 创建隔离的子智能体以并行处理工作流"
 ---
 
-# 子代理委托
+# 子智能体委派
 
-`delegate_task` 工具会生成具有隔离上下文、受限工具集和独立终端会话的子 AIAgent 实例。每个子代理都会获得一次全新的对话，并独立工作——只有其最终的摘要会进入父级的上下文。
+`delegate_task` 工具会创建具有隔离上下文、受限工具集和独立终端会话的子 AIAgent 实例。每个子智能体都会获得全新的对话并独立工作——只有其最终摘要会进入父智能体的上下文。
 
-## 单任务
+## 单个任务
 
 ```python
 delegate_task(
@@ -20,7 +20,7 @@ delegate_task(
 
 ## 并行批处理
 
-最多可支持 3 个并发子代理：
+默认最多 3 个并发子智能体（可配置，无硬性上限）：
 
 ```python
 delegate_task(tasks=[
@@ -30,30 +30,30 @@ delegate_task(tasks=[
 ])
 ```
 
-## 子代理上下文的工作原理
+## 子智能体上下文如何工作
 
-:::warning 关键：子代理一无所知
-子代理从一个**完全全新的对话**开始。它们对父级的对话历史、先前的工具调用或委托之前讨论的任何内容没有任何了解。子代理唯一的上下文来自于您提供的 `goal` 和 `context` 字段。
+:::warning 关键：子智能体一无所知
+子智能体以**完全全新的对话**开始。他们对父智能体的对话历史、之前的工具调用或委派前讨论的任何内容一无所知。子智能体的唯一上下文来自父智能体调用 `delegate_task` 时填充的 `goal` 和 `context` 字段。
 :::
 
-这意味着您必须传入子代理所需的**所有信息**：
+这意味着父智能体必须在调用中传递子智能体所需的**所有内容**：
 
 ```python
-# 错误示例 - 子代理不知道“错误”是什么
+# 错误 - 子智能体不知道“错误”是什么
 delegate_task(goal="修复错误")
 
-# 正确示例 - 子代理拥有所有需要的上下文
+# 正确 - 子智能体拥有所需的所有上下文
 delegate_task(
     goal="修复 api/handlers.py 中的 TypeError",
-    context="""文件 api/handlers.py 在第 47 行存在 TypeError:
-    'NoneType' 对象没有 'get' 属性。
+    context="""文件 api/handlers.py 第 47 行存在 TypeError：
+    'NoneType' 对象没有属性 'get'。
     函数 process_request() 从 parse_body() 接收一个字典，
     但当 Content-Type 缺失时，parse_body() 返回 None。
-    项目位于 /home/user/myproject，并使用 Python 3.11。"""
+    项目位于 /home/user/myproject，使用 Python 3.11。"""
 )
 ```
 
-子代理会接收一个由您的目标和上下文构建的聚焦系统提示，指示它完成任务，并提供一份结构化的摘要，说明它做了什么、发现了什么、修改了哪些文件以及遇到了哪些问题。
+子智能体会收到一个由你的目标和上下文构建的专注系统提示，指示其完成任务，并提供其执行的操作、发现的内容、修改的文件以及遇到的任何问题的结构化摘要。
 
 ## 实际示例
 
@@ -64,18 +64,18 @@ delegate_task(
 ```python
 delegate_task(tasks=[
     {
-        "goal": "研究 2025 年 WebAssembly 的当前状态",
+        "goal": "研究 2025 年 WebAssembly 的现状",
         "context": "重点关注：浏览器支持、非浏览器运行时、语言支持",
         "toolsets": ["web"]
     },
     {
-        "goal": "研究 2025 年 RISC-V 采用的当前状态",
+        "goal": "研究 2025 年 RISC-V 的采用情况",
         "context": "重点关注：服务器芯片、嵌入式系统、软件生态系统",
         "toolsets": ["web"]
     },
     {
         "goal": "研究 2025 年量子计算的进展",
-        "context": "重点关注：纠错突破、实际应用、主要参与者",
+        "context": "重点关注：纠错突破、实际应用、关键参与者",
         "toolsets": ["web"]
     }
 ])
@@ -83,134 +83,152 @@ delegate_task(tasks=[
 
 ### 代码审查 + 修复
 
-将审查和修复工作流委托给一个全新的上下文：
+将审查并修复的工作流委派给一个全新的上下文：
 
 ```python
 delegate_task(
-    goal="审查认证模块是否存在安全问题并修复任何发现的问题",
+    goal="审查身份验证模块的安全问题并修复发现的任何问题",
     context="""项目位于 /home/user/webapp。
-    认证模块文件：src/auth/login.py, src/auth/jwt.py, src/auth/middleware.py。
-    项目使用 Flask, PyJWT 和 bcrypt。
+    身份验证模块文件：src/auth/login.py、src/auth/jwt.py、src/auth/middleware.py。
+    该项目使用 Flask、PyJWT 和 bcrypt。
     重点关注：SQL 注入、JWT 验证、密码处理、会话管理。
-    修复发现的任何问题，并运行测试套件 (pytest tests/auth/)。""",
+    修复发现的任何问题并运行测试套件 (pytest tests/auth/)。""",
     toolsets=["terminal", "file"]
 )
 ```
 
 ### 多文件重构
 
-委托一个大型重构任务，避免使父级上下文过载：
+委派一个大型重构任务，以免淹没父智能体的上下文：
 
 ```python
 delegate_task(
-    goal="重构 src/ 中的所有 Python 文件，将 print() 替换为适当的日志记录",
+    goal="重构 src/ 中所有 Python 文件，将 print() 替换为适当的日志记录",
     context="""项目位于 /home/user/myproject。
-    使用 'logging' 模块，并设置 logger = logging.getLogger(__name__)。
+    使用 'logging' 模块，logger = logging.getLogger(__name__)。
     将 print() 调用替换为适当的日志级别：
     - print(f"Error: ...") -> logger.error(...)
     - print(f"Warning: ...") -> logger.warning(...)
     - print(f"Debug: ...") -> logger.debug(...)
     - 其他 print -> logger.info(...)
     不要更改测试文件或 CLI 输出中的 print()。
-    完成后运行 pytest 进行验证，确保没有代码中断。""",
+    之后运行 pytest 以验证没有破坏任何内容。""",
     toolsets=["terminal", "file"]
 )
 ```
 
 ## 批处理模式详情
 
-当您提供一个 `tasks` 数组时，子代理将使用线程池**并行**运行：
+当你提供 `tasks` 数组时，子智能体会使用线程池**并行**运行：
 
-- **最大并发数：** 3 个任务（如果 `tasks` 数组更长，将截断到 3 个）
-- **线程池：** 使用 `ThreadPoolExecutor`，设置 `MAX_CONCURRENT_CHILDREN = 3` 工作线程
-- **进度显示：** 在 CLI 模式下，树状视图会实时显示每个子代理的工具调用，并显示每个任务的完成行。在网关模式下，进度会进行批处理，并转发到父级的进度回调。
-- **结果排序：** 结果将按任务索引排序，与输入顺序匹配，与完成顺序无关。
-- **中断传播：** 中断父级（例如发送新消息）将中断所有活动的子代理。
+- **最大并发数：** 默认 3 个任务（可通过 `delegation.max_concurrent_children` 或 `DELEGATION_MAX_CONCURRENT_CHILDREN` 环境变量配置；下限为 1，无硬性上限）。超过限制的批次会返回工具错误，而不是被静默截断。
+- **线程池：** 使用 `ThreadPoolExecutor`，并将配置的并发限制作为最大工作线程数
+- **进度显示：** 在 CLI 模式下，树状视图会实时显示每个子智能体的工具调用，并带有每个任务的完成行。在网关模式下，进度会被分批并中继到父智能体的进度回调
+- **结果排序：** 结果按任务索引排序，以匹配输入顺序，而不管完成顺序如何
+- **中断传播：** 中断父智能体（例如，发送新消息）会中断所有活跃的子智能体
 
-单任务委托直接运行，没有线程池开销。
+单任务委派直接运行，无需线程池开销。
 
 ## 模型覆盖
 
-您可以通过 `config.yaml` 为子代理配置不同的模型——这对于将简单任务委托给成本更低/速度更快的模型非常有用：
+你可以通过 `config.yaml` 为子智能体配置不同的模型——这对于将简单任务委派给更便宜/更快的模型很有用：
 
 ```yaml
 # 在 ~/.hermes/config.yaml 中
 delegation:
-  model: "google/gemini-flash-2.0"    # 子代理的更便宜的模型
-  provider: "openrouter"              # 可选：将子代理路由到不同的提供商
+  model: "google/gemini-flash-2.0"    # 为子智能体使用更便宜的模型
+  provider: "openrouter"              # 可选：将子智能体路由到不同的提供商
 ```
 
-如果省略，子代理将使用与父级相同的模型。
+如果省略，子智能体会使用与父智能体相同的模型。
 
 ## 工具集选择提示
 
-`toolsets` 参数控制子代理可访问的工具。请根据任务选择：
+`toolsets` 参数控制子智能体可以访问哪些工具。根据任务选择：
 
-| 工具集模式 | 用例 |
+| 工具集模式 | 使用场景 |
 |----------------|----------|
 | `["terminal", "file"]` | 代码工作、调试、文件编辑、构建 |
 | `["web"]` | 研究、事实核查、文档查找 |
 | `["terminal", "file", "web"]` | 全栈任务（默认） |
-| `["file"]` | 只读分析、不执行的代码审查 |
+| `["file"]` | 只读分析、无需执行的代码审查 |
 | `["terminal"]` | 系统管理、进程管理 |
 
-无论您指定什么，某些工具集对子代理都是**始终禁用**的：
-- `delegation` — 禁止递归委托（防止无限生成）
-- `clarify` — 子代理不能与用户交互
-- `memory` — 不允许写入共享持久内存
-- `code_execution` — 子代理应分步推理
-- `send_message` — 不允许跨平台副作用（例如发送 Telegram 消息）
+无论指定什么，某些工具集都会被阻止用于子智能体：
+- `delegation` — 对叶子子智能体（默认）被阻止。为 `role="orchestrator"` 子智能体保留，受 `max_spawn_depth` 限制 — 参见下面的[深度限制和嵌套编排](#depth-limit-and-nested-orchestration)。
+- `clarify` — 子智能体无法与用户交互
+- `memory` — 无法写入共享持久内存
+- `code_execution` — 子智能体应逐步推理
+- `send_message` — 无跨平台副作用（例如，发送 Telegram 消息）
 
 ## 最大迭代次数
 
-每个子代理都有一个迭代限制（默认为 50），控制它可以执行多少次工具调用：
+每个子智能体都有一个迭代限制（默认：50），用于控制它可以进行多少次工具调用轮次：
 
 ```python
 delegate_task(
     goal="快速文件检查",
-    context="检查 /etc/nginx/nginx.conf 是否存在，并打印其前 10 行",
-    max_iterations=10  # 简单任务，不需要太多轮次
+    context="检查 /etc/nginx/nginx.conf 是否存在并打印其前 10 行",
+    max_iterations=10  # 简单任务，不需要很多轮次
 )
 ```
 
-## 深度限制
+## 深度限制和嵌套编排
 
-委托有**深度限制为 2**——父级（深度 0）可以生成子级（深度 1），但子级不能进一步委托。这可以防止失控的递归委托链。
+默认情况下，委派是**扁平的**：父智能体（深度 0）创建子智能体（深度 1），而这些子智能体无法进一步委派。这可以防止失控的递归委派。
+
+对于多阶段工作流（研究 → 综合，或对子问题的并行编排），父智能体可以创建**编排器**子智能体，这些子智能体*可以*委派自己的工作器：
+
+```python
+delegate_task(
+    goal="调查三种代码审查方法并推荐一种",
+    role="orchestrator",  # 允许此子智能体创建自己的工作器
+    context="...",
+)
+```
+
+- `role="leaf"`（默认）：子智能体无法进一步委派 — 与扁平委派行为相同。
+- `role="orchestrator"`：子智能体保留 `delegation` 工具集。受 `delegation.max_spawn_depth` 限制（默认 **1** = 扁平，因此在默认情况下 `role="orchestrator"` 无效）。将 `max_spawn_depth` 提高到 2 以允许编排器子智能体创建叶子孙智能体；提高到 3 以允许三层（上限）。
+- `delegation.orchestrator_enabled: false`：全局关闭开关，强制每个子智能体为 `leaf`，无论 `role` 参数如何。
+
+**成本警告：** 使用 `max_spawn_depth: 3` 和 `max_concurrent_children: 3` 时，树可以达到 3×3×3 = 27 个并发叶子智能体。每增加一层都会使支出倍增 — 请有意提高 `max_spawn_depth`。
 
 ## 关键属性
 
-- 每个子代理都拥有**自己的终端会话**（与父级分离）
-- **无嵌套委托**——子代理不能进一步委托（没有孙代理）
-- 子代理**不能**调用：`delegate_task`、`clarify`、`memory`、`send_message`、`execute_code`
-- **中断传播**——中断父级会中断所有活动的子代理
-- 只有最终摘要进入父级上下文，保持了高效的 Token 使用
-- 子代理继承了父级的**API 密钥、提供商配置和凭证池**（在速率限制时支持密钥轮换）
+- 每个子智能体都会获得其**自己的终端会话**（与父智能体分离）
+- **嵌套委派是选择性的** — 只有 `role="orchestrator"` 子智能体可以进一步委派，并且只有在 `max_spawn_depth` 从其默认值 1（扁平）提高时才可以。使用 `orchestrator_enabled: false` 全局禁用。
+- 叶子子智能体**无法**调用：`delegate_task`、`clarify`、`memory`、`send_message`、`execute_code`。编排器子智能体保留 `delegate_task`，但仍无法使用其他四个。
+- **中断传播** — 中断父智能体会中断所有活跃的子智能体（包括编排器下的孙智能体）
+- 只有最终摘要会进入父智能体的上下文，从而保持令牌使用效率
+- 子智能体继承父智能体的** API 密钥、提供商配置和凭据池**（支持在速率限制时轮换密钥）
 
-## 委托 vs execute_code
+## 委派 vs execute_code
 
 | 因素 | delegate_task | execute_code |
 |--------|--------------|-------------|
-| **推理能力** | 完整的 LLM 推理循环 | 仅 Python 代码执行 |
-| **上下文** | 隔离的全新对话 | 无对话，仅脚本 |
-| **工具访问** | 所有非禁用工具，并进行推理 | 通过 RPC 的 7 个工具，无推理 |
-| **并行性** | 最多 3 个并发子代理 | 单个脚本 |
-| **适用场景** | 需要判断力的复杂任务 | 机械的多步骤管道 |
-| **Token 成本** | 较高（完整的 LLM 循环） | 较低（仅返回 stdout） |
-| **用户交互** | 无（子代理不能澄清） | 无 |
+| **推理** | 完整的 LLM 推理循环 | 仅 Python 代码执行 |
+| **上下文** | 全新的隔离对话 | 无对话，仅脚本 |
+| **工具访问** | 所有非阻塞工具（带推理） | 通过 RPC 的 7 个工具，无推理 |
+| **并行性** | 默认 3 个并发子智能体（可配置） | 单个脚本 |
+| **最适合** | 需要判断的复杂任务 | 机械的多步骤管道 |
+| **令牌成本** | 较高（完整 LLM 循环） | 较低（仅返回 stdout） |
+| **用户交互** | 无（子智能体无法澄清） | 无 |
 
-**经验法则：** 当子任务需要推理、判断或多步骤问题解决时，使用 `delegate_task`。当您需要机械数据处理或脚本化工作流程时，使用 `execute_code`。
+**经验法则：** 当子任务需要推理、判断或多步骤问题解决时，使用 `delegate_task`。当你需要机械数据处理或脚本化工作流时，使用 `execute_code`。
 
 ## 配置
 
 ```yaml
 # 在 ~/.hermes/config.yaml 中
 delegation:
-  max_iterations: 50                        # 每个子代理的最大轮次（默认为 50）
-  default_toolsets: ["terminal", "file", "web"]  # 默认工具集
+  max_iterations: 50                        # 每个子智能体的最大轮次（默认：50）
+  # max_concurrent_children: 3              # 每批并行子智能体（默认：3）
+  # max_spawn_depth: 1                      # 树深度（1-3，默认 1 = 扁平）。提高到 2 以允许编排器子智能体创建叶子；提高到 3 以允许三层。
+  # orchestrator_enabled: true              # 禁用以强制所有子智能体为叶子角色。
   model: "google/gemini-3-flash-preview"             # 可选的提供商/模型覆盖
   provider: "openrouter"                             # 可选的内置提供商
 
-# 或者使用直接的自定义端点代替 provider:
+# 或者使用直接的自定义端点而不是提供商：
 delegation:
   model: "qwen2.5-coder"
   base_url: "http://localhost:1234/v1"
@@ -218,5 +236,5 @@ delegation:
 ```
 
 :::tip
-代理会根据任务的复杂性自动处理委托。您不需要明确要求它委托——当它认为合适时，它会自动执行。
+智能体会根据任务复杂性自动处理委派。你无需明确要求它委派 — 当有意义时，它会自动执行。
 :::
