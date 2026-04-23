@@ -2,10 +2,12 @@
 
 import { Command } from 'commander';
 import OpenAI from 'openai';
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, cpSync } from 'node:fs';
 import { join, dirname, relative, extname } from 'node:path';
+import { execSync } from 'node:child_process';
 import env from 'dotenv';
 import { md5, NLogger, color, concurrency } from '@lzwme/fe-utils';
+import build from './build';
 
 env.config();
 
@@ -24,10 +26,12 @@ program
   .option('-s, --source-lang <lang>', 'Source language', 'en')
   .option('-t, --target-lang <lang>', 'Target language', 'zh-CN')
   .option('--timeout <ms>', 'Timeout in milliseconds. default: 300_000')
-  .option('-c, --concurrency <thread>', 'Concurrency. default: 1', 1)
+  .option('-c, --concurrency <thread>', 'Concurrency. default: 1', '1')
   .option('-u, --base-url <url>', 'LLM base URL', process.env.OPENAI_BASE_URL || 'http://localhost:11434/v1')
   .option('-m, --model <model>', 'LLM model', process.env.OPENAI_MODEL || 'qwen3.5:latest')
-  .option('-k, --api-key <key>', 'API key', process.env.OPENAI_API_KEY || '');
+  .option('-k, --api-key <key>', 'API key', process.env.OPENAI_API_KEY || '')
+  .option('-B, --build', 'Build docs after translation', false)
+  .option('-S, --sync', 'Sync docs from hermes-agent repository before translating', false);
 
 program.parse();
 
@@ -79,6 +83,40 @@ function getAllMdFiles(dirPath: string): string[] {
   return files;
 }
 
+async function syncHermesAgentDocs(): Promise<void> {
+  const cacheDir = join(process.cwd(), 'cache');
+  const repoDir = join(cacheDir, 'hermes-agent');
+  const sourceDocsDir = join(repoDir, 'website', 'docs');
+  const targetDocsDir = join(process.cwd(), 'docs');
+
+  logger.log('Starting Hermes Agent docs sync...');
+
+  if (existsSync(repoDir)) {
+    logger.log('Repository exists, pulling latest changes...');
+    try {
+      execSync('git pull -r -n', { cwd: repoDir, stdio: 'inherit' });
+    } catch {
+      logger.log(color.yellow('git pull failed, trying git stash then pull...'));
+      execSync('git stash && git pull -r', { cwd: repoDir, stdio: 'inherit' });
+    }
+  } else {
+    logger.log('Cloning repository...');
+    if (!existsSync(cacheDir)) {
+      mkdirSync(cacheDir, { recursive: true });
+    }
+    execSync('git clone https://github.com/NousResearch/hermes-agent.git', { cwd: cacheDir, stdio: 'inherit' });
+  }
+
+  if (!existsSync(sourceDocsDir)) {
+    logger.error(`Source docs directory not found: ${sourceDocsDir}`);
+    process.exit(1);
+  }
+
+  logger.log(`Copying docs from ${sourceDocsDir} to ${targetDocsDir}...`);
+  cpSync(sourceDocsDir, targetDocsDir, { force: true, recursive: true });
+  logger.log(color.green('Docs sync completed!'));
+}
+
 async function translateFile(filePath: string, sourceLang: string, targetLang: string, idx: number, total: number) {
   // Calculate relative path from docs/
   const relativePath = relative('docs', filePath);
@@ -127,7 +165,12 @@ async function translateFile(filePath: string, sourceLang: string, targetLang: s
 }
 
 async function main() {
-  const { path: inputPath, sourceLang, targetLang, concurrency: threads = 1 } = options;
+  const { path: inputPath, sourceLang, targetLang, concurrency: threads = 1, sync } = options;
+
+  // 前置：同步文档
+  if (sync) {
+    await syncHermesAgentDocs();
+  }
 
   if (!existsSync(inputPath)) {
     logger.error(`Path does not exist: ${color.red(inputPath)}`);
@@ -157,6 +200,8 @@ async function main() {
   await concurrency(tasks, Number(process.env.TRANSLATE_CONCURRENCY || threads));
 
   logger.log(color.greenBright('Translation completed!'));
+
+  if (options.build) await build();
 }
 
 main().catch(logger.error);

@@ -1126,3 +1126,5 @@ provider_routing:
   # ignore: ["deepinfra"]    # 跳过这些提供程序
   # order: ["anthropic", "google"]  # 尝试提供程序的顺序
   # require_parameters: true  # 仅使用支持所有请求参数
+    # data_collection: "deny"   # Exclude providers that may store/train on data
+```

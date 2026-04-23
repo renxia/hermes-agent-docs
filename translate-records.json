@@ -32,8 +32,8 @@
     "zh-CN": "c71df8e35e41c960db6edf4583dfb1c7"
   },
   "docs/developer-guide/contributing.md": {
-    "srcMd5": "b019c6cb949ac3a20c2238d9a77a28b6",
-    "zh-CN": "a5bf02452743d69d3cfd4ce4703ae62d"
+    "srcMd5": "e6ebd3cfdfa34cc3767c159c04190a25",
+    "zh-CN": "dc518d904d90610b616719529601adaa"
   },
   "docs/developer-guide/creating-skills.md": {
     "srcMd5": "53aaf4412694946adf8357ade15475be",
@@ -188,12 +188,12 @@
     "zh-CN": "cad8c00fd4ea03012ecd12376670bc92"
   },
   "docs/integrations/providers.md": {
-    "srcMd5": "4eb1e06b362aba6b05c8567a2fc23ff1",
-    "zh-CN": "685bc74b37002fab88ee298d868d4212"
+    "srcMd5": "d3435b93c96656a9545a31ec2b8830d9",
+    "zh-CN": "66c2964b1d4a0dc6330ae9fcc4267b50"
   },
   "docs/reference/cli-commands.md": {
-    "srcMd5": "8e5efc102b6b312327d37a39af4bed37",
-    "zh-CN": "ab1b37b1985b25a4b9e1e71551b5628d"
+    "srcMd5": "fdfedd62717e5b46c69ef00afd1b74cc",
+    "zh-CN": "a90d886a2847c7e676d13a360f244a55"
   },
   "docs/reference/environment-variables.md": {
     "srcMd5": "22a3637281a2b71434c31c85c05eac3b",
@@ -244,8 +244,8 @@
     "zh-CN": "0fba7e6b54d08262a8c2512d40407431"
   },
   "docs/user-guide/configuration.md": {
-    "srcMd5": "799972e1bc0b8095afd9e87e477c993f",
-    "zh-CN": "1a3366a2071c9d8ca4b73ccc992853c2"
+    "srcMd5": "8a28ff3ba6180e5c5734598e9113de05",
+    "zh-CN": "302db61e6cb1e09bb715a7a1a68d7b15"
   },
   "docs/user-guide/docker.md": {
     "srcMd5": "f0438e8a3636ce93c5997e4a356f38b5",
@@ -296,8 +296,8 @@
     "zh-CN": "6f849f767946e648d50794a84074a7ff"
   },
   "docs/user-guide/features/fallback-providers.md": {
-    "srcMd5": "25e45044c464807075f8b9600f86f89d",
-    "zh-CN": "2f95b4ada148d2aef72fd3fbc27415d9"
+    "srcMd5": "1018c2a3b38b75e727b73295e3fd1627",
+    "zh-CN": "dcecfa417eebe7ebd2f36c2194d51207"
   },
   "docs/user-guide/features/honcho.md": {
     "srcMd5": "059d63833267a1cf862a0bd833eb44b0",

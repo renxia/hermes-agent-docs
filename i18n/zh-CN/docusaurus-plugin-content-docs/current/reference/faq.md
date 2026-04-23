@@ -661,5 +661,3 @@ delegation:
 ```
 
 请参见 [子代理委托](../user-guide/features/delegation.md) 以了解委托的工作原理。
-
-### 在同一个 WhatsApp 号码上运行多个代理（每聊天安
