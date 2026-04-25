@@ -2,7 +2,7 @@
 
 import { Command } from 'commander';
 import OpenAI from 'openai';
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, cpSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, cpSync, rmSync } from 'node:fs';
 import { join, dirname, relative, extname } from 'node:path';
 import { execSync } from 'node:child_process';
 import env from 'dotenv';
@@ -43,7 +43,143 @@ const openai = new OpenAI({
   timeout: Number(options.timeout || process.env.TRANSLATE_TIMEOUT_MS || 0) || 300_000,
 });
 
+// 文本分段最大长度阈值，默认 8000 字符
+const MAX_CHUNK_SIZE = Number(process.env.TRANSLATE_MAX_CHUNK_SIZE || 8000);
+
+/**
+ * 按二级标题 ## 分割文本，返回分段数组
+ * 优先向前查找最近的 ## 作为分割点
+ */
+function splitBySection(text: string): string[] {
+  // 按行分割，保留行结构
+  const lines = text.split('\n');
+  const chunks: string[] = [];
+  let currentChunk: string[] = [];
+  let currentLength = 0;
+
+  for (const line of lines) {
+    const lineLength = line.length + 1; // +1 for newline
+    const isSectionHeader = /^##\s/.test(line);
+
+    // 如果当前行是二级标题，且累积内容已超过阈值
+    if (isSectionHeader && currentLength > MAX_CHUNK_SIZE && currentChunk.length > 0) {
+      // 将当前块推入结果，并重新开始新块
+      chunks.push(currentChunk.join('\n'));
+      currentChunk = [line];
+      currentLength = lineLength;
+    } else {
+      currentChunk.push(line);
+      currentLength += lineLength;
+    }
+  }
+
+  // 推入最后一块
+  if (currentChunk.length > 0) {
+    chunks.push(currentChunk.join('\n'));
+  }
+
+  return chunks;
+}
+
+/**
+ * 进一步按段落分割（当按 ## 分割后仍有块超过阈值时使用）
+ * 尝试按空行或普通标题 # 分隔
+ */
+function splitByParagraph(text: string): string[] {
+  if (process.env.TRANSLATE_MAX_CHUNK_SIZE_STRICT == 'false' || text.length <= MAX_CHUNK_SIZE) {
+    return [text];
+  }
+
+  // 优先按 ## 分割
+  const sidx = text.indexOf('\n## ');
+  if (sidx > 0) {
+    const nextIdx = text.indexOf('\n## ', sidx + 5);
+    // 第一段长度小于 1/3 阈值，且第二段存在，则合并第一段和第二段
+    if (sidx <= MAX_CHUNK_SIZE / 3 && nextIdx > -1) {
+      return [text.slice(0, nextIdx), text.slice(nextIdx)];
+    }
+
+    return [text.slice(0, sidx), text.slice(sidx)];
+  }
+
+  const chunks: string[] = [];
+  const paragraphs = text.split(/\n\n+/);
+  let currentChunk = '';
+
+  for (const para of paragraphs) {
+    if ((currentChunk + '\n\n' + para).length <= MAX_CHUNK_SIZE) {
+      currentChunk = currentChunk ? currentChunk + '\n\n' + para : para;
+    } else {
+      if (currentChunk) chunks.push(currentChunk);
+      // 如果单个段落本身就超过阈值，按句子分割
+      if (para.length > MAX_CHUNK_SIZE) {
+        const sentences = para.split(/(?<=[。！？.!?])\s*/);
+        currentChunk = '';
+        for (const sentence of sentences) {
+          if ((currentChunk + ' ' + sentence).length <= MAX_CHUNK_SIZE) {
+            currentChunk = currentChunk ? currentChunk + ' ' + sentence : sentence;
+          } else {
+            if (currentChunk) chunks.push(currentChunk);
+            currentChunk = sentence;
+          }
+        }
+      } else {
+        currentChunk = para;
+      }
+    }
+  }
+
+  if (currentChunk) chunks.push(currentChunk);
+  return chunks;
+}
+
 async function translateText(text: string, sourceLang: string, targetLang: string): Promise<string> {
+  // 如果文本长度超过阈值，先分段
+  if (text.length > MAX_CHUNK_SIZE) {
+    logger.log(`  Content length (${text.length}) exceeds threshold (${MAX_CHUNK_SIZE}), splitting...`);
+
+    // 第一步：按二级标题 ## 分割
+    let chunks = splitBySection(text);
+
+    // 第二步：对仍超过阈值的块，按段落进一步分割
+    const finalChunks: string[] = [];
+    for (const chunk of chunks) {
+      if (chunk.length > MAX_CHUNK_SIZE) {
+        finalChunks.push(...splitByParagraph(chunk));
+      } else {
+        finalChunks.push(chunk);
+      }
+    }
+
+    const total = finalChunks.length
+    if (total >= 3 && finalChunks[total - 1].length + finalChunks[total - 2].length  < MAX_CHUNK_SIZE) {
+      finalChunks[total - 2] += finalChunks[total - 1]
+      finalChunks.pop()
+    }
+
+    logger.log(`  Split into ${finalChunks.length} chunks`, finalChunks.map(c => c.length));
+
+    // 逐个翻译各块
+    const translatedChunks: string[] = [];
+    for (let i = 0; i < finalChunks.length; i++) {
+      const chunk = finalChunks[i];
+      logger.log(`  Translating chunk ${i + 1}/${finalChunks.length} (${chunk.length} chars)...`);
+
+      const translated = await translateSingleChunk(chunk, sourceLang, targetLang);
+      translatedChunks.push(translated);
+    }
+
+    // 拼接翻译结果
+    return translatedChunks.join('\n\n');
+  }
+
+  return translateSingleChunk(text, sourceLang, targetLang);
+}
+
+/**
+ * 单次翻译单个文本块
+ */
+async function translateSingleChunk(text: string, sourceLang: string, targetLang: string): Promise<string> {
   const terminology = targetLang === 'zh-CN' ? `
 IMPORTANT TERMINOLOGY MAPPING (must follow these exact translations):
 - "agent" or "Agent" -> "智能体" (NOT "代理")
@@ -57,7 +193,7 @@ IMPORTANT TERMINOLOGY MAPPING (must follow these exact translations):
   const response = await openai.chat.completions.create({
     model: options.model,
     messages: [{ role: 'user', content: prompt }],
-    temperature: 0.3,
+    temperature: 0.5,
   });
 
   return response.choices[0].message.content || '';
@@ -86,8 +222,8 @@ function getAllMdFiles(dirPath: string): string[] {
 async function syncHermesAgentDocs(): Promise<void> {
   const cacheDir = join(process.cwd(), 'cache');
   const repoDir = join(cacheDir, 'hermes-agent');
-  const sourceDocsDir = join(repoDir, 'website', 'docs');
-  const targetDocsDir = join(process.cwd(), 'docs');
+  const sourceDocsDir = join(repoDir, 'website');
+  const targetDocsDir = process.cwd();
 
   logger.log('Starting Hermes Agent docs sync...');
 
@@ -112,8 +248,15 @@ async function syncHermesAgentDocs(): Promise<void> {
     process.exit(1);
   }
 
-  logger.log(`Copying docs from ${sourceDocsDir} to ${targetDocsDir}...`);
-  cpSync(sourceDocsDir, targetDocsDir, { force: true, recursive: true });
+  ['docs', 'src', 'scripts'].forEach(dir => {
+    const sourceDir = join(sourceDocsDir, dir);
+    const targetDir = join(targetDocsDir, dir);
+    if (existsSync(sourceDir)) {
+      if (dir === 'docs') rmSync(targetDir, { force: true, recursive: true });
+      logger.log(`Copying ${sourceDir} to ${targetDir}...`);
+      cpSync(sourceDir, targetDir, { force: true, recursive: true });
+    }
+  });
   logger.log(color.green('Docs sync completed!'));
 }
 

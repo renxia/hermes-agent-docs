@@ -7,13 +7,13 @@ from collections import Counter
 
 import yaml
 
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOCAL_SKILL_DIRS = [
     ("skills", "built-in"),
     ("optional-skills", "optional"),
 ]
 INDEX_CACHE_DIR = os.path.join(REPO_ROOT, "skills", "index-cache")
-OUTPUT = os.path.join(REPO_ROOT, "src", "data", "skills.json")
+OUTPUT = os.path.join(REPO_ROOT, "website", "src", "data", "skills.json")
 
 CATEGORY_LABELS = {
     "apple": "Apple",
