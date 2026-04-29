@@ -15,7 +15,7 @@
     "typecheck": "tsc",
     "lint:diagrams": "ascii-guard lint docs",
     "b": "bun scripts/build.ts",
-    "translate": "bun run scripts/translate-docs.ts",
+    "translate": "bun run scripts/translate.ts",
     "extract-skills": "bun run scripts/extract-skills.ts"
   },
   "dependencies": {

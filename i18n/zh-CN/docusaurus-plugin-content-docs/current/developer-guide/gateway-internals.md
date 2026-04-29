@@ -6,7 +6,7 @@ description: "消息网关如何启动、授权用户、路由会话以及传递
 
 # 网关内部机制
 
-消息网关是一个长期运行的进程，通过统一的架构将 Hermes 连接到 14 多个外部消息平台。
+消息网关是一个长期运行的进程，通过统一的架构将 Hermes 连接到 14 个以上的外部消息平台。
 
 ## 关键文件
 
@@ -16,11 +16,11 @@ description: "消息网关如何启动、授权用户、路由会话以及传递
 | `gateway/session.py` | `SessionStore` — 对话持久化和会话密钥构建 |
 | `gateway/delivery.py` | 向目标平台/频道发送出站消息 |
 | `gateway/pairing.py` | 用于用户授权的私信配对流程 |
-| `gateway/channel_directory.py` | 将聊天 ID 映射为人类可读的名称，用于定时任务消息传递 |
+| `gateway/channel_directory.py` | 将聊天 ID 映射为人类可读的名称，用于定时任务传递 |
 | `gateway/hooks.py` | 钩子发现、加载和生命周期事件分发 |
 | `gateway/mirror.py` | 跨会话消息镜像，用于 `send_message` |
 | `gateway/status.py` | 针对配置文件范围的网关实例的令牌锁定管理 |
-| `gateway/builtin_hooks/` | 始终注册的钩子（例如 BOOT.md 系统提示钩子） |
+| `gateway/builtin_hooks/` | 始终注册的钩子的扩展点（未随附任何钩子） |
 | `gateway/platforms/` | 平台适配器（每个消息平台一个） |
 
 ## 架构概览
@@ -59,10 +59,10 @@ description: "消息网关如何启动、授权用户、路由会话以及传递
    - 如果是 `/approve`、`/deny`、`/stop` → 绕过守卫（内联分发）
 3. **GatewayRunner._handle_message()** 接收事件：
    - 通过 `_session_key_for_source()` 解析会话键（格式：`agent:main:{platform}:{chat_type}:{chat_id}`）
-   - 检查授权（见下文“授权”部分）
+   - 检查授权（参见下文“授权”部分）
    - 检查是否为斜杠命令 → 分发至命令处理器
    - 检查智能体是否已在运行 → 拦截 `/stop`、`/status` 等命令
-   - 否则 → 创建 `AIAgent` 实例并运行对话
+   - 否则 → 创建 `AIAgent` 实例并启动对话
 4. **响应**通过平台适配器发送回去
 
 ### 会话键格式
@@ -75,51 +75,51 @@ agent:main:{platform}:{chat_type}:{chat_id}
 
 例如：`agent:main:telegram:private:123456789`
 
-支持线程的平台（Telegram 论坛主题、Discord 线程、Slack 线程）可能会在 `chat_id` 部分包含线程 ID。**切勿手动构造会话键** —— 始终使用 `gateway/session.py` 中的 `build_session_key()`。
+支持线程的平台（Telegram 论坛主题、Discord 线程、Slack 线程）可能会在 chat_id 部分包含线程 ID。**切勿手动构造会话键** —— 始终使用 `gateway/session.py` 中的 `build_session_key()` 函数。
 
 ### 两级消息守卫
 
 当智能体处于活跃运行状态时，传入的消息会经过两个连续的守卫：
 
-1. **第 1 级 — 基础适配器**（`gateway/platforms/base.py`）：检查 `_active_sessions`。如果会话处于活跃状态，则将消息加入 `_pending_messages` 队列，并设置中断事件。此守卫会在消息到达网关运行器*之前*捕获它们。
+1. **第1级 — 基础适配器**（`gateway/platforms/base.py`）：检查 `_active_sessions`。如果会话处于活跃状态，则将消息加入 `_pending_messages` 队列，并设置中断事件。这能在消息到达网关运行器*之前*捕获它们。
 
-2. **第 2 级 — 网关运行器**（`gateway/run.py`）：检查 `_running_agents`。拦截特定命令（`/stop`、`/new`、`/queue`、`/status`、`/approve`、`/deny`）并正确路由。其他所有命令都会触发 `running_agent.interrupt()`。
+2. **第2级 — 网关运行器**（`gateway/run.py`）：检查 `_running_agents`。拦截特定命令（`/stop`、`/new`、`/queue`、`/status`、`/approve`、`/deny`）并正确路由。其他所有消息都会触发 `running_agent.interrupt()`。
 
 必须在智能体被阻塞时仍能到达运行器的命令（如 `/approve`）通过 `await self._message_handler(event)` **内联**分发 —— 它们绕过后台任务系统以避免竞态条件。
 
 ## 授权
 
-网关使用多层授权检查，按顺序评估：
+网关采用多层授权检查，按顺序评估：
 
-1. **每平台允许所有用户标志**（例如 `TELEGRAM_ALLOW_ALL_USERS`）—— 如果设置，则该平台所有用户均被授权
-2. **平台允许列表**（例如 `TELEGRAM_ALLOWED_USERS`）—— 逗号分隔的用户 ID
+1. **每平台全员允许标志**（例如 `TELEGRAM_ALLOW_ALL_USERS`）—— 如果设置，则该平台所有用户均被授权
+2. **平台白名单**（例如 `TELEGRAM_ALLOWED_USERS`）—— 逗号分隔的用户 ID 列表
 3. **私信配对** —— 已认证用户可通过配对码配对新用户
-4. **全局允许所有用户**（`GATEWAY_ALLOW_ALL_USERS`）—— 如果设置，则所有平台的所有用户均被授权
+4. **全局全员允许**（`GATEWAY_ALLOW_ALL_USERS`）—— 如果设置，则所有平台的所有用户均被授权
 5. **默认：拒绝** —— 未授权用户将被拒绝
 
 ### 私信配对流程
 
 ```text
 管理员: /pair
-网关: "配对码：ABC123。请分享给用户。"
+网关: "配对码：ABC123。请分享给目标用户。"
 新用户: ABC123
-网关: "配对成功！您现在已被授权。"
+网关: "配对成功！您现在已获得授权。"
 ```
 
-配对状态持久化保存在 `gateway/pairing.py` 中，重启后仍有效。
+配对状态持久化保存在 `gateway/pairing.py` 中，重启后依然有效。
 
 ## 斜杠命令分发
 
-网关中所有斜杠命令均通过同一解析管道：
+网关中所有斜杠命令都通过相同的解析管道：
 
 1. `hermes_cli/commands.py` 中的 `resolve_command()` 将输入映射到规范名称（处理别名、前缀匹配）
 2. 检查规范名称是否属于 `GATEWAY_KNOWN_COMMANDS`
 3. `_handle_message()` 中的处理器根据规范名称进行分发
-4. 某些命令受配置限制（`CommandDef` 上的 `gateway_config_gate`）
+4. 某些命令受配置控制（`CommandDef` 上的 `gateway_config_gate`）
 
 ### 运行中智能体守卫
 
-当智能体正在处理时，必须**不执行**的命令会被提前拒绝：
+当智能体正在处理时，绝不允许执行的命令会被提前拒绝：
 
 ```python
 if _quick_key in self._running_agents:
@@ -135,32 +135,32 @@ if _quick_key in self._running_agents:
 
 | 来源 | 提供内容 |
 |------|----------|
-| `~/.hermes/.env` | API 密钥、机器人令牌、平台凭据 |
+| `~/.hermes/.env` | API 密钥、机器人令牌、平台凭证 |
 | `~/.hermes/config.yaml` | 模型设置、工具配置、显示选项 |
 | 环境变量 | 覆盖上述任意配置 |
 
-与 CLI（使用带硬编码默认值的 `load_cli_config()`）不同，网关直接通过 YAML 加载器读取 `config.yaml`。这意味着存在于 CLI 默认字典但不存在于用户配置文件中的配置键，在 CLI 和网关之间可能表现不同。
+与 CLI（使用带硬编码默认值的 `load_cli_config()`）不同，网关直接通过 YAML 加载器读取 `config.yaml`。这意味着存在于 CLI 默认字典但不存在于用户配置文件中的配置项，在 CLI 和网关之间可能表现不同。
 
 ## 平台适配器
 
-每个消息平台在 `gateway/platforms/` 中都有一个适配器：
+每个消息平台在 `gateway/platforms/` 下都有一个适配器：
 
 ```text
 gateway/platforms/
-├── base.py              # BaseAdapter — 所有平台共享逻辑
+├── base.py              # BaseAdapter — 所有平台共享的逻辑
 ├── telegram.py          # Telegram Bot API（长轮询或 webhook）
 ├── discord.py           # 通过 discord.py 的 Discord 机器人
 ├── slack.py             # Slack Socket Mode
 ├── whatsapp.py          # WhatsApp Business Cloud API
 ├── signal.py            # 通过 signal-cli REST API 的 Signal
-├── matrix.py            # 通过 mautrix 的 Matrix（可选 E2EE）
+├── matrix.py            # 通过 mautrix 的 Matrix（可选端到端加密）
 ├── mattermost.py        # Mattermost WebSocket API
 ├── email.py             # 通过 IMAP/SMTP 的电子邮件
 ├── sms.py               # 通过 Twilio 的短信
-├── dingtalk.py          # 钉钉 WebSocket
-├── feishu.py            # 飞书/Lark WebSocket 或 webhook
-├── wecom.py             # 企业微信回调
-├── weixin.py            # 微信（个人微信）通过 iLink Bot API
+├── dingtalk.py          # DingTalk WebSocket
+├── feishu.py            # Feishu/Lark WebSocket 或 webhook
+├── wecom.py             # WeCom（企业微信）回调
+├── weixin.py            # Weixin（个人微信）通过 iLink Bot API
 ├── bluebubbles.py       # 通过 BlueBubbles macOS 服务器的 Apple iMessage
 ├── qqbot.py             # 通过官方 API v2 的 QQ 机器人（腾讯 QQ）
 ├── webhook.py           # 入站/出站 webhook 适配器
@@ -175,18 +175,18 @@ gateway/platforms/
 
 ### 令牌锁
 
-使用唯一凭据连接的适配器会在 `connect()` 中调用 `acquire_scoped_lock()`，在 `disconnect()` 中调用 `release_scoped_lock()`。这防止两个配置文件同时使用同一机器人令牌。
+使用唯一凭证连接的适配器会在 `connect()` 中调用 `acquire_scoped_lock()`，在 `disconnect()` 中调用 `release_scoped_lock()`。这防止两个配置文件同时使用同一个机器人令牌。
 
 ## 投递路径
 
 出站投递（`gateway/delivery.py`）处理：
 
-- **直接回复** — 将响应发送回原始聊天
-- **主频道投递** — 将定时任务输出和后台结果路由到配置的主频道
-- **显式目标投递** — `send_message` 工具指定 `telegram:-1001234567890`
-- **跨平台投递** — 投递到与原始消息不同的平台
+- **直接回复** —— 将响应发送回原始聊天
+- **主页频道投递** —— 将定时任务输出和后台结果路由到配置的主页频道
+- **显式目标投递** —— `send_message` 工具指定 `telegram:-1001234567890`
+- **跨平台投递** —— 投递到与原始消息不同的平台
 
-定时任务投递**不会**镜像到网关会话历史中 —— 它们仅存在于自己的定时任务会话中。这是为避免消息交替违规而有意的设计选择。
+定时任务投递**不会**镜像到网关会话历史中 —— 它们仅存在于各自的定时任务会话中。这是一个刻意的设计选择，以避免消息交替违规。
 
 ## 钩子
 
@@ -199,7 +199,7 @@ gateway/platforms/
 | `gateway:startup` | 网关进程启动时 |
 | `session:start` | 新对话会话开始时 |
 | `session:end` | 会话完成或超时时 |
-| `session:reset` | 用户通过 `/new` 重置会话时 |
+| `session:reset` | 用户使用 `/new` 重置会话时 |
 | `agent:start` | 智能体开始处理消息时 |
 | `agent:step` | 智能体完成一次工具调用迭代时 |
 | `agent:end` | 智能体完成并返回响应时 |
@@ -228,27 +228,27 @@ AIAgent._invoke_tool()
 当会话被重置、恢复或过期时：
 1. 内置记忆刷新到磁盘
 2. 触发记忆提供者的 `on_session_end()` 钩子
-3. 临时的 `AIAgent` 运行仅包含记忆的对话轮次
-4. 随后上下文被丢弃或归档
+3. 一个临时的 `AIAgent` 运行仅包含记忆的对话轮次
+4. 然后上下文被丢弃或归档
 
 ## 后台维护
 
-网关在消息处理的同时会定期执行维护任务：
+网关在处理消息的同时会定期执行维护任务：
 
-- **定时任务触发** — 检查作业计划并触发到期的作业
-- **会话过期** — 在超时后清理废弃的会话
+- **定时任务调度** — 检查作业计划并触发到期的作业
+- **会话过期处理** — 在超时后清理被遗弃的会话
 - **内存刷新** — 在会话过期前主动刷新内存
 - **缓存刷新** — 刷新模型列表和提供商状态
 
 ## 进程管理
 
-网关作为长期运行的进程，可通过以下方式管理：
+网关作为一个长期运行的进程，可通过以下方式管理：
 
 - `hermes gateway start` / `hermes gateway stop` — 手动控制
 - `systemctl`（Linux）或 `launchctl`（macOS）— 服务管理
-- `~/.hermes/gateway.pid` 处的 PID 文件 — 基于配置文件的进程跟踪
+- `~/.hermes/gateway.pid` 处的 PID 文件 — 按配置文件隔离的进程跟踪
 
-**基于配置文件 vs 全局**：`start_gateway()` 使用基于配置文件的 PID 文件。`hermes gateway stop` 仅停止当前配置文件的网关。`hermes gateway stop --all` 使用全局的 `ps aux` 扫描来终止所有网关进程（在更新时使用）。
+**配置文件隔离 vs 全局**：`start_gateway()` 使用按配置文件隔离的 PID 文件。`hermes gateway stop` 仅停止当前配置文件的网关。`hermes gateway stop --all` 使用全局的 `ps aux` 扫描来终止所有网关进程（在更新时使用）。
 
 ## 相关文档
 

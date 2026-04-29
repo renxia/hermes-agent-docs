@@ -14,9 +14,9 @@ env.config();
 const program = new Command();
 const logger = new NLogger('T');
 // 用于记录已翻译的文件，避免重复翻译
-const translateRecordFile = join(process.cwd(), './translate-records.json');
+const RECORD_FILE = join(process.cwd(), './translate-records.json');
 
-const translateRecord: { [filepath: string]: { srcMd5: string; } & { [targetpath: string]: string } } = existsSync(translateRecordFile) ? JSON.parse(readFileSync(translateRecordFile, 'utf-8')) : {};
+const translateRecords: { [filepath: string]: { srcMd5: string; } & { [targetpath: string]: string } } = existsSync(RECORD_FILE) ? JSON.parse(readFileSync(RECORD_FILE, 'utf-8')) : {};
 
 program
   .name('translate-docs')
@@ -26,9 +26,9 @@ program
   .option('-s, --source-lang <lang>', 'Source language', 'en')
   .option('-t, --target-lang <lang>', 'Target language', 'zh-CN')
   .option('--timeout <ms>', 'Timeout in milliseconds. default: 300_000')
-  .option('-c, --concurrency <thread>', 'Concurrency. default: 1', '1')
+  .option('-c, --concurrency <thread>', 'Concurrency. default: 1', process.env.TRANSLATE_CONCURRENCY || '1')
   .option('-u, --base-url <url>', 'LLM base URL', process.env.OPENAI_BASE_URL || 'http://localhost:11434/v1')
-  .option('-m, --model <model>', 'LLM model', process.env.OPENAI_MODEL || 'qwen3.5:latest')
+  .option('-m, --model <model>', 'LLM model', process.env.TRANSLATE_OPENAI_MODEL || 'qwen3.5:latest')
   .option('-k, --api-key <key>', 'API key', process.env.OPENAI_API_KEY || '')
   .option('-B, --build', 'Build docs after translation', false)
   .option('-S, --sync', 'Sync docs from hermes-agent repository before translating', false);
@@ -248,7 +248,7 @@ async function syncHermesAgentDocs(): Promise<void> {
     process.exit(1);
   }
 
-  ['docs', 'src', 'scripts'].forEach(dir => {
+  ['docs', 'src', 'scripts', 'sidebar.ts'].forEach(dir => {
     const sourceDir = join(sourceDocsDir, dir);
     const targetDir = join(targetDocsDir, dir);
     if (existsSync(sourceDir)) {
@@ -260,51 +260,49 @@ async function syncHermesAgentDocs(): Promise<void> {
   logger.log(color.green('Docs sync completed!'));
 }
 
-async function translateFile(filePath: string, sourceLang: string, targetLang: string, idx: number, total: number) {
+async function translateFile(srcFile: string, sourceLang: string, targetLang: string, idx: number, total: number) {
   // Calculate relative path from docs/
-  const relativePath = relative('docs', filePath);
-  const targetPath = join('i18n', targetLang, 'docusaurus-plugin-content-docs', 'current', relativePath);
+  const relativePath = relative('docs', srcFile);
+  const destFile = join('i18n', targetLang, 'docusaurus-plugin-content-docs', 'current', relativePath);
   const startTime = Date.now();
-  const content = readFileSync(filePath, 'utf-8');
+  const content = readFileSync(srcFile, 'utf-8');
 
   const srcMd5 = md5(content);
-  const fileCacheKey = filePath.replace(process.cwd(), '').replace(/\\/g, '/');
+  const fileCacheKey = srcFile.replace(process.cwd(), '').replace(/\\/g, '/');
 
   // 源文件发生变更则更新 srcMd5，并删除已翻译的记录
-  if (translateRecord[fileCacheKey]?.srcMd5 !== srcMd5) translateRecord[fileCacheKey] = { srcMd5 };
+  if (translateRecords[fileCacheKey]?.srcMd5 !== srcMd5) translateRecords[fileCacheKey] = { srcMd5 };
 
   // 目标文件已存在，根据 translateRecord 判断是否需要更新
-  if (existsSync(targetPath) && translateRecord[fileCacheKey]?.srcMd5 === srcMd5 && translateRecord[fileCacheKey][targetLang]) {
-    // console.log(`- [${idx}/${total}]${color.gray(targetPath)} already exists, skipping...`);
-    console.log(`- [${idx}/${total}][${color.gray(filePath)} -> ${color.cyan(targetLang)}] already exists, skipping...`);
+  if (existsSync(destFile) && translateRecords[fileCacheKey]?.srcMd5 === srcMd5 && translateRecords[fileCacheKey][targetLang]) {
+    // console.log(`- [${idx}/${total}]${color.gray(destFile)} already exists, skipping...`);
+    console.log(`- [${idx}/${total}][${color.gray(srcFile)} -> ${color.cyan(targetLang)}] already exists, skipping...`);
     return;
   }
 
 
-  console.log(`- [${idx}/${total}] Translating ${color.cyan(filePath)}, [content length: ${color.yellow(content.length)}] ...`);
+  console.log(`- [${idx}/${total}] Translating ${color.cyan(srcFile)} (content length: ${color.yellow(content.length)} chars) ...`);
   let translatedContent = await translateText(content, sourceLang, targetLang);
 
   if (!translatedContent) {
-    console.log(color.red(`- [${idx}/${total}] Translating ${color.cyan(filePath)} failed!`));
+    console.log(color.red(`- [${idx}/${total}] Translating ${color.cyan(srcFile)} failed!`));
     return;
   }
 
   // Ensure directory exists
-  const targetDir = dirname(targetPath);
-  if (!existsSync(targetDir)) {
-    mkdirSync(targetDir, { recursive: true });
-  }
+  const targetDir = dirname(destFile);
+  if (!existsSync(targetDir)) mkdirSync(targetDir, { recursive: true });
 
   // 如果是 json 文件，则解析为对象，然后再序列化为 json 字符串
-  if (extname(filePath) === '.json') {
+  if (extname(srcFile) === '.json') {
     const json = JSON.parse(translatedContent.trim().replace(/^```json/, '').replace(/```$/, '').trim());
     translatedContent = JSON.stringify(json, null, 2);
   }
 
-  writeFileSync(targetPath, translatedContent, 'utf-8');
-  translateRecord[fileCacheKey][targetLang] = md5(translatedContent);
-  writeFileSync(translateRecordFile, JSON.stringify(translateRecord, null, 2), 'utf-8');
-  console.log(`  -> Translated to ${color.green(targetPath)}. Time Cost: ${color.yellow(Date.now() - startTime)}ms`);
+  writeFileSync(destFile, translatedContent, 'utf-8');
+  translateRecords[fileCacheKey][targetLang] = md5(translatedContent);
+  writeFileSync(RECORD_FILE, JSON.stringify(translateRecords, null, 2), 'utf-8');
+  console.log(`  -> Translated to ${color.green(destFile)}. Time Cost: ${color.yellow(Date.now() - startTime)}ms`);
 }
 
 async function main() {
@@ -340,7 +338,7 @@ async function main() {
   const total = filesToTranslate.length;
 
   const tasks = filesToTranslate.map(file => () => translateFile(file, sourceLang, targetLang, ++current, total).catch(error => logger.error(`Error translating ${file}:`, error)));
-  await concurrency(tasks, Number(process.env.TRANSLATE_CONCURRENCY || threads));
+  await concurrency(tasks, Number(threads));
 
   logger.log(color.greenBright('Translation completed!'));
 

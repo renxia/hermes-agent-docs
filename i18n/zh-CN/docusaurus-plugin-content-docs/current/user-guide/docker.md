@@ -1,21 +1,21 @@
 ---
 sidebar_position: 7
 title: "Docker"
-description: "在 Docker 中运行 Hermes 智能体，以及将 Docker 用作终端后端"
+description: "在 Docker 中运行 Hermes 智能体，并使用 Docker 作为终端后端"
 ---
 
 # Hermes 智能体 — Docker
 
 Docker 与 Hermes 智能体有两种不同的交互方式：
 
-1. **在 Docker 中运行 Hermes** —— 智能体本身运行在容器内（本页面的重点）
-2. **Docker 作为终端后端** —— 智能体运行在主机上，但在 Docker 沙箱中执行命令（参见 [配置 → terminal.backend](./configuration.md)）
+1. **在 Docker 中运行 Hermes** — 智能体本身运行在一个容器内（本页面的主要关注点）
+2. **Docker 作为终端后端** — 智能体运行在宿主机上，但在 Docker 沙箱中执行命令（参见 [配置 → terminal.backend](./configuration.md)）
 
-本文档介绍第一种方式。容器将所有用户数据（配置、API 密钥、会话、技能、记忆）存储在一个从宿主机挂载的目录 `/opt/data` 中。镜像本身是状态无关的，可以通过拉取新版本来升级，而不会丢失任何配置。
+本页面介绍第一种方式。容器将所有用户数据（配置、API 密钥、会话、技能、记忆）存储在宿主机挂载到 `/opt/data` 的单个目录中。镜像本身是无状态的，可以通过拉取新版本进行升级而不会丢失任何配置。
 
 ## 快速开始
 
-如果你是第一次运行 Hermes 智能体，请在宿主机上创建一个数据目录，并交互式地启动容器以运行设置向导：
+如果您是首次运行 Hermes 智能体，请在宿主机上创建一个数据目录，并以交互方式启动容器以运行设置向导：
 
 ```sh
 mkdir -p ~/.hermes
@@ -24,11 +24,11 @@ docker run -it --rm \
   nousresearch/hermes-agent setup
 ```
 
-这将进入设置向导，它会提示你输入 API 密钥并将其写入 `~/.hermes/.env`。只需操作一次。强烈建议此时为网关配置一个聊天系统以支持其正常工作。
+这将使您进入设置向导，向导会提示您输入 API 密钥并将其写入 `~/.hermes/.env`。您只需执行此操作一次。强烈建议此时为网关设置一个聊天系统以使其正常工作。
 
 ## 以网关模式运行
 
-配置完成后，以后台模式运行容器作为持久化网关（Telegram、Discord、Slack、WhatsApp 等）：
+配置完成后，将容器作为持久化网关（Telegram、Discord、Slack、WhatsApp 等）在后台运行：
 
 ```sh
 docker run -d \
@@ -39,15 +39,15 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-端口 8642 暴露了网关的 [OpenAI 兼容 API 服务器](./api-server.md) 和健康检查端点。如果你只使用聊天平台（Telegram、Discord 等），这是可选的；但如果你想使用仪表板或外部工具访问网关，则是必需的。
+端口 8642 暴露了网关的 [OpenAI 兼容 API 服务器](./api-server.md) 和健康检查端点。如果你仅使用聊天平台（如 Telegram、Discord 等），则此端口是可选的；但如果你希望仪表板或外部工具能够访问网关，则必须开放该端口。
 
-在互联网-facing机器上打开端口存在安全风险。除非你了解相关风险，否则不应这样做。
+在互联网可访问的机器上开放任何端口都存在安全风险。除非你了解相关风险，否则不应这样做。
 
 ## 运行仪表板
 
 内置的 Web 仪表板可以作为独立容器与网关并行运行。
 
-要以独立容器运行仪表板，请将其指向网关的健康检查端点，以便跨容器检测网关状态：
+要将仪表板作为独立容器运行，请将其指向网关的健康检查端点，以便它能够在不同容器之间检测网关状态：
 
 ```sh
 docker run -d \
@@ -59,18 +59,18 @@ docker run -d \
   nousresearch/hermes-agent dashboard
 ```
 
-将 `$HOST_IP` 替换为运行网关容器的机器 IP 地址（例如 `192.168.1.100`），或者如果使用 Docker 网络共享网络，则使用容器主机名（参见下面的 [Docker Compose 示例](#docker-compose-example)）。
+将 `$HOST_IP` 替换为运行网关容器的机器 IP 地址（例如 `192.168.1.100`），或者如果两个容器共享同一网络，则可以使用 Docker 网络主机名（参见下面的 [Compose 示例](#docker-compose-example)）。
 
 | 环境变量 | 描述 | 默认值 |
 |---------------------|-------------|---------|
-| `GATEWAY_HEALTH_URL` | 网关 API 服务器的基础 URL，例如 `http://gateway:8642` | *(未设置 — 仅本地 PID 检查)* |
+| `GATEWAY_HEALTH_URL` | 网关 API 服务器的基础 URL，例如 `http://gateway:8642` | *（未设置 — 仅本地 PID 检查）* |
 | `GATEWAY_HEALTH_TIMEOUT` | 健康探测超时时间（秒） | `3` |
 
-如果没有设置 `GATEWAY_HEALTH_URL`，仪表板会回退到本地进程检测 —— 这仅在网关与仪表板运行在同一容器或同一主机上时有效。
+如果没有设置 `GATEWAY_HEALTH_URL`，仪表板将回退到本地进程检测 — 这仅在网关运行于同一容器或同一主机上时才有效。
 
 ## 交互式运行（CLI 聊天）
 
-要打开一个针对正在运行的数据目录的交互式聊天会话：
+要针对正在运行的数据目录打开交互式聊天会话：
 
 ```sh
 docker run -it --rm \
@@ -78,7 +78,7 @@ docker run -it --rm \
   nousresearch/hermes-agent
 ```
 
-或者，如果你已经通过 Docker Desktop 等方式在运行的容器中打开了终端，只需运行：
+或者，如果你已经通过（例如 Docker Desktop）在运行的容器中打开了终端，只需运行：
 
 ```sh
 /opt/hermes/.venv/bin/hermes
@@ -86,7 +86,7 @@ docker run -it --rm \
 
 ## 持久化卷
 
-`/opt/data` 卷是所有 Hermes 状态的单一真实来源。它映射到宿主机的 `~/.hermes/` 目录，包含：
+`/opt/data` 卷是 Hermes 所有状态的单一事实来源。它映射到宿主机的 `~/.hermes/` 目录，并包含以下内容：
 
 | 路径 | 内容 |
 |------|----------|
@@ -95,19 +95,76 @@ docker run -it --rm \
 | `SOUL.md` | 智能体个性/身份 |
 | `sessions/` | 对话历史记录 |
 | `memories/` | 持久化记忆存储 |
-| `skills/` | 已安装的技能 |
-| `cron/` | 计划任务定义 |
+| `skills/` | 已安装技能 |
+| `cron/` | 定时任务定义 |
 | `hooks/` | 事件钩子 |
 | `logs/` | 运行时日志 |
 | `skins/` | 自定义 CLI 皮肤 |
 
 :::warning
-切勿同时将两个 Hermes **网关** 容器指向同一个数据目录 —— 会话文件和记忆存储未设计用于并发写入。与网关并行运行仪表板容器是安全的，因为仪表板仅读取数据。
+切勿同时针对同一数据目录运行两个 Hermes **网关**容器 — 会话文件和记忆存储并非为并发写入访问而设计。与网关并行运行仪表板容器是安全的，因为仪表板仅读取数据。
 :::
+
+## 多配置文件支持
+
+Hermes 支持[多个配置文件](../reference/profile-commands.md) — 即独立的 `~/.hermes/` 目录，允许你从单个安装中运行多个独立的智能体（不同的 SOUL、技能、记忆、会话、凭据）。**在 Docker 下运行时，不建议使用 Hermes 内置的多配置文件功能。**
+
+相反，推荐的模式是**每个配置文件使用一个容器**，每个容器将其自己的宿主机目录绑定挂载为 `/opt/data`：
+
+```sh
+# 工作配置文件
+docker run -d \
+  --name hermes-work \
+  --restart unless-stopped \
+  -v ~/.hermes-work:/opt/data \
+  -p 8642:8642 \
+  nousresearch/hermes-agent gateway run
+
+# 个人配置文件
+docker run -d \
+  --name hermes-personal \
+  --restart unless-stopped \
+  -v ~/.hermes-personal:/opt/data \
+  -p 8643:8642 \
+  nousresearch/hermes-agent gateway run
+```
+
+为什么在 Docker 中推荐使用独立容器而非配置文件：
+
+- **隔离性** — 每个容器拥有独立的文件系统、进程表和资源限制。一个配置文件中的崩溃、依赖变更或失控会话不会影响其他配置文件。
+- **独立生命周期** — 可以分别升级、重启、暂停或回滚每个智能体（`docker restart hermes-work` 不会影响 `hermes-personal`）。
+- **清晰的端口和网络分离** — 每个网关绑定其自己的宿主机端口；不存在聊天平台或 API 服务器之间的交叉通信风险。
+- **更简单的思维模型** — 容器*就是*配置文件。备份、迁移和权限管理都遵循绑定挂载的目录，无需额外记忆 `--profile` 标志。
+- **避免并发写入风险** — 上述关于切勿针对同一数据目录运行两个网关的警告同样适用于单个容器内的多个配置文件。
+
+在 Docker Compose 中，只需为每个配置文件声明一个服务，并指定不同的 `container_name`、`volumes` 和 `ports`：
+
+```yaml
+services:
+  hermes-work:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-work
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"
+    volumes:
+      - ~/.hermes-work:/opt/data
+
+  hermes-personal:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-personal
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8643:8642"
+    volumes:
+      - ~/.hermes-personal:/opt/data
+```
 
 ## 环境变量转发
 
-API 密钥从容器内的 `/opt/data/.env` 读取。你也可以直接传递环境变量：
+API 密钥从容器内的 `/opt/data/.env` 文件中读取。你也可以直接传递环境变量：
 
 ```sh
 docker run -it --rm \
@@ -117,11 +174,11 @@ docker run -it --rm \
   nousresearch/hermes-agent
 ```
 
-直接使用 `-e` 标志会覆盖 `.env` 中的值。这在 CI/CD 或密钥管理器集成中很有用，当你不希望密钥保存在磁盘上时。
+直接的 `-e` 标志会覆盖 `.env` 中的值。这对于 CI/CD 或密钥管理器集成非常有用，可以避免将密钥存储在磁盘上。
 
 ## Docker Compose 示例
 
-对于同时部署网关和仪表板的持久化方案，`docker-compose.yaml` 非常方便：
+对于同时运行网关和仪表板的持久化部署，使用 `docker-compose.yaml` 非常方便：
 
 ```yaml
 services:
@@ -136,7 +193,7 @@ services:
       - ~/.hermes:/opt/data
     networks:
       - hermes-net
-    # 取消注释以下行以通过 .env 文件转发特定环境变量：
+    # 取消注释以转发特定环境变量，而不是使用 .env 文件：
     # environment:
     #   - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     #   - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -177,15 +234,15 @@ networks:
 
 ## 资源限制
 
-Hermes 容器需要中等资源。推荐最小值：
+Hermes 容器需要适度的资源。建议最低配置：
 
-| 资源 | 最小值 | 推荐值 |
+| 资源 | 最低要求 | 推荐配置 |
 |----------|---------|-------------|
 | 内存 | 1 GB | 2–4 GB |
-| CPU | 1 核心 | 2 核心 |
+| CPU | 1 核 | 2 核 |
 | 磁盘（数据卷） | 500 MB | 2+ GB（随会话/技能增长） |
 
-浏览器自动化（Playwright/Chromium）是最耗内存的功能。如果不需要浏览器工具，1 GB 足够。启用浏览器工具时，至少分配 2 GB。
+浏览器自动化（Playwright/Chromium）是最消耗内存的功能。如果你不需要浏览器工具，1 GB 内存足够。如果启用浏览器工具，请至少分配 2 GB 内存。
 
 在 Docker 中设置限制：
 
@@ -200,25 +257,25 @@ docker run -d \
 
 ## Dockerfile 的作用
 
-官方镜像是基于 `debian:13.4` 构建的，包含：
+官方镜像基于 `debian:13.4`，并包含：
 
-- Python 3 及所有 Hermes 依赖项（`pip install -e ".[all]"`）
+- 安装了所有 Hermes 依赖的 Python 3（`pip install -e ".[all]"`）
 - Node.js + npm（用于浏览器自动化和 WhatsApp 桥接）
-- Playwright 及 Chromium（`npx playwright install --with-deps chromium`）
-- ripgrep 和 ffmpeg 作为系统工具
-- WhatsApp 桥接脚本（`scripts/whatsapp-bridge/`）
+- 安装了 Chromium 的 Playwright（`npx playwright install --with-deps chromium`）
+- 系统工具 ripgrep 和 ffmpeg
+- WhatsApp 桥接（`scripts/whatsapp-bridge/`）
 
-入口脚本（`docker/entrypoint.sh`）会在首次运行时引导数据卷：
+入口点脚本（`docker/entrypoint.sh`）在首次运行时初始化数据卷：
 - 创建目录结构（`sessions/`、`memories/`、`skills/` 等）
-- 如果没有 `.env` 文件，则复制 `.env.example` → `.env`
-- 如果没有 `config.yaml`，则复制默认配置
-- 如果没有 `SOUL.md`，则复制默认人格文件
-- 使用基于清单的方式同步捆绑技能（保留用户修改）
-- 然后使用你传入的任何参数运行 `hermes`
+- 如果不存在 `.env` 文件，则复制 `.env.example` → `.env`
+- 如果缺少默认 `config.yaml`，则复制
+- 如果缺少默认 `SOUL.md`，则复制
+- 使用基于清单的方法同步捆绑技能（保留用户编辑）
+- 然后使用你传递的任何参数运行 `hermes`
 
 ## 升级
 
-拉取最新镜像并重建容器。你的数据目录保持不变。
+拉取最新镜像并重新创建容器。你的数据目录保持不变。
 
 ```sh
 docker pull nousresearch/hermes-agent:latest
@@ -237,31 +294,31 @@ docker compose pull
 docker compose up -d
 ```
 
-## 技能和凭据文件
+## 技能与凭据文件
 
-当使用 Docker 作为执行环境时（不是上述方法，而是当智能体在 Docker 沙箱中运行命令时），Hermes 会自动将技能目录（`~/.hermes/skills/`）以及技能声明的任何凭据文件作为只读卷绑定挂载到容器中。这意味着技能脚本、模板和引用在沙箱内立即可用，无需手动配置。
+当使用 Docker 作为执行环境时（不是上述方法，而是当智能体在 Docker 沙箱内运行命令时），Hermes 会自动将技能目录（`~/.hermes/skills/`）以及由技能声明的任何凭据文件以只读卷的形式绑定挂载到容器中。这意味着技能脚本、模板和引用在沙箱内无需手动配置即可使用。
 
-SSH 和 Modal 后端也采用相同的同步机制 —— 在每个命令执行前，技能和凭据文件会通过 rsync 或 Modal 挂载 API 上传。
+对于 SSH 和 Modal 后端，也会执行相同的同步操作——每次执行命令前，技能和凭据文件都会通过 rsync 或 Modal 挂载 API 上传。
 
 ## 故障排除
 
 ### 容器立即退出
 
 检查日志：`docker logs hermes`。常见原因：
-- 缺少或无效的 `.env` 文件 —— 首先交互式运行以完成设置
-- 如果暴露端口，可能存在端口冲突
+- 缺少或无效的 `.env` 文件 —— 请先以交互模式运行以完成设置
+- 如果运行时有暴露端口，则可能存在端口冲突
 
-### "Permission denied" 错误
+### “权限被拒绝”错误
 
-容器默认以 root 身份运行。如果你的宿主机 `~/.hermes/` 是由非 root 用户创建的，权限应该正常。如果出现错误，请确保数据目录可写：
+容器默认以 root 用户运行。如果您的主机 `~/.hermes/` 目录是由非 root 用户创建的，权限应该可以正常工作。如果出现错误，请确保数据目录可写：
 
 ```sh
 chmod -R 755 ~/.hermes
 ```
 
-### 浏览器工具不工作
+### 浏览器工具无法工作
 
-Playwright 需要共享内存。在你的 Docker run 命令中添加 `--shm-size=1g`：
+Playwright 需要共享内存。请在您的 Docker 运行命令中添加 `--shm-size=1g`：
 
 ```sh
 docker run -d \
@@ -271,15 +328,15 @@ docker run -d \
   nousresearch/hermes-agent gateway run
 ```
 
-### 网关在网络问题后无法重连
+### 网关在网络问题后无法重新连接
 
-`--restart unless-stopped` 标志可以处理大多数临时故障。如果网关卡住，重启容器：
+`--restart unless-stopped` 标志可处理大多数瞬时故障。如果网关卡住，请重启容器：
 
 ```sh
 docker restart hermes
 ```
 
-### 检查容器健康状态
+### 检查容器健康状况
 
 ```sh
 docker logs --tail 50 hermes          # 最近日志
