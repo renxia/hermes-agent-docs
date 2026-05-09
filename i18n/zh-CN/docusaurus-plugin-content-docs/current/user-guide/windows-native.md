@@ -1,0 +1,301 @@
+---
+title: "Windows（原生）指南 — 早期 Beta 版"
+description: "早期 BETA：在 Windows 10 / 11 上原生运行 Hermes 智能体 — 安装、功能矩阵、UTF-8 控制台、Git Bash、将网关作为计划任务运行、编辑器处理、PATH、卸载以及常见陷阱"
+sidebar_label: "Windows（原生）— Beta"
+sidebar_position: 3
+---
+
+# Windows（原生）指南 — 早期 Beta 版
+
+:::warning 早期 BETA
+原生 Windows 支持目前处于**早期 Beta 阶段**。它可以安装、运行，并通过我们的 Windows 陷阱检查，但尚未像 Linux/macOS/WSL2 路径那样经过大规模实际测试。请预期会遇到一些粗糙的边缘问题 — 尤其是在子进程处理、路径怪癖和非 ASCII 控制台输出方面。当遇到问题时，请附带复现步骤[提交问题](https://github.com/NousResearch/hermes-agent/issues)。如果您希望使用经过充分测试的设置，请改用 [WSL2 下的 Linux/macOS 安装程序](./windows-wsl-quickstart.md)。
+:::
+
+Hermes 可在 Windows 10 和 Windows 11 上原生运行 — 无需 WSL、无需 Cygwin、无需 Docker。本页面是深入指南：哪些功能可原生运行，哪些仅限 WSL，安装程序实际做了什么，以及您可能需要调整哪些特定于 Windows 的设置。
+
+如果您只是想安装，[主页](/) 或 [安装页面](../getting-started/installation#windows-native-powershell--early-beta) 上的一行命令就足够了。当遇到意外情况时，再回到这里查看。
+
+:::tip 想要使用 WSL 吗？
+如果您更喜欢真正的 POSIX 环境（例如用于仪表板的嵌入式终端、`fork` 语义、类 Linux 文件监视器等），请参阅 **[Windows (WSL2) 指南](./windows-wsl-quickstart.md)**。两者可以共存：原生数据存储在 `%LOCALAPPDATA%\hermes` 下，WSL 数据存储在 `~/.hermes` 下。
+:::
+
+## 快速安装
+
+打开 **PowerShell**（或 Windows 终端）并运行：
+
+```powershell
+irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1 | iex
+```
+
+无需管理员权限。安装程序会将文件安装到 `%LOCALAPPDATA%\hermes\` 并将 `hermes` 添加到您的**用户 PATH** — 安装完成后请打开一个新的终端。
+
+**安装程序选项**（需要使用脚本块形式传递参数）：
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1))) -NoVenv -SkipSetup -Branch main
+```
+
+| 参数 | 默认值 | 用途 |
+|---|---|---|
+| `-Branch` | `main` | 克隆特定分支（适用于测试 PR） |
+| `-NoVenv` | 关闭 | 跳过虚拟环境创建（高级 — 您需要自行管理 Python） |
+| `-SkipSetup` | 关闭 | 跳过安装后 `hermes setup` 向导 |
+| `-HermesHome` | `%LOCALAPPDATA%\hermes` | 覆盖数据目录 |
+| `-InstallDir` | `%LOCALAPPDATA%\hermes\hermes-agent` | 覆盖代码位置 |
+
+## 安装程序实际执行的操作
+
+从上到下，按顺序执行：
+
+1. **引导安装 `uv`** —— Astral 的快速 Python 管理器。安装到 `%USERPROFILE%\.local\bin`。
+2. 通过 `uv` **安装 Python 3.11**。无需预先安装 Python。
+3. **安装 Node.js 22**（如果可用则使用 winget，否则解压一个便携版 Node tarball 到 `%LOCALAPPDATA%\hermes\node`）。用于浏览器工具和 WhatsApp 桥接。
+4. **安装便携版 Git** —— 如果 `git` 已在 PATH 中，则安装程序直接使用它；否则，它会下载一个精简的、自包含的 **PortableGit**（约 45 MB，来自官方的 `git-for-windows` 发布版本）到 `%LOCALAPPDATA%\hermes\git`。无需管理员权限，不写入 Windows 安装程序注册表，也不会干扰计算机上的其他任何内容。
+5. **将仓库克隆**到 `%LOCALAPPDATA%\hermes\hermes-agent` 并在其中创建虚拟环境。
+6. **分层执行 `uv pip install`** —— 首先尝试 `.[all]`，如果 `git+https` 依赖项在速率受限的 GitHub 上失败，则逐步回退到更小的集合（`[messaging,dashboard,ext]` → `[messaging]` → `.`）。防止“单个依赖项失败导致安装回退到最低配置”的故障模式。
+7. **根据 `.env` 自动安装消息 SDK** —— 如果存在 `TELEGRAM_BOT_TOKEN` / `DISCORD_BOT_TOKEN` / `SLACK_BOT_TOKEN` / `SLACK_APP_TOKEN` / `WHATSAPP_ENABLED`，则运行 `python -m ensurepip --upgrade` 并调用针对性的 `pip install`，以确保每个平台的 SDK 实际可导入。
+8. **设置 `HERMES_GIT_BASH_PATH`** 为解析后的 `bash.exe` 路径，以便 Hermes 在新 shell 中能够确定性地找到它。
+9. **将 `%LOCALAPPDATA%\hermes\bin` 添加到用户 PATH** —— 在您打开新终端后，暴露 `hermes` 命令。
+10. **运行 `hermes setup`** —— 正常的首次运行向导（模型、提供商、工具集）。使用 `-SkipSetup` 跳过。
+
+## 功能矩阵
+
+除了仪表板中嵌入的终端窗格，其他所有功能都在 Windows 上原生运行。
+
+| 功能 | Windows 原生 | WSL2 |
+|---|---|---|
+| CLI (`hermes chat`、`hermes setup`、`hermes gateway`，……) | ✓ | ✓ |
+| 交互式 TUI (`hermes --tui`) | ✓ | ✓ |
+| 消息网关（Telegram、Discord、Slack、WhatsApp，15+ 个平台） | ✓ | ✓ |
+| Cron 调度器 | ✓ | ✓ |
+| 浏览器工具（通过 Node 的 Chromium） | ✓ | ✓ |
+| MCP 服务器（stdio 和 HTTP） | ✓ | ✓ |
+| 本地 Ollama / LM Studio / llama-server | ✓ | ✓（通过 WSL 网络） |
+| Web 仪表板（会话、作业、指标、配置） | ✓ | ✓ |
+| 仪表板 `/chat` 嵌入的终端窗格 | ✗（需要 POSIX PTY） | ✓ |
+| 登录时自动启动 | ✓（schtasks） | ✓（systemd） |
+
+仪表板的 `/chat` 标签页通过 POSIX PTY（`ptyprocess`）嵌入一个真实的终端。Windows 原生没有等效原语；Python 的 `pywinpty` / Windows ConPTY 可以工作，但需要单独实现 —— 视为未来工作。**仪表板的其余部分可以原生工作** —— 只有该标签页会显示“为此使用 WSL2”的横幅。
+
+## Hermes 如何在 Windows 上运行 shell 命令
+
+Hermes 的终端工具通过 **Git Bash** 运行命令，与 Claude Code 使用的策略相同。这绕过了 POSIX 与 Windows 之间的差距，而无需重写每个工具。
+
+`bash.exe` 的解析顺序：
+
+1. 如果设置了 `HERMES_GIT_BASH_PATH` 环境变量。
+2. `%LOCALAPPDATA%\hermes\git\usr\bin\bash.exe`（由安装程序管理的 PortableGit）。
+3. `%LOCALAPPDATA%\hermes\git\bin\bash.exe`（旧版 Git-for-Windows 布局）。
+4. 系统 Git-for-Windows 安装（`%ProgramFiles%\Git\bin\bash.exe` 等）。
+5. MSYS2、Cygwin 或 PATH 上的任何 `bash.exe` 作为最后手段。
+
+安装程序会显式设置 `HERMES_GIT_BASH_PATH`，因此新的 PowerShell 会话无需重新发现。如果您希望 Hermes 使用特定的 bash，可以覆盖它 —— 例如，您的系统 Git Bash 或通过符号链接托管在 WSL 中的 bash。
+
+**陷阱：** MinGit 的布局与完整的 Git-for-Windows 安装程序不同 —— bash 位于 `usr\bin\bash.exe`，而不是 `bin\bash.exe`。Hermes 会检查两者。如果您手动解压 MinGit zip 文件，请确保选择**非 busybox** 变体（`MinGit-*-64-bit.zip`，而不是 `MinGit-*-busybox*.zip`）—— busybox 构建版本提供的是 `ash` 而不是 `bash`，并且大多数 coreutils 都缺失。
+
+## Windows 上的 UTF-8 控制台
+
+Windows 上 Python 默认的 stdio 使用控制台的当前代码页（通常是 cp1252 或 cp437）。Hermes 的横幅、斜杠命令列表、工具 feed、Rich 面板和技能描述都包含 Unicode。如果不进行干预，任何内容都会因 `UnicodeEncodeError: 'charmap' codec can't encode character…` 而崩溃。
+
+修复方法在 `hermes_cli/stdio.py::configure_windows_stdio()` 中，在每个入口点（`cli.py::main`、`hermes_cli/main.py::main`、`gateway/run.py::main`）早期调用。它会：
+
+1. 通过 `kernel32.SetConsoleCP` / `SetConsoleOutputCP` 将控制台代码页切换为 CP_UTF8 (65001)。
+2. 使用 `errors='replace'` 将 `sys.stdout` / `sys.stderr` / `sys.stdin` 重新配置为 UTF-8。
+3. 设置 `PYTHONIOENCODING=utf-8` 和 `PYTHONUTF8=1`（通过 `setdefault`，因此用户的显式设置优先），以便子 Python 子进程继承 UTF-8。
+4. 如果既未设置 `EDITOR` 也未设置 `VISUAL`，则设置 `EDITOR=notepad`（请参阅下面的编辑器部分）。
+
+幂等操作。在非 Windows 系统上为空操作。
+
+**选择退出：** 在环境中设置 `HERMES_DISABLE_WINDOWS_UTF8=1` 可回退到传统的 cp1252 stdio 路径。适用于二分查找编码错误；在正常操作中不太可能是正确的设置。
+
+## 编辑器（`Ctrl-X Ctrl-E`、`/edit`）
+
+在 #21561 之前，在 Windows 上按下 `Ctrl-X Ctrl-E` 或输入 `/edit` 会静默地什么都不做。prompt_toolkit 有一个硬编码的 POSIX 绝对路径回退列表（`/usr/bin/nano`、`/usr/bin/pico`、`/usr/bin/vi`，……），在 Windows 上永远无法解析 —— 即使安装了完整的 Git for Windows。
+
+Hermes 的 Windows stdio 垫片现在默认设置 `EDITOR=notepad`。Notepad 随每个 Windows 安装一起提供，并可作为阻塞式编辑器工作 —— `subprocess.call(["notepad", file])` 会阻塞，直到窗口关闭。
+
+**用户覆盖仍然优先**（在 `setdefault` 之前检查）：
+
+| 编辑器 | PowerShell 命令 |
+|---|---|
+| VS Code | `$env:EDITOR = "code --wait"` |
+| Notepad++ | `$env:EDITOR = "'C:\Program Files\Notepad++\notepad++.exe' -multiInst -nosession"` |
+| Neovim | `$env:EDITOR = "nvim"` |
+| Helix | `$env:EDITOR = "hx"` |
+
+VS Code 上的 `--wait` 标志至关重要 —— 没有它，编辑器会立即返回，Hermes 会得到一个空缓冲区。
+
+在您的 PowerShell 配置文件中永久设置它：
+
+```powershell
+# 在 $PROFILE 中
+$env:EDITOR = "code --wait"
+```
+
+或在系统设置中将其设置为用户环境变量，以便每个新 shell 都采用它。
+
+## CLI 中用于换行的 `Ctrl+Enter`
+
+Windows Terminal 将 `Ctrl+Enter` 作为专用键序列传递。Hermes 将其绑定到“插入换行符”，以便您可以在 CLI 中编写多行提示，而无需回退到 `Esc` 然后 `Enter`。在 Windows Terminal、VS Code 集成终端以及任何支持 VT 转义序列的现代 Windows 控制台主机中均有效。
+
+在传统的 `cmd.exe` 控制台中，`Ctrl+Enter` 会折叠为普通的 `Enter` —— 请改用 `Esc Enter`，或升级到 Windows Terminal（它是免费的，并且在 Windows 11 上默认安装）。
+
+## 在 Windows 登录时运行网关
+
+在 Windows 上，`hermes gateway install` 使用**计划任务**，并回退到启动文件夹 —— 无需管理员权限。
+
+### 安装
+
+```powershell
+hermes gateway install
+```
+
+幕后发生的事情：
+
+1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN HermesGateway` —— 注册一个在您登录时以标准（非提升）权限运行的任务。无需 UAC 提示。
+2. 如果 schtasks 被组策略阻止，则回退到在 `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` 中写入一个 `start /min cmd.exe /d /c <wrapper>` 快捷方式。效果相同，但略显粗糙。
+3. 通过 `pythonw.exe` **分离方式启动网关** —— 而不是 `python.exe`。`pythonw.exe` 没有附加控制台，这使其免受来自同级进程的 `CTRL_C_EVENT` 广播的影响（这是一个真实的问题，当您 Ctrl+C 终止同一进程组中的任何内容时，它曾经会杀死网关）。
+
+启动时使用的标志：`DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB`。
+
+### 管理
+
+```powershell
+hermes gateway status      # 合并视图：schtasks + 启动文件夹 + 运行中的 PID
+hermes gateway start       # 立即启动计划任务
+hermes gateway stop        # 优雅的 SIGTERM 等效操作（通过 psutil 的 TerminateProcess）
+hermes gateway restart
+hermes gateway uninstall   # 删除 schtasks 条目、启动快捷方式、pid 文件
+```
+
+`hermes gateway status` 是幂等的 —— 连续调用它一千次也永远不会意外杀死网关。（在 PR #21561 之前，它会静默地杀死网关，通过 `os.kill(pid, 0)` 在 C 级别与 `CTRL_C_EVENT` 冲突 —— 如果您关心这个故事，请参阅下面的“进程管理内部机制”部分。）
+
+### 为什么不使用 Windows 服务？
+
+服务需要管理员权限才能安装，并将网关的生命周期绑定到机器启动，而不是用户登录。典型的 Hermes 用户希望：登录 → 网关可用，注销 → 网关消失。计划任务正是这样做的，无需提升权限。如果您确实想要一个服务，请手动使用 `nssm` 或 `sc create` —— 但您可能不需要。
+
+## 数据布局
+
+| 路径 | 内容 |
+|---|---|
+| `%LOCALAPPDATA%\hermes\hermes-agent\` | Git 检出 + venv。可安全执行 `Remove-Item -Recurse` 并重新安装。 |
+| `%LOCALAPPDATA%\hermes\git\` | PortableGit（仅当安装程序已配置时）。 |
+| `%LOCALAPPDATA%\hermes\node\` | Portable Node.js（仅当安装程序已配置时）。 |
+| `%LOCALAPPDATA%\hermes\bin\` | `hermes.cmd` 包装脚本，已添加至用户 PATH。 |
+| `%USERPROFILE%\.hermes\` | 你的配置、认证信息、技能、会话、日志。**重装后仍保留。** |
+
+这种分离是故意的：`%LOCALAPPDATA%\hermes` 是可丢弃的基础设施（你可以将其删除，一行命令即可恢复）。`%USERPROFILE%\.hermes` 是你的数据——配置、记忆、技能、会话历史——其结构与 Linux 安装完全一致。在不同机器间同步此目录，你的 Hermes 就能随身携带。
+
+**覆盖 `HERMES_HOME`：** 设置环境变量以指向其他数据目录。其行为与 Linux 上相同。
+
+## 浏览器工具
+
+浏览器工具使用 `agent-browser`（一个 Node 辅助程序）驱动 Chromium。在 Windows 上：
+
+- 安装程序通过 npm 将 `agent-browser` 添加到 PATH。
+- `shutil.which("agent-browser", path=...)` 会自动识别 `.cmd` 包装脚本——`CreateProcessW` 无法执行无扩展名的 shebang 脚本，因此 Hermes 始终解析为 `.CMD` 包装器。不要手动调用 shebang 脚本；始终通过 `.cmd` 调用。
+- Playwright Chromium 会在首次运行时自动安装（`npx playwright install chromium`）。如果安装失败，`hermes doctor` 会提示并提供修复建议。
+
+## 在 Windows 上运行 Hermes —— 实用说明
+
+### 安装后的 PATH
+
+安装程序通过 `[Environment]::SetEnvironmentVariable` 将 `%LOCALAPPDATA%\hermes\bin` 添加到你的**用户 PATH**。现有终端不会立即生效——请在安装后打开新的 PowerShell 窗口（或 Windows Terminal 标签页）。请关闭后重新打开，不要手动执行 `$env:PATH += …`，除非你知道自己在做什么。
+
+验证：
+
+```powershell
+Get-Command hermes        # 应输出 C:\Users\<你>\AppData\Local\hermes\bin\hermes.cmd
+hermes --version
+```
+
+### 环境变量
+
+Hermes 同时支持 `$env:X`（进程作用域）和用户环境变量（永久生效，通过“系统属性 → 环境变量”设置）。通常应将 API 密钥设置在 `%USERPROFILE%\.hermes\.env` 中——与 Linux 相同：
+
+```
+OPENROUTER_API_KEY=sk-or-...
+TELEGRAM_BOT_TOKEN=...
+```
+
+除非你明确希望所有 Windows 进程都能访问这些密钥，否则不要将其放入用户环境变量（这通常不是你想要的结果）。
+
+### Windows 特有的环境变量
+
+这些仅影响原生 Windows 安装：
+
+| 变量 | 效果 |
+|---|---|
+| `HERMES_GIT_BASH_PATH` | 覆盖 bash.exe 的发现路径。可指向任意 bash —— 完整的 Git-for-Windows、通过符号链接的 WSL bash、MSYS2、Cygwin。安装程序会自动设置此变量。 |
+| `HERMES_DISABLE_WINDOWS_UTF8` | 设为 `1` 可禁用 UTF-8 stdio 包装器，回退到本地代码页。适用于排查编码问题。 |
+| `EDITOR` / `VISUAL` | 用于 `/edit` 和 `Ctrl-X Ctrl-E` 的编辑器。如果两者均未设置，Hermes 默认使用 `notepad`。 |
+
+## 卸载
+
+在 PowerShell 中执行：
+
+```powershell
+hermes uninstall
+```
+
+这是干净的卸载方式——会删除计划任务项、启动文件夹快捷方式、`hermes.cmd` 包装脚本，删除 `%LOCALAPPDATA%\hermes\hermes-agent\`，并清理用户 PATH。它会保留 `%USERPROFILE%\.hermes\`（你的配置、认证信息、技能、会话、日志），以便你重新安装。
+
+要彻底删除所有内容：
+
+```powershell
+hermes uninstall
+Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
+```
+
+`hermes uninstall` CLI 子命令还会处理计划任务项以不同任务名称注册的情况（旧版本安装）——它会根据安装路径而非硬编码的任务名称进行搜索。
+
+## 进程管理内部机制
+
+这是背景知识——除非你在调试“它把自己杀死了”这类奇怪问题，否则可以跳过。
+
+在 Linux 和 macOS 上，POSIX 惯用法 `os.kill(pid, 0)` 是一个无操作的权限检查：“此 PID 是否存活且我可以向其发送信号？”在 Windows 上，Python 的 `os.kill` 将 `sig=0` 映射为 `CTRL_C_EVENT`——它们在整数值 0 处冲突——并通过 `GenerateConsoleCtrlEvent(0, pid)` 路由，这会向包含目标 PID 的**整个控制台进程组**广播 Ctrl+C。这是 [bpo-14484](https://bugs.python.org/issue14484)，自 2012 年起未解决。它不会被修复，因为修改它会破坏依赖当前行为的脚本。
+
+后果：任何通过 `os.kill(pid, 0)` 在 Windows 上检查“此 PID 是否存活”的代码路径都会静默地杀死目标。Hermes 已将所有此类位置（11 个文件中的 14 处）迁移到 `gateway.status._pid_exists()`，后者使用 `psutil.pid_exists()`（在 Windows 上转而使用 `OpenProcess + GetExitCodeProcess` —— 不使用信号）。如果你正在编写插件或补丁，请直接使用 `psutil.pid_exists()` 或 `gateway.status._pid_exists()` —— 切勿使用 `os.kill(pid, 0)`。
+
+`scripts/check-windows-footguns.py` 在 CI 中强制执行此规则：任何新的 `os.kill(pid, 0)` 调用都会导致 `Windows footguns (blocking)` 检查失败，除非该行带有 `# windows-footgun: ok — <原因>` 标记。
+
+## 常见陷阱
+
+**安装后立即提示 `hermes: command not found`。**
+打开新的 PowerShell 窗口。安装程序已将 `%LOCALAPPDATA%\hermes\bin` 添加到用户 PATH，但现有 shell 需要重启才能生效。在此期间，你可以运行 `& "$env:LOCALAPPDATA\hermes\bin\hermes.cmd"`。
+
+**运行工具时出现 `WinError 193: %1 is not a valid Win32 application`。**
+你命中了绕过 `.cmd` 包装脚本的 shebang 脚本调用。Hermes 通过 `shutil.which(cmd, path=local_bin)` 解析命令，因此 PATHEXT 会识别 `.CMD` —— 如果你通过硬编码路径调用工具，请切换到 `.cmd` 变体（例如，使用 `npx.cmd`，而非 `npx`）。
+
+**`[scriptblock]::Create(...)` 失败并提示 `The assignment expression is not valid`。**
+你下载的 `install.ps1` 带有 UTF-8 BOM。`irm | iex` 形式会自动去除 BOM；`[scriptblock]::Create((irm ...))` 则不会。请改用简单的 `irm | iex` 形式重新运行，或手动下载脚本并通过 `[IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false))` 保存为无 BOM 的 UTF-8 格式。
+
+**重启后网关无法保持运行。**
+检查 `hermes gateway status` —— 它会合并计划任务项、启动文件夹快捷方式（如果使用）和活动 PID。如果计划任务已注册但未运行，组策略可能阻止了 `ONLOGON` 触发器。运行 `schtasks /Query /TN HermesGateway /V /FO LIST` 查看任务失败原因，或通过卸载并重新安装时设置 `HERMES_GATEWAY_FORCE_STARTUP=1` 回退到启动文件夹路径。
+
+**设置 `$env:EDITOR` 后 `/edit` 仍然无反应。**
+你仅在当前进程中设置了它；请关闭并重新打开 shell，或在“系统属性 → 环境变量”中以用户作用域设置。在新的 PowerShell 窗口中通过 `echo $env:EDITOR` 验证。
+
+**浏览器工具启动但工具超时。**
+Chromium 会在首次运行时自动安装。如果安装失败（GitHub 限流、Playwright CDN 故障），运行 `hermes doctor` —— 它会提示缺失的 Chromium 并打印确切的 `npx playwright install chromium` 命令以修复。
+
+**`agent-browser` 因奇怪的 Node 版本错误而失败。**
+安装程序在 `%LOCALAPPDATA%\hermes\node` 配置了 Node 22，但你的 PATH 可能优先使用了旧的系统 Node 18。请将 Hermes 的 node 目录移到 PATH 更靠前的位置，或删除系统安装（如果你不在其他地方使用 Node）。
+
+**CLI 中中文 / 日文 / 阿拉伯字符显示为 `?`。**
+UTF-8 stdio 包装器未激活。检查 `HERMES_DISABLE_WINDOWS_UTF8` 是否未设置（`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`）。如果为空但仍显示 `?`，则控制台主机（非常旧的 `cmd.exe`）可能根本不支持 UTF-8 —— 请切换到 Windows Terminal。
+
+**网关无法发送 Telegram 照片 —— “`BadRequest: payload contains invalid characters`”。**
+这与 Windows 无关，但有时在此首次出现。通常意味着你的文件路径在 JSON 正文中包含未转义的反斜杠。Telegram 应接收 Hermes 规范化的路径，而非原始 Windows 路径 —— 如果你在自定义插件中遇到此问题，请确保传递的是 Hermes 提供的路径，而非来自用户输入的 `str(Path(...))`。
+
+**`git pull` 后出现“在我其他机器上正常”的编码问题。**
+如果你在 Windows 上使用非 UTF-8 编辑器（旧版 Windows 的记事本、某些中文输入法）编辑 Hermes 配置或技能，文件可能以 BOM 保存。Hermes 在大多数配置读取中容忍 `utf-8-sig`，但折叠 YAML 标量（`description: >`）内的 BOM 会静默破坏 YAML 解析。请将文件重新保存为无 BOM 的纯 UTF-8 格式。
+
+## 下一步去哪里
+
+- **[安装](../getting-started/installation.md)** —— 完整的安装页面，包括 Linux/macOS/WSL2/Termux。
+- **[Windows (WSL2) 指南](./windows-wsl-quickstart.md)** —— 如果你需要 POSIX 语义或仪表板终端窗格。
+- **[CLI 参考](../reference/cli-commands.md)** —— 每个 `hermes` 子命令。
+- **[常见问题](../reference/faq.md)** —— 常见的非 Windows 特定问题。
+- **[消息网关](./messaging/index.md)** —— 在 Windows 上运行 Telegram/Discord/Slack。

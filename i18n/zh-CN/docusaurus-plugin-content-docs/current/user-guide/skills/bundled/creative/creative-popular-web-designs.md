@@ -1,14 +1,14 @@
 ---
-title: "热门网页设计 — 从真实网站中提取的54个生产级设计系统"
+title: "热门网页设计 — 54 个真实设计系统（Stripe、Linear、Vercel）的 HTML/CSS 实现"
 sidebar_label: "热门网页设计"
-description: "从真实网站中提取的54个生产级设计系统"
+description: "54 个真实设计系统（Stripe、Linear、Vercel）的 HTML/CSS 实现"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
 
 # 热门网页设计
 
-从真实网站中提取的54个生产级设计系统。加载模板以生成与 Stripe、Linear、Vercel、Notion、Airbnb 等网站视觉标识相匹配的 HTML/CSS。每个模板包含颜色、排版、组件、布局规则以及可直接使用的 CSS 值。
+54 个真实设计系统（Stripe、Linear、Vercel）的 HTML/CSS 实现。
 
 ## 技能元数据
 
@@ -17,30 +17,35 @@ description: "从真实网站中提取的54个生产级设计系统"
 | 来源 | 捆绑（默认安装） |
 | 路径 | `skills/creative/popular-web-designs` |
 | 版本 | `1.0.0` |
-| 作者 | Hermes 智能体 + Teknium（设计系统来源：VoltAgent/awesome-design-md） |
+| 作者 | Hermes 智能体 + Teknium（设计系统来源于 VoltAgent/awesome-design-md） |
 | 许可证 | MIT |
 
-## 参考：完整 SKILL.md
+## 参考：完整的 SKILL.md
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是触发此技能时 Hermes 加载的完整技能定义。这是智能体在技能激活时看到的指令。
 :::
 
 # 热门网页设计
 
-54个真实世界的设计系统，可在生成 HTML/CSS 时直接使用。每个模板都捕捉了网站的完整视觉语言：调色板、排版层次结构、组件样式、间距系统、阴影、响应式行为，以及带有精确 CSS 值的实用智能体提示。
+54 套可直接用于生成 HTML/CSS 的真实设计系统。每个模板都捕捉了网站的完整视觉语言：调色板、排版层次、组件样式、间距系统、阴影、响应式行为，以及带有精确 CSS 值的实用智能体提示。
+
+## 相关设计技能
+
+- **`claude-design`** — 用于设计*过程和品味*（确定简报范围、生成变体、验证本地 HTML 产物、避免 AI 设计瑕疵）。当用户想要一个以知名品牌为风格的精心设计的页面时，将其与此技能配对使用：`claude-design` 驱动工作流程，此技能提供视觉词汇。
+- **`design-md`** — 当交付物是一个正式的 DESIGN.md 令牌规范文件，而不是渲染产物时使用。
 
 ## 使用方法
 
-1. 从下方目录中选择一个设计
+1. 从下面的目录中选择一个设计
 2. 加载它：`skill_view(name="popular-web-designs", file_path="templates/<site>.md")`
 3. 在生成 HTML 时使用设计令牌和组件规范
-4. 结合 `generative-widgets` 技能，通过 cloudflared 隧道提供服务
+4. 与 `generative-widgets` 技能配对，通过 cloudflared 隧道提供结果
 
 每个模板顶部都包含一个 **Hermes 实现说明** 块，其中包含：
-- CDN 字体替代方案和 Google Fonts `<link>` 标签（可直接粘贴）
+- CDN 字体替代和 Google 字体 `<link>` 标签（可直接粘贴）
 - 主要字体和等宽字体的 CSS 字体族堆栈
-- 提醒使用 `write_file` 创建 HTML，并使用 `browser_vision` 进行验证
+- 提醒使用 `write_file` 创建 HTML 并使用 `browser_vision` 进行验证
 
 ## HTML 生成模式
 
@@ -51,7 +56,7 @@ description: "从真实网站中提取的54个生产级设计系统"
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>页面标题</title>
-  <!-- 粘贴模板 Hermes 说明中的 Google Fonts <link> -->
+  <!-- 粘贴模板 Hermes 说明中的 Google 字体 <link> -->
   <link href="https://fonts.googleapis.com/css2?family=..." rel="stylesheet">
   <style>
     /* 将模板的调色板应用为 CSS 自定义属性 */
@@ -78,39 +83,39 @@ description: "从真实网站中提取的54个生产级设计系统"
 </html>
 ```
 
-使用 `write_file` 写入文件，通过 `generative-widgets` 工作流（cloudflared 隧道）提供服务，并使用 `browser_vision` 验证结果以确认视觉准确性。
+使用 `write_file` 写入文件，使用 `generative-widgets` 工作流（cloudflared 隧道）提供服务，并使用 `browser_vision` 验证结果以确认视觉准确性。
 
 ## 字体替代参考
 
-大多数网站使用无法通过 CDN 获取的专有字体。每个模板都映射到一个 Google Fonts 替代字体，以保留设计的特征。常见映射：
+大多数网站使用无法通过 CDN 获得的专有字体。每个模板都映射到一个 Google 字体替代，以保持设计的特征。常见映射：
 
-| 专有字体 | CDN 替代字体 | 特征 |
+| 专有字体 | CDN 替代 | 特征 |
 |---|---|---|
-| Geist / Geist Sans | Geist（Google Fonts 上） | 几何感，紧凑字距 |
-| Geist Mono | Geist Mono（Google Fonts 上） | 简洁等宽字体，连字 |
+| Geist / Geist Sans | Geist（在 Google 字体上） | 几何、压缩字距 |
+| Geist Mono | Geist Mono（在 Google 字体上） | 简洁等宽、连字 |
 | sohne-var (Stripe) | Source Sans 3 | 轻盈优雅 |
-| Berkeley Mono | JetBrains Mono | 技术性等宽字体 |
-| Airbnb Cereal VF | DM Sans | 圆润，友好的几何感 |
-| Circular (Spotify) | DM Sans | 几何感，温暖 |
-| figmaSans | Inter | 简洁的人文主义 |
-| Pin Sans (Pinterest) | DM Sans | 友好，圆润 |
-| NVIDIA-EMEA | Inter（或 Arial 系统） | 工业感，简洁 |
-| CoinbaseDisplay/Sans | DM Sans | 几何感，值得信赖 |
-| UberMove | DM Sans | 粗体，紧凑 |
-| HashiCorp Sans | Inter | 企业级，中性 |
-| waldenburgNormal (Sanity) | Space Grotesk | 几何感，略微压缩 |
-| IBM Plex Sans/Mono | IBM Plex Sans/Mono | 可在 Google Fonts 上获得 |
-| Rubik (Sentry) | Rubik | 可在 Google Fonts 上获得 |
+| Berkeley Mono | JetBrains Mono | 技术性等宽 |
+| Airbnb Cereal VF | DM Sans | 圆润、友好的几何 |
+| Circular (Spotify) | DM Sans | 几何、温暖 |
+| figmaSans | Inter | 简洁人文主义 |
+| Pin Sans (Pinterest) | DM Sans | 友好、圆润 |
+| NVIDIA-EMEA | Inter（或 Arial 系统） | 工业、简洁 |
+| CoinbaseDisplay/Sans | DM Sans | 几何、值得信赖 |
+| UberMove | DM Sans | 大胆、紧凑 |
+| HashiCorp Sans | Inter | 企业、中性 |
+| waldenburgNormal (Sanity) | Space Grotesk | 几何、略微压缩 |
+| IBM Plex Sans/Mono | IBM Plex Sans/Mono | 可在 Google 字体上获得 |
+| Rubik (Sentry) | Rubik | 可在 Google 字体上获得 |
 
-当模板的 CDN 字体与原始字体匹配时（Inter、IBM Plex、Rubik、Geist），不会发生替代损失。当使用替代字体时（DM Sans 替代 Circular，Source Sans 3 替代 sohne-var），请严格遵循模板的字重、大小和字间距值——这些比特定字体本身更能体现视觉标识。
+当模板的 CDN 字体与原始字体匹配时（Inter、IBM Plex、Rubik、Geist），不会发生替代损失。当使用替代字体时（DM Sans 替代 Circular，Source Sans 3 替代 sohne-var），请密切遵循模板的粗细、大小和字距值——这些比特定字体更能体现视觉特征。
 
 ## 设计目录
 
-### 人工智能与机器学习
+### AI 与机器学习
 
 | 模板 | 网站 | 风格 |
 |---|---|---|
-| `claude.md` | Anthropic Claude | 温暖的赤土色点缀，简洁的编辑布局 |
+| `claude.md` | Anthropic Claude | 温暖的陶土色点缀，简洁的编辑布局 |
 | `cohere.md` | Cohere | 充满活力的渐变，数据丰富的仪表板美学 |
 | `elevenlabs.md` | ElevenLabs | 深色电影 UI，音频波形美学 |
 | `minimax.md` | Minimax | 大胆的深色界面，霓虹色点缀 |
@@ -118,88 +123,88 @@ description: "从真实网站中提取的54个生产级设计系统"
 | `ollama.md` | Ollama | 终端优先，单色简洁 |
 | `opencode.ai.md` | OpenCode AI | 以开发者为中心的深色主题，全等宽字体 |
 | `replicate.md` | Replicate | 简洁的白色画布，代码优先 |
-| `runwayml.md` | RunwayML | 电影感深色 UI，媒体丰富的布局 |
+| `runwayml.md` | RunwayML | 电影深色 UI，媒体丰富的布局 |
 | `together.ai.md` | Together AI | 技术性，蓝图风格设计 |
 | `voltagent.md` | VoltAgent | 虚空黑色画布，翠绿色点缀，终端原生 |
-| `x.ai.md` | xAI | 极简单色，未来主义极简主义，全等宽字体 |
+| `x.ai.md` | xAI | 鲜明的单色，未来主义极简主义，全等宽字体 |
 
 ### 开发者工具与平台
 
-| 模板 | 网站 | 风格 |
+| Template | Site | Style |
 |---|---|---|
-| `cursor.md` | Cursor | 流畅的深色界面，渐变点缀 |
+| `cursor.md` | Cursor | 时尚的深色界面，渐变点缀 |
 | `expo.md` | Expo | 深色主题，紧凑字距，以代码为中心 |
 | `linear.app.md` | Linear | 超极简深色模式，精确，紫色点缀 |
-| `lovable.md` | Lovable |  playful 渐变，友好的开发者美学 |
-| `mintlify.md` | Mintlify | 简洁，绿色点缀，阅读优化 |
-| `posthog.md` | PostHog |  playful 品牌，对开发者友好的深色 UI |
-| `raycast.md` | Raycast | 流畅的深色铬，充满活力的渐变点缀 |
+| `lovable.md` | Lovable | 俏皮的渐变，友好的开发者美学 |
+| `mintlify.md` | Mintlify | 简洁，绿色点缀，优化阅读 |
+| `posthog.md` | PostHog | 俏皮的品牌，对开发者友好的深色 UI |
+| `raycast.md` | Raycast | 时尚的深色铬，充满活力的渐变点缀 |
 | `resend.md` | Resend | 极简深色主题，等宽字体点缀 |
 | `sentry.md` | Sentry | 深色仪表板，数据密集，粉紫色点缀 |
 | `supabase.md` | Supabase | 深色翠绿主题，代码优先的开发者工具 |
-| `superhuman.md` | Superhuman | 高端深色 UI，键盘优先，紫色光晕 |
+| `superhuman.md` | Superhuman | 高级深色 UI，键盘优先，紫色光晕 |
 | `vercel.md` | Vercel | 黑白精确，Geist 字体系统 |
-| `warp.md` | Warp | 深色 IDE 类界面，基于块的命令 UI |
+| `warp.md` | Warp | 深色类 IDE 界面，基于块的命令 UI |
 | `zapier.md` | Zapier | 温暖的橙色，友好的插图驱动 |
 
 ### 基础设施与云
 
-| 模板 | 网站 | 风格 |
+| Template | Site | Style |
 |---|---|---|
 | `clickhouse.md` | ClickHouse | 黄色点缀，技术文档风格 |
 | `composio.md` | Composio | 现代深色，彩色集成图标 |
 | `hashicorp.md` | HashiCorp | 企业级简洁，黑白 |
 | `mongodb.md` | MongoDB | 绿色叶子品牌，专注于开发者文档 |
 | `sanity.md` | Sanity | 红色点缀，内容优先的编辑布局 |
-| `stripe.md` | Stripe | 标志性紫色渐变，300 字重优雅 |
+| `stripe.md` | Stripe | 标志性紫色渐变，300 权重优雅 |
 
 ### 设计与生产力
 
-| 模板 | 网站 | 风格 |
+| Template | Site | Style |
 |---|---|---|
 | `airtable.md` | Airtable | 多彩，友好，结构化数据美学 |
-| `cal.md` | Cal.com | 简洁中性 UI，面向开发者的简洁性 |
+| `cal.md` | Cal.com | 简洁中性 UI，面向开发者的简洁 |
 | `clay.md` | Clay | 有机形状，柔和渐变，艺术指导布局 |
-| `figma.md` | Figma | 充满活力的多色， playful 但专业 |
-| `framer.md` | Framer | 大胆的黑蓝，动作为先，设计优先 |
+| `figma.md` | Figma | 充满活力的多色，俏皮但专业 |
+| `framer.md` | Framer | 大胆的黑蓝色，运动优先，设计优先 |
 | `intercom.md` | Intercom | 友好的蓝色调色板，对话式 UI 模式 |
 | `miro.md` | Miro | 明亮的黄色点缀，无限画布美学 |
 | `notion.md` | Notion | 温暖极简主义，衬线标题，柔和表面 |
-| `pinterest.md` | Pinterest | 红色点缀，瀑布流网格，图像优先布局 |
+| `pinterest.md` | Pinterest | 红色点缀，砖石网格，图像优先布局 |
 | `webflow.md` | Webflow | 蓝色点缀，精美的营销网站美学 |
 
-### 金融科技与加密
+### 金融科技与加密货币
 
-| 模板 | 网站 | 风格 |
+| Template | Site | Style |
 |---|---|---|
 | `coinbase.md` | Coinbase | 简洁的蓝色标识，注重信任，机构感 |
 | `kraken.md` | Kraken | 紫色点缀的深色 UI，数据密集的仪表板 |
-| `revolut.md` | Revolut | 流畅的深色界面，渐变卡片，金融科技精确性 |
-| `wise.md` | Wise | 明亮的绿色点缀，友好且清晰 |
+| `revolut.md` | Revolut | 时尚的深色界面，渐变卡片，金融科技精确 |
+| `wise.md` | Wise | 明亮的绿色点缀，友好清晰 |
 
 ### 企业与消费者
 
-| 模板 | 网站 | 风格 |
+| Template | Site | Style |
 |---|---|---|
 | `airbnb.md` | Airbnb | 温暖的珊瑚色点缀，摄影驱动，圆润 UI |
-| `apple.md` | Apple | 高端留白，SF Pro，电影感图像 |
-| `bmw.md` | BMW | 深色高端表面，精确的工程美学 |
+| `apple.md` | Apple | 高级留白，SF Pro，电影图像 |
+| `bmw.md` | BMW | 深色高级表面，精确工程美学 |
 | `ibm.md` | IBM | Carbon 设计系统，结构化蓝色调色板 |
-| `nvidia.md` | NVIDIA | 绿黑能量，技术力量美学 |
-| `spacex.md` | SpaceX | 极简黑白，全出血图像，未来主义 |
-| `spotify.md` | Spotify | 深色上的活力绿色，粗体字体，专辑艺术驱动 |
+| `nvidia.md` | NVIDIA | 绿黑色能量，技术实力美学 |
+| `spacex.md` | SpaceX | 鲜明的黑白，全出血图像，未来主义 |
+| `spotify.md` | Spotify | 深色上的充满活力的绿色，大胆字体，专辑艺术驱动 |
 | `uber.md` | Uber | 大胆的黑白，紧凑字体，都市能量 |
 
 ## 选择设计
 
 将设计与内容匹配：
 
-- **开发者工具 / 仪表板：** Linear、Vercel、Supabase、Raycast、Sentry
-- **文档 / 内容网站：** Mintlify、Notion、Sanity、MongoDB
-- **营销 / 登陆页面：** Stripe、Framer、Apple、SpaceX
+- **开发者工具/仪表板：** Linear、Vercel、Supabase、Raycast、Sentry
+- **文档/内容网站：** Mintlify、Notion、Sanity、MongoDB
+- **营销/登陆页面：** Stripe、Framer、Apple、SpaceX
 - **深色模式 UI：** Linear、Cursor、ElevenLabs、Warp、Superhuman
-- **浅色 / 简洁 UI：** Vercel、Stripe、Notion、Cal.com、Replicate
-- **Playful / 友好：** PostHog、Figma、Lovable、Zapier、Miro
-- **高端 / 奢华：** Apple、BMW、Stripe、Superhuman、Revolut
-- **数据密集 / 仪表板：** Sentry、Kraken、Cohere、ClickHouse
-- **等宽字体 / 终端美学：** Ollama、OpenCode、x.ai、VoltAgent
+- **浅色/简洁 UI：** Vercel、Stripe、Notion、Cal.com、Replicate
+- **俏皮/友好：** PostHog、Figma、Lovable、Zapier、Miro
+- **高级/奢华：** Apple、BMW、Stripe、Superhuman、Revolut
+- **数据密集/仪表板：** Sentry、Kraken、Cohere、ClickHouse
+- **等宽字体/终端美学：** Ollama、OpenCode、x.ai、VoltAgent

@@ -1,14 +1,14 @@
 ---
-title: "Notion — 通过 curl 创建和管理页面、数据库及块的 Notion API"
+title: "Notion — 通过 curl 调用 Notion API：页面、数据库、块、搜索"
 sidebar_label: "Notion"
-description: "通过 curl 创建和管理页面、数据库及块的 Notion API"
+description: "通过 curl 调用 Notion API：页面、数据库、块、搜索"
 ---
 
 {/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
 # Notion
 
-通过 curl 使用 Notion API 来创建、读取、更新页面、数据库（数据源）和块。无需额外工具——只需 curl 和一个 Notion API 密钥。
+通过 curl 调用 Notion API：创建、读取、更新页面、数据库（数据源）和块。无需额外工具——只需 curl 和一个 Notion API 密钥。
 
 ## 技能元数据
 
@@ -19,17 +19,17 @@ description: "通过 curl 创建和管理页面、数据库及块的 Notion API"
 | 版本 | `1.0.0` |
 | 作者 | 社区 |
 | 许可证 | MIT |
-| 标签 | `Notion`, `生产力`, `笔记`, `数据库`, `API` |
+| 标签 | `Notion`, `Productivity`, `Notes`, `Database`, `API` |
 
 ## 参考：完整 SKILL.md
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
 :::
 
 # Notion API
 
-通过 curl 使用 Notion API 来创建、读取、更新页面、数据库（数据源）和块。无需额外工具——只需 curl 和一个 Notion API 密钥。
+使用 curl 通过 Notion API 创建、读取、更新页面、数据库（数据源）和块。无需额外工具——只需 curl 和一个 Notion API 密钥。
 
 ## 先决条件
 
@@ -39,7 +39,7 @@ description: "通过 curl 创建和管理页面、数据库及块的 Notion API"
    ```
    NOTION_API_KEY=ntn_your_key_here
    ```
-4. **重要：** 在 Notion 中将目标页面/数据库与你的集成共享（点击 "..." → "连接到" → 你的集成名称）
+4. **重要：** 在 Notion 中将目标页面/数据库与你的集成共享（点击“...” → “连接到” → 你的集成名称）
 
 ## API 基础
 
@@ -142,7 +142,7 @@ curl -s -X PATCH "https://api.notion.com/v1/pages/{page_id}" \
 ### 向页面添加内容
 
 ```bash
-curl -s -X PATCH "https://api.notion.com/v1/blocks/{page_id}/children" \
+curl -s -X PATCH "https://api/notion.com/v1/blocks/{page_id}/children" \
   -H "Authorization: Bearer $NOTION_API_KEY" \
   -H "Notion-Version: 2025-09-03" \
   -H "Content-Type: application/json" \
@@ -155,7 +155,7 @@ curl -s -X PATCH "https://api.notion.com/v1/blocks/{page_id}/children" \
 
 ## 属性类型
 
-数据库项的常见属性格式：
+数据库条目的常见属性格式：
 
 - **标题：** `{"title": [{"text": {"content": "..."}}]}`
 - **富文本：** `{"rich_text": [{"text": {"content": "..."}}]}`
@@ -170,7 +170,7 @@ curl -s -X PATCH "https://api.notion.com/v1/blocks/{page_id}/children" \
 
 ## API 版本 2025-09-03 中的关键差异
 
-- **数据库 → 数据源：** 使用 `/data_sources/` 端点进行查询和检索
+- **数据库 → 数据源：** 查询和检索时使用 `/data_sources/` 端点
 - **两个 ID：** 每个数据库都有 `database_id` 和 `data_source_id`
   - 创建页面时使用 `database_id`（`parent: {"database_id": "..."}`）
   - 查询时使用 `data_source_id`（`POST /v1/data_sources/{id}/query`）
@@ -181,6 +181,6 @@ curl -s -X PATCH "https://api.notion.com/v1/blocks/{page_id}/children" \
 - 页面/数据库 ID 是 UUID（带或不带连字符）
 - 速率限制：平均约 3 次请求/秒
 - API 无法设置数据库视图过滤器——这仅限于用户界面
-- 创建数据源时使用 `is_inline: true` 以将其嵌入页面中
-- 在 curl 中添加 `-s` 标志以抑制进度条（为 Hermes 提供更干净的输出）
+- 创建数据源时使用 `is_inline: true` 以将其嵌入页面
+- 为 curl 添加 `-s` 标志以抑制进度条（为 Hermes 提供更干净的输出）
 - 通过 `jq` 管道输出以获取可读的 JSON：`... | jq '.results[0].properties'`

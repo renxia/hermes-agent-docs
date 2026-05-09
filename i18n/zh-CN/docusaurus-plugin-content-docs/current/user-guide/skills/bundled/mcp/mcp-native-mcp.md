@@ -1,14 +1,14 @@
 ---
-title: "原生 MCP"
+title: "原生 MCP — MCP 客户端：连接服务器，注册工具 (stdio/HTTP)"
 sidebar_label: "原生 MCP"
-description: "内置 MCP（模型上下文协议）客户端，可连接外部 MCP 服务器，发现其工具，并将其注册为原生 Hermes 智能体工具"
+description: "MCP 客户端：连接服务器，注册工具 (stdio/HTTP)"
 ---
 
 {/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
 
 # 原生 MCP
 
-内置 MCP（模型上下文协议）客户端，可连接外部 MCP 服务器，发现其工具，并将其注册为原生 Hermes 智能体工具。支持标准输入输出和 HTTP 传输，具备自动重连、安全过滤和零配置工具注入功能。
+MCP 客户端：连接服务器，注册工具 (stdio/HTTP)。
 
 ## 技能元数据
 
@@ -19,7 +19,7 @@ description: "内置 MCP（模型上下文协议）客户端，可连接外部 M
 | 版本 | `1.0.0` |
 | 作者 | Hermes 智能体 |
 | 许可证 | MIT |
-| 标签 | `MCP`, `工具`, `集成` |
+| 标签 | `MCP`，`工具`，`集成` |
 | 相关技能 | [`mcporter`](/docs/user-guide/skills/optional/mcp/mcp-mcporter) |
 
 ## 参考：完整的 SKILL.md
@@ -30,14 +30,14 @@ description: "内置 MCP（模型上下文协议）客户端，可连接外部 M
 
 # 原生 MCP 客户端
 
-Hermes 智能体内置了一个 MCP 客户端，它会在启动时连接到 MCP 服务器，发现其工具，并将它们作为智能体可以直接调用的一级工具。无需桥接 CLI——来自 MCP 服务器的工具会与 `terminal`、`read_file` 等内置工具并列出现。
+Hermes 智能体内置了一个 MCP 客户端，它会在启动时连接到 MCP 服务器，发现其工具，并将它们作为智能体可直接调用的一级工具提供。无需桥接 CLI——来自 MCP 服务器的工具会与 `terminal`、`read_file` 等内置工具并列出现。
 
 ## 何时使用
 
-在以下情况下使用此技能：
+当你需要执行以下操作时，请使用此技能：
 - 连接到 MCP 服务器并在 Hermes 智能体内部使用其工具
 - 通过 MCP 添加外部功能（文件系统访问、GitHub、数据库、API）
-- 运行基于本地 stdio 的 MCP 服务器（npx、uvx 或任何命令）
+- 运行本地基于 stdio 的 MCP 服务器（npx、uvx 或任意命令）
 - 连接到远程 HTTP/StreamableHTTP MCP 服务器
 - 让 MCP 工具自动被发现并在每次对话中可用
 
@@ -46,8 +46,8 @@ Hermes 智能体内置了一个 MCP 客户端，它会在启动时连接到 MCP 
 ## 先决条件
 
 - **mcp Python 包**——可选依赖项；使用 `pip install mcp` 安装。如果未安装，MCP 支持将被静默禁用。
-- **Node.js**——基于 `npx` 的 MCP 服务器（大多数社区服务器）所需
-- **uv**——基于 `uvx` 的 MCP 服务器（基于 Python 的服务器）所需
+- **Node.js**——基于 `npx` 的 MCP 服务器所需（大多数社区服务器）
+- **uv**——基于 `uvx` 的 MCP 服务器所需（基于 Python 的服务器）
 
 安装 MCP SDK：
 
@@ -71,7 +71,7 @@ mcp_servers:
 重启 Hermes 智能体。启动时它将：
 1. 连接到服务器
 2. 发现可用工具
-3. 使用 `mcp_time_*` 前缀注册它们
+3. 以 `mcp_time_*` 前缀注册它们
 4. 将它们注入所有平台工具集
 
 然后你就可以自然地调用这些工具——只需让智能体获取当前时间即可。
@@ -86,11 +86,11 @@ mcp_servers:
 mcp_servers:
   server_name:
     command: "npx"             # （必需）要运行的可执行文件
-    args: ["-y", "pkg-name"]   # （可选）命令参数，默认值：[]
+    args: ["-y", "pkg-name"]   # （可选）命令参数，默认为 []
     env:                       # （可选）子进程的环境变量
       SOME_API_KEY: "value"
-    timeout: 120               # （可选）每次工具调用超时（秒），默认值：120
-    connect_timeout: 60        # （可选）初始连接超时（秒），默认值：60
+    timeout: 120               # （可选）每次工具调用超时（秒），默认为 120
+    connect_timeout: 60        # （可选）初始连接超时（秒），默认为 60
 ```
 
 ### HTTP 传输（url）
@@ -99,23 +99,23 @@ mcp_servers:
 mcp_servers:
   server_name:
     url: "https://my-server.example.com/mcp"   # （必需）服务器 URL
-    headers:                                     # （可选）HTTP 头
+    headers:                                     # （可选）HTTP 请求头
       Authorization: "Bearer sk-..."
-    timeout: 180               # （可选）每次工具调用超时（秒），默认值：120
-    connect_timeout: 60        # （可选）初始连接超时（秒），默认值：60
+    timeout: 180               # （可选）每次工具调用超时（秒），默认为 120
+    connect_timeout: 60        # （可选）初始连接超时（秒），默认为 60
 ```
 
 ### 所有配置选项
 
-| 选项              | 类型   | 默认值 | 描述                                       |
-|-------------------|--------|---------|---------------------------------------------------|
-| `command`         | string | --      | 要运行的可执行文件（stdio 传输，必需）     |
-| `args`            | list   | `[]`    | 传递给命令的参数                   |
-| `env`             | dict   | `{}`    | 子进程的额外环境变量    |
-| `url`             | string | --      | 服务器 URL（HTTP 传输，必需）             |
-| `headers`         | dict   | `{}`    | 每次请求发送的 HTTP 头              |
-| `timeout`         | int    | `120`   | 每次工具调用超时（秒）                  |
-| `connect_timeout` | int    | `60`    | 初始连接和发现的超时      |
+| 选项              | 类型   | 默认值 | 说明                                       |
+|-------------------|--------|--------|--------------------------------------------|
+| `command`         | string | --     | 要运行的可执行文件（stdio 传输，必需）     |
+| `args`            | list   | `[]`   | 传递给命令的参数                           |
+| `env`             | dict   | `{}`   | 子进程的额外环境变量                       |
+| `url`             | string | --     | 服务器 URL（HTTP 传输，必需）              |
+| `headers`         | dict   | `{}`   | 每次请求发送的 HTTP 请求头                 |
+| `timeout`         | int    | `120`  | 每次工具调用超时（秒）                     |
+| `connect_timeout` | int    | `60`   | 初始连接和发现的超时时间                   |
 
 注意：服务器配置必须包含 `command`（stdio）或 `url`（HTTP）之一，不能同时包含两者。
 
@@ -128,17 +128,17 @@ mcp_servers:
 1. 从 `~/.hermes/config.yaml` 读取 `mcp_servers`
 2. 为每个服务器在专用后台事件循环中建立连接
 3. 初始化 MCP 会话并调用 `list_tools()` 来发现可用工具
-4. 将每个工具注册到 Hermes 工具注册表中
+4. 将每个工具注册到 Hermes 工具注册表
 
 ### 工具命名约定
 
-MCP 工具使用以下命名模式注册：
+MCP 工具按以下命名模式注册：
 
 ```
 mcp_{server_name}_{tool_name}
 ```
 
-名称中的连字符和点会被替换为下划线，以兼容 LLM API。
+名称中的连字符和点会被替换为下划线，以确保与 LLM API 兼容。
 
 示例：
 - 服务器 `filesystem`，工具 `read_file` → `mcp_filesystem_read_file`
@@ -158,13 +158,13 @@ mcp_{server_name}_{tool_name}
 
 ### 幂等性
 
-`discover_mcp_tools()` 是幂等的——多次调用它只会连接到尚未连接的服务器。失败的服务器会在后续调用中重试。
+`discover_mcp_tools()` 是幂等的——多次调用只会连接到尚未连接的服务器。失败的服务器会在后续调用中重试。
 
 ## 传输类型
 
 ### Stdio 传输
 
-最常见的传输类型。Hermes 将 MCP 服务器作为子进程启动，并通过 stdin/stdout 进行通信。
+最常见的传输方式。Hermes 将 MCP 服务器作为子进程启动，并通过 stdin/stdout 进行通信。
 
 ```yaml
 mcp_servers:
@@ -173,7 +173,7 @@ mcp_servers:
     args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
 ```
 
-子进程会继承一个**过滤后的**环境（参见下面的安全部分）以及你在 `env` 中指定的任何变量。
+子进程会继承一个**过滤后的**环境（参见下面的安全部分），以及你在 `env` 中指定的任何变量。
 
 ### HTTP / StreamableHTTP 传输
 
@@ -187,13 +187,13 @@ mcp_servers:
       Authorization: "Bearer sk-..."
 ```
 
-如果你的 `mcp` 版本不包含 HTTP 支持，服务器将因 ImportError 而失败，其他服务器将继续正常运行。
+如果你安装的 `mcp` 版本不包含 HTTP 支持，该服务器将因 ImportError 而失败，其他服务器将继续正常运行。
 
-## 安全
+## 安全性
 
 ### 环境变量过滤
 
-对于 stdio 服务器，Hermes 不会将你的完整 shell 环境传递给 MCP 子进程。仅继承安全的基础变量：
+对于 stdio 服务器，Hermes **不会**将你的完整 shell 环境传递给 MCP 子进程。仅继承安全的基线变量：
 
 - `PATH`、`HOME`、`USER`、`LANG`、`LC_ALL`、`TERM`、`SHELL`、`TMPDIR`
 - 任何 `XDG_*` 变量
@@ -212,12 +212,12 @@ mcp_servers:
 
 ### 错误消息中的凭据脱敏
 
-如果 MCP 工具调用失败，错误消息中任何类似凭据的模式都会在显示给 LLM 之前自动被脱敏。这包括：
+如果 MCP 工具调用失败，错误消息中任何类似凭据的模式都会在显示给 LLM 之前自动被脱敏。涵盖以下内容：
 
-- GitHub 个人访问令牌（`ghp_...`）
-- OpenAI 风格的密钥（`sk-...`）
+- GitHub PAT（`ghp_...`）
+- OpenAI 风格密钥（`sk-...`）
 - Bearer 令牌
-- 通用的 `token=`、`key=`、`API_KEY=`、`password=`、`secret=` 模式
+- 通用模式如 `token=`、`key=`、`API_KEY=`、`password=`、`secret=`
 
 ## 故障排除
 
@@ -231,14 +231,14 @@ pip install mcp
 
 ### “未配置 MCP 服务器”
 
-`~/.hermes/config.yaml` 中没有 `mcp_servers` 键，或者该键为空。请至少添加一个服务器。
+`~/.hermes/config.yaml` 中没有 `mcp_servers` 键，或其为空。请至少添加一个服务器。
 
 ### “无法连接到 MCP 服务器 'X'”
 
 常见原因：
-- **命令未找到**：`command` 二进制文件不在 PATH 中。确保已安装 `npx`、`uvx` 或相关命令。
-- **包未找到**：对于 npx 服务器，npm 包可能不存在，或者需要在 args 中添加 `-y` 以自动安装。
-- **超时**：服务器启动时间过长。增加 `connect_timeout`。
+- **命令未找到**：`command` 二进制文件不在 PATH 中。请确保已安装 `npx`、`uvx` 或相关命令。
+- **包未找到**：对于 npx 服务器，npm 包可能不存在，或需要在 args 中添加 `-y` 以自动安装。
+- **超时**：服务器启动时间过长。请增加 `connect_timeout`。
 - **端口冲突**：对于 HTTP 服务器，URL 可能无法访问。
 
 ### “MCP 服务器 'X' 需要 HTTP 传输，但 mcp.client.streamable_http 不可用”
@@ -254,11 +254,11 @@ pip install --upgrade mcp
 - 检查服务器是否列在 `mcp_servers` 下（而不是 `mcp` 或 `servers`）
 - 确保 YAML 缩进正确
 - 查看 Hermes 智能体启动日志中的连接消息
-- 工具名称以 `mcp_{server}_{tool}` 为前缀——请查找该模式
+- 工具名称前缀为 `mcp_{server}_{tool}`——请查找该模式
 
 ### 连接不断断开
 
-客户端会以指数退避方式重试最多 5 次（1 秒、2 秒、4 秒、8 秒、16 秒，上限为 60 秒）。如果服务器根本不可达，5 次尝试后将放弃。请检查服务器进程和网络连接。
+客户端会以指数退避方式重试最多 5 次（1 秒、2 秒、4 秒、8 秒、16 秒，上限为 60 秒）。如果服务器根本不可达，将在 5 次尝试后放弃。请检查服务器进程和网络连接。
 
 ## 示例
 
@@ -343,7 +343,7 @@ mcp_servers:
 
 Hermes 支持 MCP 的 `sampling/createMessage` 功能 — MCP 服务器可以在工具执行期间通过智能体请求 LLM 补全。这使得智能体参与的工作流（数据分析、内容生成、决策制定）成为可能。
 
-采样功能**默认启用**。请按服务器进行配置：
+采样**默认启用**。请按服务器进行配置：
 
 ```yaml
 mcp_servers:
@@ -361,9 +361,9 @@ mcp_servers:
       log_level: "info"       # 审计详细程度
 ```
 
-服务器还可以在采样请求中包含 `tools`，以实现多轮工具增强工作流。`max_tool_rounds` 配置可防止无限工具循环。每个服务器的审计指标（请求数、错误数、令牌数、工具使用次数）通过 `get_mcp_status()` 进行跟踪。
+服务器还可以在采样请求中包含 `tools`，以实现多轮工具增强工作流。`max_tool_rounds` 配置可防止无限工具循环。每个服务器的审计指标（请求数、错误数、令牌数、工具使用次数）都通过 `get_mcp_status()` 进行跟踪。
 
-对于不受信任的服务器，请使用 `sampling: { enabled: false }` 禁用采样功能。
+对于不受信任的服务器，请使用 `sampling: { enabled: false }` 禁用采样。
 
 ## 注意事项
 
@@ -371,4 +371,4 @@ mcp_servers:
 - 工具结果以 JSON 格式返回，格式为 `{"result": "..."}` 或 `{"error": "..."}`
 - 原生 MCP 客户端与 `mcporter` 无关 — 您可以同时使用两者
 - 服务器连接是持久性的，并在同一智能体进程的所有对话之间共享
-- 添加或删除服务器需要重启智能体（目前不支持热重载）
+- 添加或移除服务器需要重启智能体（目前不支持热重载）

@@ -8,7 +8,7 @@ description: "用于机器学习训练和推理的预留和按需 GPU 云实例"
 
 # Lambda Labs GPU 云
 
-用于机器学习训练和推理的预留和按需 GPU 云实例。当您需要进行大规模训练的专用 GPU 实例、简单的 SSH 访问、持久文件系统或高性能多节点集群时，可使用此技能。
+用于机器学习训练和推理的预留和按需 GPU 云实例。当您需要进行大规模训练时，需要具有简单 SSH 访问权限、持久文件系统或高性能多节点集群的专用 GPU 实例时，可以使用此服务。
 
 ## 技能元数据
 
@@ -30,31 +30,31 @@ description: "用于机器学习训练和推理的预留和按需 GPU 云实例"
 
 # Lambda Labs GPU 云
 
-在 Lambda Labs GPU 云上运行 ML 工作负载的综合指南，包括按需实例和一键集群。
+在 Lambda Labs GPU 云上使用按需实例和一键集群运行机器学习工作负载的综合指南。
 
 ## 何时使用 Lambda Labs
 
-**在以下情况下使用 Lambda Labs：**
+**在以下情况使用 Lambda Labs：**
 - 需要具有完整 SSH 访问权限的专用 GPU 实例
 - 运行长时间训练任务（数小时至数天）
-- 希望采用简单定价且无出口费用
+- 希望定价简单且无出口费用
 - 需要在会话之间保持持久存储
 - 需要高性能多节点集群（16-512 个 GPU）
-- 希望预装 ML 堆栈（Lambda Stack，包含 PyTorch、CUDA、NCCL）
+- 希望预装机器学习栈（Lambda Stack，包含 PyTorch、CUDA、NCCL）
 
-**主要功能：**
-- **GPU 种类多样**：B200、H100、GH200、A100、A10、A6000、V100
+**关键特性：**
+- **GPU 多样性**：B200、H100、GH200、A100、A10、A6000、V100
 - **Lambda Stack**：预装 PyTorch、TensorFlow、CUDA、cuDNN、NCCL
 - **持久文件系统**：在实例重启之间保留数据
-- **一键集群**：配备 InfiniBand 的 16-512 GPU Slurm 集群
+- **一键集群**：16-512 个 GPU 的 Slurm 集群，配备 InfiniBand
 - **简单定价**：按分钟计费，无出口费用
-- **全球区域**：遍布全球的 12 多个区域
+- **全球区域**：全球 12+ 个区域
 
 **使用替代方案：**
-- **Modal**：适用于无服务器、自动扩展的工作负载
-- **SkyPilot**：适用于多云编排和成本优化
-- **RunPod**：适用于更便宜的抢占式实例和无服务器端点
-- **Vast.ai**：适用于价格最低的 GPU 市场
+- **Modal**：用于无服务器、自动扩展工作负载
+- **SkyPilot**：用于多云编排和成本优化
+- **RunPod**：用于更便宜的抢占式实例和无服务器端点
+- **Vast.ai**：用于价格最低的 GPU 市场
 
 ## 快速入门
 
@@ -88,13 +88,13 @@ ssh -i ~/.ssh/lambda_key ubuntu@<INSTANCE-IP>
 
 ### 可用 GPU
 
-| GPU | 显存 | 价格/GPU/小时 | 最适合 |
+| GPU | 显存 | 价格/GPU/小时 | 最佳用途 |
 |-----|------|--------------|----------|
 | B200 SXM6 | 180 GB | $4.99 | 最大模型，最快训练 |
 | H100 SXM | 80 GB | $2.99-3.29 | 大型模型训练 |
 | H100 PCIe | 80 GB | $2.49 | 性价比高的 H100 |
 | GH200 | 96 GB | $1.49 | 单 GPU 大型模型 |
-| A100 80GB | 80 GB | $1.79 | 生产训练 |
+| A100 80GB | 80 GB | $1.79 | 生产环境训练 |
 | A100 40GB | 40 GB | $1.29 | 标准训练 |
 | A10 | 24 GB | $0.75 | 推理，微调 |
 | A6000 | 48 GB | $0.80 | 良好的显存/价格比 |
@@ -121,7 +121,7 @@ ssh -i ~/.ssh/lambda_key ubuntu@<INSTANCE-IP>
 ```bash
 # 包含的软件
 - Ubuntu 22.04 LTS
-- NVIDIA 驱动程序（最新版）
+- NVIDIA 驱动（最新版）
 - CUDA 12.x
 - cuDNN 8.x
 - NCCL（用于多 GPU）
@@ -195,7 +195,7 @@ instance_id = response.data.instance_ids[0]
 print(f"已启动：{instance_id}")
 ```
 
-### 列出正在运行的实例
+### 列出运行中的实例
 
 ```python
 instances = api.list_instances()
@@ -293,6 +293,7 @@ python train.py --checkpoint-dir /lambda/nfs/my-storage/checkpoints
 
 ### 最佳实践
 
+<!-- ascii-guard-ignore -->
 ```bash
 # 存储在文件系统上（持久）
 /lambda/nfs/storage/
@@ -305,13 +306,14 @@ python train.py --checkpoint-dir /lambda/nfs/my-storage/checkpoints
 /home/ubuntu/
   └── working/  # 临时文件
 ```
+<!-- ascii-guard-ignore-end -->
 
 ## SSH 配置
 
 ### 添加 SSH 密钥
 
 ```bash
-# 在本地生成密钥
+# 本地生成密钥
 ssh-keygen -t ed25519 -f ~/.ssh/lambda_key
 
 # 将公钥添加到 Lambda 控制台
@@ -351,7 +353,7 @@ ssh -L 8888:localhost:8888 -L 6006:localhost:6006 ubuntu@<IP>
 
 1. 进入“实例”页面
 2. 点击“云 IDE”列中的“启动”
-3. JupyterLab 在浏览器中打开
+3. JupyterLab 将在浏览器中打开
 
 ### 手动访问
 
@@ -410,7 +412,7 @@ if __name__ == "__main__":
 torchrun --nproc_per_node=8 train_ddp.py
 ```
 
-### 检查点保存到文件系统
+### 将检查点保存到文件系统
 
 ```python
 import os
@@ -435,7 +437,7 @@ torch.save({
 - 16-512 个 NVIDIA H100 或 B200 GPU
 - NVIDIA Quantum-2 400 Gb/s InfiniBand
 - 3200 Gb/s GPUDirect RDMA
-- 预装分布式 ML 堆栈
+- 预装分布式机器学习栈
 
 ### 包含的软件
 
@@ -443,7 +445,7 @@ torch.save({
 - NCCL、Open MPI
 - 支持 DDP 和 FSDP 的 PyTorch
 - TensorFlow
-- OFED 驱动程序
+- OFED 驱动
 
 ### 存储
 
@@ -470,7 +472,7 @@ srun --nodes=4 --ntasks-per-node=8 --gpus-per-node=8 \
 ### 防火墙
 
 - 默认：仅开放端口 22（SSH）
-- 在 Lambda 控制台中配置其他端口
+- 在 Lambda 控制台配置其他端口
 - 默认允许 ICMP 流量
 
 ### 私有 IP
@@ -482,12 +484,12 @@ ip addr show | grep 'inet '
 
 ## 常见工作流
 
-### 工作流 1：微调大语言模型（LLM）
+### 工作流 1：微调大语言模型
 
 ```bash
-# 1. 启动 8 个 H100 实例并挂载文件系统
+# 1. 启动 8x H100 实例并挂载文件系统
 
-# 2. SSH 连接并设置环境
+# 2. SSH 登录并设置环境
 ssh ubuntu@<IP>
 pip install transformers accelerate peft
 
@@ -498,7 +500,7 @@ model = AutoModelForCausalLM.from_pretrained('meta-llama/Llama-2-7b-hf')
 model.save_pretrained('/lambda/nfs/storage/models/llama-2-7b')
 "
 
-# 4. 使用文件系统上的检查点进行微调
+# 4. 在文件系统上保存检查点并进行微调
 accelerate launch --num_processes 8 train.py \
   --model_path /lambda/nfs/storage/models/llama-2-7b \
   --output_dir /lambda/nfs/storage/outputs \
@@ -508,7 +510,7 @@ accelerate launch --num_processes 8 train.py \
 ### 工作流 2：批量推理
 
 ```bash
-# 1. 启动 A10 实例（推理场景下性价比更高）
+# 1. 启动 A10 实例（推理更具成本效益）
 
 # 2. 运行推理
 python inference.py \
@@ -522,44 +524,44 @@ python inference.py \
 ### 选择合适的 GPU
 
 | 任务 | 推荐 GPU |
-|------|-----------------|
-| LLM 微调（7B 参数） | A100 40GB |
-| LLM 微调（70B 参数） | 8 个 H100 |
+|------|----------|
+| 大语言模型微调（7B） | A100 40GB |
+| 大语言模型微调（70B） | 8x H100 |
 | 推理 | A10, A6000 |
 | 开发 | V100, A10 |
-| 极致性能 | B200 |
+| 最高性能 | B200 |
 
 ### 降低成本
 
 1. **使用文件系统**：避免重复下载数据
-2. **频繁保存检查点**：以便恢复中断的训练
-3. **按需配置**：不要过度配置 GPU
-4. **手动终止闲置实例**：无自动停止功能，需手动终止
+2. **频繁保存检查点**：恢复中断的训练
+3. **合理配置**：不要过度配置 GPU
+4. **终止空闲实例**：无自动停止功能，需手动终止
 
 ### 监控使用情况
 
-- 仪表盘显示实时 GPU 利用率
+- 仪表板显示实时 GPU 利用率
 - 提供用于编程监控的 API
 
 ## 常见问题
 
 | 问题 | 解决方案 |
-|-------|----------|
-| 实例无法启动 | 检查区域资源可用性，尝试更换 GPU 类型 |
-| SSH 连接被拒绝 | 等待实例初始化完成（3-15 分钟） |
+|------|----------|
+| 实例无法启动 | 检查区域可用性，尝试其他 GPU |
+| SSH 连接被拒绝 | 等待实例初始化（3-15 分钟） |
 | 终止后数据丢失 | 使用持久化文件系统 |
-| 数据传输缓慢 | 使用同区域的文件系统 |
-| 未检测到 GPU | 重启实例，检查驱动程序 |
+| 数据传输缓慢 | 使用同区域文件系统 |
+| GPU 未被检测到 | 重启实例，检查驱动 |
 
-## 参考资料
+## 参考
 
 - **[高级用法](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/lambda-labs/references/advanced-usage.md)** - 多节点训练、API 自动化
 - **[故障排除](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/lambda-labs/references/troubleshooting.md)** - 常见问题及解决方案
 
-## 资源链接
+## 资源
 
-- **官方文档**：https://docs.lambda.ai
+- **文档**：https://docs.lambda.ai
 - **控制台**：https://cloud.lambda.ai
-- **价格信息**：https://lambda.ai/instances
-- **技术支持**：https://support.lambdalabs.com
-- **官方博客**：https://lambda.ai/blog
+- **定价**：https://lambda.ai/instances
+- **支持**：https://support.lambdalabs.com
+- **博客**：https://lambda.ai/blog

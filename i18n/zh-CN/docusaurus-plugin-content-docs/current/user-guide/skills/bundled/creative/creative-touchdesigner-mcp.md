@@ -1,14 +1,14 @@
 ---
 title: "Touchdesigner Mcp"
 sidebar_label: "Touchdesigner Mcp"
-description: "通过 twozero MCP 控制正在运行的 TouchDesigner 实例 — 创建操作器、设置参数、连接线路、执行 Python、构建实时视觉效果"
+description: "通过 twozero MCP 控制正在运行的 TouchDesigner 实例 — 创建操作符、设置参数、连接线路、执行 Python 脚本、构建实时视觉效果"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
 
 # Touchdesigner Mcp
 
-通过 twozero MCP 控制正在运行的 TouchDesigner 实例 — 创建操作器、设置参数、连接线路、执行 Python、构建实时视觉效果。36 个原生工具。
+通过 twozero MCP 控制正在运行的 TouchDesigner 实例 — 创建操作符、设置参数、连接线路、执行 Python 脚本、构建实时视觉效果。36 个原生工具。
 
 ## 技能元数据
 
@@ -19,21 +19,21 @@ description: "通过 twozero MCP 控制正在运行的 TouchDesigner 实例 — 
 | 版本 | `1.1.0` |
 | 作者 | kshitijk4poor |
 | 许可证 | MIT |
-| 标签 | `TouchDesigner`, `MCP`, `twozero`, `创意编程`, `实时视觉效果`, `生成艺术`, `音频响应`, `VJ`, `装置艺术`, `GLSL` |
+| 标签 | `TouchDesigner`, `MCP`, `twozero`, `creative-coding`, `real-time-visuals`, `generative-art`, `audio-reactive`, `VJ`, `installation`, `GLSL` |
 | 相关技能 | [`native-mcp`](/docs/user-guide/skills/bundled/mcp/mcp-native-mcp), [`ascii-video`](/docs/user-guide/skills/bundled/creative/creative-ascii-video), [`manim-video`](/docs/user-guide/skills/bundled/creative/creative-manim-video), `hermes-video` |
 
 ## 参考：完整的 SKILL.md
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是当此技能被触发时 Hermes 加载的完整技能定义。这是智能体在技能激活时看到的指令。
 :::
 
-# TouchDesigner 集成 (twozero MCP)
+# TouchDesigner 集成（twozero MCP）
 
 ## 关键规则
 
 1. **切勿猜测参数名称。** 首先调用 `td_get_par_info` 获取操作符类型。您的训练数据对于 TD 2025.32 是错误的。
-2. **如果触发 `tdAttributeError`，请停止。** 在继续之前，先对失败的节点调用 `td_get_operator_info`。
+2. **如果触发 `tdAttributeError`，请停止。** 在继续之前，请先对失败的节点调用 `td_get_operator_info`。
 3. **切勿在脚本回调中硬编码绝对路径。** 使用 `me.parent()` / `scriptOp.parent()`。
 4. **优先使用原生 MCP 工具，而非 `td_execute_python`。** 使用 `td_create_operator`、`td_set_operator_pars`、`td_get_errors` 等。仅在复杂多步逻辑时才回退到 `td_execute_python`。
 5. **在构建之前调用 `td_get_hints`。** 它会返回与您正在使用的操作符类型相关的模式。
@@ -41,7 +41,7 @@ description: "通过 twozero MCP 控制正在运行的 TouchDesigner 实例 — 
 ## 架构
 
 ```
-Hermes 智能体 -> MCP (流式 HTTP) -> twozero.tox (端口 40404) -> TD Python
+Hermes 智能体 -> MCP（可流式 HTTP）-> twozero.tox（端口 40404）-> TD Python
 ```
 
 36 个原生工具。免费插件（无需付款/许可证 — 已确认至 2026 年 4 月）。
@@ -59,7 +59,7 @@ bash "${HERMES_HOME:-$HOME/.hermes}/skills/creative/touchdesigner-mcp/scripts/se
 脚本将：
 1. 检查 TD 是否正在运行
 2. 如果尚未缓存，则下载 twozero.tox
-3. 将 `twozero_td` MCP 服务器添加到 Hermes 配置中（如果缺失）
+3. 将 `twozero_td` MCP 服务器添加到 Hermes 配置（如果缺失）
 4. 在端口 40404 上测试 MCP 连接
 5. 报告剩余的手动步骤（将 .tox 拖入 TD，启用 MCP 开关）
 
@@ -76,8 +76,8 @@ nc -z 127.0.0.1 40404 && echo "twozero MCP: 就绪"
 
 ## 环境说明
 
-- **非商业版 TD** 将分辨率限制为 1280×1280。使用 `outputresolution = 'custom'` 并显式设置宽度/高度。
-- **编解码器：** `prores`（在 macOS 上首选）或 `mjpa` 作为备用。H.264/H.265/AV1 需要商业许可证。
+- **非商业版 TD** 将分辨率限制为 1280×1280。使用 `outputresolution = 'custom'` 并显式设置宽/高。
+- **编解码器：** `prores`（macOS 首选）或 `mjpa` 作为备选。H.264/H.265/AV1 需要商业许可证。
 - 在设置参数之前始终调用 `td_get_par_info` — 参数名称因 TD 版本而异（参见关键规则 #1）。
 
 ## 工作流
@@ -87,15 +87,15 @@ nc -z 127.0.0.1 40404 && echo "twozero MCP: 就绪"
 ```
 对计划使用的每种类型调用 td_get_par_info。
 对您正在构建的主题调用 td_get_hints（例如 “glsl”、“音频响应”、“反馈”）。
-调用 td_get_focus 以查看用户所在位置以及选中了什么。
-调用 td_get_network 以查看已存在的内容。
+调用 td_get_focus 查看用户所在位置及选中内容。
+调用 td_get_network 查看已存在的内容。
 ```
 
 无需临时节点，无需清理。这完全取代了旧的发现流程。
 
 ### 步骤 1：清理 + 构建
 
-**重要：将清理和创建拆分为单独的 MCP 调用。** 在同一个 `td_execute_python` 脚本中销毁并重新创建同名节点会导致“无效操作符对象”错误。参见陷阱 #11b。
+**重要：将清理和创建拆分为单独的 MCP 调用。** 在单个 `td_execute_python` 脚本中销毁并重新创建同名节点会导致“无效操作符对象”错误。参见陷阱 #11b。
 
 对每个节点使用 `td_create_operator`（自动处理视口定位）：
 
@@ -168,65 +168,66 @@ win.par.winopen.pulse()
 ## MCP 工具快速参考
 
 **核心（最常用）：**
-| 工具 | 说明 |
+| 工具 | 功能 |
 |------|------|
-| `td_execute_python` | 在 TD 中运行任意 Python 代码。完全访问 API。 |
-| `td_create_operator` | 创建带参数和自动定位的节点 |
+| `td_execute_python` | 在 TD 中运行任意 Python 代码。完全 API 访问权限。 |
+| `td_create_operator` | 创建带参数 + 自动定位的节点 |
 | `td_set_operator_pars` | 安全设置参数（验证，不会崩溃） |
 | `td_get_operator_info` | 检查单个节点：连接、参数、错误 |
 | `td_get_operators_info` | 一次调用检查多个节点 |
-| `td_get_network` | 查看指定路径的网络结构 |
+| `td_get_network` | 查看指定路径下的网络结构 |
 | `td_get_errors` | 递归查找错误/警告 |
-| `td_get_par_info` | 获取操作符类型的参数名称（替代发现） |
-| `td_get_hints` | 在构建前获取模式/提示 |
-| `td_get_focus` | 哪个网络已打开，选中了什么 |
+| `td_get_par_info` | 获取操作符类型的参数名称（取代发现流程） |
+| `td_get_hints` | 构建前获取模式/提示 |
+| `td_get_focus` | 查看当前打开的网络及选中内容 |
 
 **读取/写入：**
-| 工具 | 说明 |
+| 工具 | 功能 |
 |------|------|
 | `td_read_dat` | 读取 DAT 文本内容 |
 | `td_write_dat` | 写入/修补 DAT 内容 |
 | `td_read_chop` | 读取 CHOP 通道值 |
 | `td_read_textport` | 读取 TD 控制台输出 |
 
-**视觉：**
-| 工具 | 说明 |
+**可视化：**
+| 工具 | 功能 |
 |------|------|
-| `td_get_screenshot` | 将一个操作符查看器捕获到文件 |
+| `td_get_screenshot` | 捕获单个操作符查看器到文件 |
 | `td_get_screenshots` | 一次捕获多个操作符 |
 | `td_get_screen_screenshot` | 通过 TD 捕获实际屏幕 |
-| `td_navigate_to` | 将网络编辑器跳转到某个操作符 |
+| `td_navigate_to` | 将网络编辑器跳转到指定操作符 |
 
 **搜索：**
-| 工具 | 说明 |
+| 工具 | 功能 |
 |------|------|
 | `td_find_op` | 按名称/类型在整个项目中查找操作符 |
 | `td_search` | 搜索代码、表达式、字符串参数 |
 
 **系统：**
-| 工具 | 说明 |
+| 工具 | 功能 |
 |------|------|
-| `td_get_perf` | 性能分析（FPS、慢操作符） |
+| `td_get_perf` | 性能分析（FPS、慢速操作符） |
 | `td_list_instances` | 列出所有正在运行的 TD 实例 |
-| `td_get_docs` | 深入文档（关于 TD 主题） |
+| `td_get_docs` | 获取 TD 主题的深入文档 |
 | `td_agents_md` | 读取/写入每个 COMP 的 Markdown 文档 |
-| `td_reinit_extension` | 在代码编辑后重新加载扩展 |
-| `td_clear_textport` | 在调试会话前清除控制台 |
+| `td_reinit_extension` | 代码编辑后重新加载扩展 |
+| `td_clear_textport` | 调试会话前清除控制台 |
 
 **输入自动化：**
-| 工具 | 说明 |
+| 工具 | 功能 |
 |------|------|
 | `td_input_execute` | 向 TD 发送鼠标/键盘输入 |
 | `td_input_status` | 轮询输入队列状态 |
 | `td_input_clear` | 停止输入自动化 |
 | `td_op_screen_rect` | 获取节点的屏幕坐标 |
-| `td_click_screen_point` | 点击截图中的某个点 |
+| `td_click_screen_point` | 点击截图中的某一点 |
+| `td_screen_point_to_global` | 将截图像素转换为绝对屏幕坐标 |
 
-参见 `references/mcp-tools.md` 以获取完整的参数模式。
+上表涵盖了典型创意工作流中使用的 32 个工具。其余 4 个工具（`td_project_quit`、`td_test_session`、`td_dev_log`、`td_clear_dev_log`）是管理/开发模式实用程序 — 参见 `references/mcp-tools.md` 获取包含完整参数模式的 36 个工具完整参考。
 
 ## 关键实现规则
 
-**GLSL 时间：** GLSL TOP 中没有 `uTDCurrentTime`。请使用“值”页面：
+**GLSL 时间：** GLSL TOP 中无 `uTDCurrentTime`。请使用“值”页面：
 ```python
 # 首先调用 td_get_par_info(op_type="glslTOP") 以确认参数名称
 td_set_operator_pars(path="/project1/shader", parameters={"value0name": "uTime"})
@@ -235,9 +236,9 @@ td_set_operator_pars(path="/project1/shader", parameters={"value0name": "uTime"}
 # 在 GLSL 中：uniform float uTime;
 ```
 
-备用方案：使用 `rgba32float` 格式的常量 TOP（8 位限制为 0-1，会导致着色器冻结）。
+备选方案：使用 `rgba32float` 格式的 Constant TOP（8 位限制为 0-1，会导致着色器冻结）。
 
-**反馈 TOP：** 使用 `top` 参数引用，而非直接输入连线。“源不足”问题会在首次计算后解决。“计算依赖循环”警告是预期的。
+**Feedback TOP：** 使用 `top` 参数引用，而非直接输入连线。“源不足”会在首次计算后解决。“计算依赖循环”警告是预期的。
 
 **分辨率：** 非商业版限制为 1280×1280。使用 `outputresolution = 'custom'`。
 
@@ -245,7 +246,7 @@ td_set_operator_pars(path="/project1/shader", parameters={"value0name": "uTime"}
 
 **顶点/点访问（TD 2025.32）：** `point.P[0]`、`point.P[1]`、`point.P[2]` — 而非 `.x`、`.y`、`.z`。
 
-**扩展：** `ext0object` 格式在 CONSTANT 模式下为 `"op('./datName').module.ClassName(me)"`。在使用 `td_write_dat` 编辑扩展代码后，调用 `td_reinit_extension`。
+**扩展：** `ext0object` 格式为 CONSTANT 模式下的 `"op('./datName').module.ClassName(me)"`。使用 `td_write_dat` 编辑扩展代码后，调用 `td_reinit_extension`。
 
 **脚本回调：** 始终使用相对路径 `me.parent()` / `scriptOp.parent()`。
 
@@ -260,12 +261,12 @@ rec = root.create(moviefileoutTOP, 'recorder')
 op('/project1/out').outputConnectors[0].connect(rec.inputConnectors[0])
 rec.par.type = 'movie'
 rec.par.file = '/tmp/output.mov'
-rec.par.videocodec = 'prores'  # Apple ProRes — 在 macOS 上不受许可证限制
+rec.par.videocodec = 'prores'  # Apple ProRes — macOS 上无许可证限制
 rec.par.record = True   # 开始
 # rec.par.record = False  # 停止（稍后单独调用）
 ```
 
-H.264/H.265/AV1 需要商业许可证。在 macOS 上使用 `prores` 或 `mjpa` 作为备用。
+H.264/H.265/AV1 需要商业许可证。在 macOS 上使用 `prores` 或 `mjpa` 作为备选。
 提取帧：`ffmpeg -i /tmp/output.mov -vframes 120 /tmp/frames/frame_%06d.png`
 
 **TOP.save() 对动画无用** — 每次捕获相同的 GPU 纹理。始终使用 MovieFileOut。
@@ -274,39 +275,39 @@ H.264/H.265/AV1 需要商业许可证。在 macOS 上使用 `prores` 或 `mjpa` 
 
 1. **通过 `td_get_perf` 验证 FPS > 0。** 如果 FPS=0，录制将为空。参见陷阱 #38-39。
 2. **通过 `td_get_screenshot` 验证着色器输出不为黑色。** 黑色输出 = 着色器错误或缺少输入。参见陷阱 #8、#40。
-3. **如果录制带音频：** 先提示音频开始，然后将录制延迟 3 帧。参见陷阱 #19。
+3. **如果录制带音频：** 先提示音频开始，然后延迟 3 帧再开始录制。参见陷阱 #19。
 4. **在开始录制前设置输出路径** — 在同一脚本中同时设置两者可能导致竞争条件。
 
-## 音频响应式 GLSL（已验证配方）
+## 音频响应 GLSL（已验证配方）
 
-### 正确的信号链（2026年4月测试通过）
+### 正确的信号链（2026年4月测试）
 
 ```
 AudioFileIn CHOP (playmode=sequential)
   → AudioSpectrum CHOP (FFT=512, outputmenu=setmanually, outlength=256, timeslice=ON)
   → Math CHOP (gain=10)
   → CHOP to TOP (dataformat=r, layout=rowscropped)
-  → GLSL TOP 输入 1（频谱纹理，256x2）
+  → GLSL TOP input 1 (频谱纹理, 256x2)
 
-Constant TOP (rgba32float, time) → GLSL TOP 输入 0
+Constant TOP (rgba32float, time) → GLSL TOP input 0
 GLSL TOP → Null TOP → MovieFileOut
 ```
 
 ### 关键音频响应规则（经验证）
 
 1. **AudioSpectrum 必须保持 TimeSlice 开启**。关闭 = 处理整个音频文件 → 24000+ 个样本 → CHOP to TOP 溢出。
-2. **手动将输出长度设置为 256**，通过 `outputmenu='setmanually'` 和 `outlength=256`。默认输出 22050 个样本。
-3. **切勿使用 Lag CHOP 进行频谱平滑。** Lag CHOP 在时间切片模式下运行，会将 256 个样本扩展为 2400+ 个，将所有值平均到接近零（~1e-06）。着色器接收不到可用数据。这是测试中排名第一的音频同步失败原因。
+2. **通过 `outputmenu='setmanually'` 和 `outlength=256` 手动设置输出长度为 256**。默认输出 22050 个样本。
+3. **不要使用 Lag CHOP 进行频谱平滑**。Lag CHOP 在时间切片模式下运行，会将 256 个样本扩展到 2400+，并将所有值平均到接近零（~1e-06）。着色器接收不到可用数据。这是测试中排名第一的音频同步失败原因。
 4. **也不要使用 Filter CHOP** —— 频谱数据存在相同的时间切片扩展问题。
-5. **平滑应在 GLSL 着色器中进行**（如果需要），通过反馈纹理的时间线性插值：`mix(prevValue, newValue, 0.3)`。这可以实现帧级完美同步，且管道延迟为零。
+5. **如果需要平滑，请在 GLSL 着色器中进行**，通过带有反馈纹理的时间线性插值：`mix(prevValue, newValue, 0.3)`。这可以实现帧完美同步，且零管道延迟。
 6. **CHOP to TOP dataformat = 'r'**，layout = 'rowscropped'。频谱输出为 256x2（立体声）。在 y=0.25 处采样第一个声道。
-7. **Math gain = 10**（不是 5）。原始频谱值在低频段约为 0.19。增益 10 可对着色器提供可用的 ~5.0。
-8. **无需 Resample CHOP。** 直接通过 AudioSpectrum 的 `outlength` 参数控制输出大小。
+7. **Math gain = 10**（不是 5）。原始频谱值在低频段约为 0.19。增益 10 对着色器来说可用值约为 5.0。
+8. **不需要 Resample CHOP**。直接通过 AudioSpectrum 的 `outlength` 参数控制输出大小。
 
 ### GLSL 频谱采样
 
 ```glsl
-// 输入 0 = 时间 (1x1 rgba32float)，输入 1 = 频谱 (256x2)
+// Input 0 = time (1x1 rgba32float), Input 1 = spectrum (256x2)
 float iTime = texture(sTD2DInputs[0], vec2(0.5)).r;
 
 // 每个频段采样多个点并平均以提高稳定性：
@@ -332,21 +333,21 @@ float hi   = (texture(sTD2DInputs[1], vec2(0.6, 0.25)).r +
 | MAT | 黄色 | phongMAT, pbrMAT, glslMAT, constMAT | MAT |
 | COMP | 灰色 | geometryCOMP, containerCOMP, cameraCOMP, lightCOMP, windowCOMP | COMP |
 
-## 安全注意事项
+## 安全说明
 
-- MCP 仅在本地主机上运行（端口 40404）。无身份验证 —— 任何本地进程均可发送命令。
+- MCP 仅在本地主机上运行（端口 40404）。无身份验证 —— 任何本地进程都可以发送命令。
 - `td_execute_python` 对 TD Python 环境和文件系统拥有不受限制的访问权限（以 TD 进程用户身份）。
 - `setup.sh` 从官方 404zero.com URL 下载 twozero.tox。如有疑虑，请验证下载内容。
 - 该技能绝不会将数据发送到本地主机之外。所有 MCP 通信均为本地通信。
 
 ## 参考资料
 
-| 文件 | 说明 |
+| 文件 | 内容 |
 |------|------|
-| `references/pitfalls.md` | 真实会话中总结的来之不易的经验教训 |
+| `references/pitfalls.md` | 真实会话中获得的来之不易的经验教训 |
 | `references/operators.md` | 所有操作符家族及其参数和使用案例 |
-| `references/network-patterns.md` | 配方：音频响应式、生成式、GLSL、实例化 |
-| `references/mcp-tools.md` | 完整的 twozero MCP 工具参数模式 |
+| `references/network-patterns.md` | 配方：音频响应、生成式、GLSL、实例化 |
+| `references/mcp-tools.md` | 完整的 twozero MCP 工具参数架构 |
 | `references/python-api.md` | TD Python：op()、脚本、扩展 |
 | `references/troubleshooting.md` | 连接诊断、调试 |
 | `references/glsl.md` | GLSL 统一变量、内置函数、着色器模板 |
@@ -355,8 +356,17 @@ float hi   = (texture(sTD2DInputs[1], vec2(0.6, 0.25)).r +
 | `references/operator-tips.md` | 线框渲染、反馈 TOP 设置 |
 | `references/geometry-comp.md` | Geometry COMP：实例化、POP vs SOP、变形 |
 | `references/audio-reactive.md` | 音频频段提取、节拍检测、包络跟随 |
+| `references/animation.md` | LFO、计时器、关键帧、缓动、表达式驱动动画 |
+| `references/midi-osc.md` | MIDI/OSC 控制器、TouchOSC、多机同步 |
+| `references/particles.md` | POP 和传统 particleSOP —— 发射、力、碰撞 |
+| `references/projection-mapping.md` | 多窗口输出、角钉、网格变形、边缘融合 |
+| `references/external-data.md` | HTTP、WebSocket、MQTT、串口、TCP、webserverDAT |
+| `references/panel-ui.md` | 自定义参数、面板 COMPs、按钮/滑块/字段、panelExecuteDAT |
+| `references/replicator.md` | replicatorCOMP —— 数据驱动克隆、布局、回调 |
+| `references/dat-scripting.md` | Execute DAT 家族 —— chop/dat/parameter/panel/op/executeDAT |
+| `references/3d-scene.md` | 灯光装置、阴影、IBL/立方体贴图、多摄像机、PBR |
 | `scripts/setup.sh` | 自动设置脚本 |
 
 ---
 
-> 你写的不是代码。你是在引导光线。
+> 你写的不是代码。你是在引导光。

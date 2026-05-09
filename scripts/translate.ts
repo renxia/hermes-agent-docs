@@ -188,7 +188,11 @@ IMPORTANT TERMINOLOGY MAPPING (must follow these exact translations):
 
 ` : '';
 
-  const prompt = `Translate the following ${sourceLang} text to ${targetLang}. Maintain the markdown formatting and structure.${terminology}Only return the translated text without any additional comments or explanations:\n\n${text}`;
+  const prompt = `Translate the following ${sourceLang} text to ${targetLang}. Maintain the markdown formatting and structure.${terminology}Only return the translated text without any additional comments or explanations.
+
+CRITICAL: Do NOT translate YAML frontmatter keys (keys inside the "---" block at the top of the file). Only translate the values. For example, keep "title:", "description:", "slug:", etc. as they are in English.
+
+CRITICAL: Preserve ALL HTML entities exactly as they appear. Do NOT convert `&lt;` to `<`, `&gt;` to `>`, `&amp;` to `&`, `&#123;` to `{`, etc. For example, `&lt;100ms` must remain `&lt;100ms`, not `<100ms`.\n\n${text}`;
 
   const response = await openai.chat.completions.create({
     model: options.model,
@@ -252,7 +256,7 @@ async function syncHermesAgentDocs(): Promise<void> {
     const sourceDir = join(sourceDocsDir, dir);
     const targetDir = join(targetDocsDir, dir);
     if (existsSync(sourceDir)) {
-      if (dir === 'docs') rmSync(targetDir, { force: true, recursive: true });
+      if (dir !== 'scripts') rmSync(targetDir, { force: true, recursive: true });
       logger.log(`Copying ${sourceDir} to ${targetDir}...`);
       cpSync(sourceDir, targetDir, { force: true, recursive: true });
     }
@@ -337,12 +341,4 @@ async function main() {
   let current = 0;
   const total = filesToTranslate.length;
 
-  const tasks = filesToTranslate.map(file => () => translateFile(file, sourceLang, targetLang, ++current, total).catch(error => logger.error(`Error translating ${file}:`, error)));
-  await concurrency(tasks, Number(threads));
-
-  logger.log(color.greenBright('Translation completed!'));
-
-  if (options.build) await build();
-}
-
-main().catch(logger.error);
+  const tasks = filesToTranslate.map(file => () => translateFile(file, sourceLang, targetLang, ++current, total).catch(error => logger.error(`Error transl

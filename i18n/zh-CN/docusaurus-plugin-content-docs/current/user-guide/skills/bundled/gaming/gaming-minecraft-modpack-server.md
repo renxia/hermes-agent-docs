@@ -1,54 +1,54 @@
 ---
-title: "Minecraft 模组包服务器 — 从 CurseForge/Modrinth 服务器包压缩文件搭建一个模组化 Minecraft 服务器"
-sidebar_label: "Minecraft 模组包服务器"
-description: "从 CurseForge/Modrinth 服务器包压缩文件搭建一个模组化 Minecraft 服务器"
+title: "Minecraft Modpack 服务器 — 托管模组化 Minecraft 服务器（CurseForge、Modrinth）"
+sidebar_label: "Minecraft Modpack 服务器"
+description: "托管模组化 Minecraft 服务器（CurseForge、Modrinth）"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
-# Minecraft 模组包服务器
+# Minecraft Modpack 服务器
 
-从 CurseForge/Modrinth 服务器包压缩文件搭建一个模组化 Minecraft 服务器。涵盖 NeoForge/Forge 安装、Java 版本、JVM 调优、防火墙、局域网配置、备份和启动脚本。
+托管模组化 Minecraft 服务器（CurseForge、Modrinth）。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 捆绑（默认安装） |
+| 来源 | 内置（默认安装） |
 | 路径 | `skills/gaming/minecraft-modpack-server` |
 
-## 参考：完整的 SKILL.md
+## 参考：完整 SKILL.md
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
 :::
 
-# Minecraft 模组包服务器搭建
+# Minecraft Modpack 服务器设置
 
 ## 何时使用
-- 用户想要从服务器包压缩文件搭建一个模组化 Minecraft 服务器
+- 用户想要从服务器包 zip 文件设置一个模组化 Minecraft 服务器
 - 用户需要帮助配置 NeoForge/Forge 服务器
 - 用户询问关于 Minecraft 服务器性能调优或备份的问题
 
 ## 首先收集用户偏好
-在开始搭建之前，向用户询问：
+在开始设置之前，向用户询问：
 - **服务器名称 / MOTD** — 在服务器列表中应该显示什么？
-- **种子** — 特定种子还是随机？
+- **种子** — 指定种子还是随机？
 - **难度** — 和平 / 简单 / 普通 / 困难？
 - **游戏模式** — 生存 / 创造 / 冒险？
-- **在线模式** — true（Mojang 认证，正版账户）还是 false（局域网/破解版友好）？
-- **玩家数量** — 预计有多少玩家？（影响内存和视距调优）
-- **内存分配** — 还是让智能体根据模组数量和可用内存决定？
-- **视距 / 模拟距离** — 还是让智能体根据玩家数量和硬件选择？
+- **在线模式** — true（Mojang 认证，正版账户）还是 false（局域网/离线友好）？
+- **玩家数量** — 预计有多少玩家？（影响 RAM 和视距调优）
+- **RAM 分配** — 或者让智能体根据模组数量和可用 RAM 决定？
+- **视距 / 模拟距离** — 或者让智能体根据玩家数量和硬件选择？
 - **PvP** — 开启还是关闭？
 - **白名单** — 开放服务器还是仅限白名单？
 - **备份** — 是否需要自动备份？多久一次？
 
-如果用户不关心，使用合理的默认值，但在生成配置之前务必询问。
+如果用户不在意，则使用合理的默认值，但在生成配置之前务必先询问。
 
 ## 步骤
 
-### 1. 下载并检查包
+### 1. 下载并检查服务器包
 ```bash
 mkdir -p ~/minecraft-server
 cd ~/minecraft-server
@@ -56,24 +56,24 @@ wget -O serverpack.zip "<URL>"
 unzip -o serverpack.zip -d server
 ls server/
 ```
-查找：`startserver.sh`，安装器 jar（neoforge/forge），`user_jvm_args.txt`，`mods/` 文件夹。
-检查脚本以确定：模组加载器类型、版本和所需的 Java 版本。
+查找：`startserver.sh`、安装器 jar 文件（neoforge/forge）、`user_jvm_args.txt`、`mods/` 文件夹。
+检查脚本以确定：模组加载器类型、版本以及所需的 Java 版本。
 
 ### 2. 安装 Java
-- Minecraft 1.21+ → Java 21: `sudo apt install openjdk-21-jre-headless`
-- Minecraft 1.18-1.20 → Java 17: `sudo apt install openjdk-17-jre-headless`
-- Minecraft 1.16 及以下 → Java 8: `sudo apt install openjdk-8-jre-headless`
+- Minecraft 1.21+ → Java 21：`sudo apt install openjdk-21-jre-headless`
+- Minecraft 1.18-1.20 → Java 17：`sudo apt install openjdk-17-jre-headless`
+- Minecraft 1.16 及以下 → Java 8：`sudo apt install openjdk-8-jre-headless`
 - 验证：`java -version`
 
 ### 3. 安装模组加载器
-大多数服务器包都包含一个安装脚本。使用 INSTALL_ONLY 环境变量来安装而不启动：
+大多数服务器包都包含一个安装脚本。使用 INSTALL_ONLY 环境变量进行安装而不启动：
 ```bash
 cd ~/minecraft-server/server
 ATM10_INSTALL_ONLY=true bash startserver.sh
 # 或者对于通用的 Forge 包：
 # java -jar forge-*-installer.jar --installServer
 ```
-这会下载库文件，修补服务器 jar 等。
+这将下载库文件、修补服务器 jar 文件等。
 
 ### 4. 接受 EULA
 ```bash
@@ -85,35 +85,35 @@ echo "eula=true" > ~/minecraft-server/server/eula.txt
 ```properties
 motd=\u00a7b\u00a7l服务器名称 \u00a7r\u00a78| \u00a7a模组包名称
 server-port=25565
-online-mode=true          # false 表示无需 Mojang 认证的局域网
-enforce-secure-profile=true  # 与 online-mode 匹配
-difficulty=hard            # 大多数模组包在困难难度下平衡
-allow-flight=true          # 模组化为必需（飞行坐骑/物品）
+online-mode=true          # false 表示无 Mojang 认证的局域网
+enforce-secure-profile=true  # 与 online-mode 保持一致
+difficulty=hard            # 大多数模组包围绕困难难度平衡
+allow-flight=true          # 模组化服务器必需（飞行坐骑/物品）
 spawn-protection=0         # 允许每个人在出生点建造
-max-tick-time=180000       # 模组化需要更长的 tick 超时
+max-tick-time=180000       # 模组化服务器需要更长的 tick 超时时间
 enable-command-block=true
 ```
 
 性能设置（根据硬件调整）：
 ```properties
-# 2 名玩家，性能强劲的机器：
+# 2 名玩家，高性能机器：
 view-distance=16
 simulation-distance=10
 
-# 4-6 名玩家，中等机器：
+# 4-6 名玩家，中等性能机器：
 view-distance=10
 simulation-distance=6
 
-# 8 名以上玩家或硬件较弱：
+# 8 名以上玩家或较弱硬件：
 view-distance=8
 simulation-distance=4
 ```
 
 ### 6. 调整 JVM 参数（user_jvm_args.txt）
-根据玩家数量和模组数量调整内存。模组化的经验法则：
+根据玩家数量和模组数量调整 RAM。模组化服务器的经验法则：
 - 100-200 个模组：6-12GB
 - 200-350+ 个模组：12-24GB
-- 为操作系统/其他任务至少保留 8GB 空闲内存
+- 至少为操作系统/其他任务保留 8GB 空闲内存
 
 ```
 -Xms12G
@@ -189,17 +189,17 @@ chmod +x ~/minecraft-server/backup.sh
 ```
 
 ## 陷阱
-- 模组化务必设置 `allow-flight=true` — 否则带有喷气背包/飞行的模组会踢出玩家
-- `max-tick-time=180000` 或更高 — 模组化服务器在世界生成期间通常有较长的 tick
-- 首次启动很慢（大型包需要几分钟）— 不要惊慌
+- 对于模组化服务器，**务必设置 `allow-flight=true`** — 否则带有喷气背包/飞行功能的模组会踢出玩家
+- `max-tick-time=180000` 或更高 — 模组化服务器在世界生成期间通常有较长的 tick 时间
+- 首次启动非常慢（大型包可能需要几分钟）— 不要惊慌
 - 首次启动时的“无法跟上！”警告是正常的，初始区块生成后会稳定下来
-- 如果 online-mode=false，也要设置 enforce-secure-profile=false，否则客户端会被拒绝
-- 包的 startserver.sh 通常有一个自动重启循环 — 创建一个不包含它的干净启动脚本
+- 如果 online-mode=false，也要设置 enforce-secure-profile=false，否则客户端会被拒绝连接
+- 服务器包的 startserver.sh 通常包含自动重启循环 — 创建一个不包含它的干净启动脚本
 - 删除 world/ 文件夹以使用新种子重新生成
 - 某些包有环境变量来控制行为（例如，ATM10 使用 ATM10_JAVA、ATM10_RESTART、ATM10_INSTALL_ONLY）
 
 ## 验证
 - `pgrep -fa neoforge` 或 `pgrep -fa minecraft` 检查是否正在运行
 - 检查日志：`tail -f ~/minecraft-server/server/logs/latest.log`
-- 在日志中查找“Done (Xs)!” = 服务器已就绪
+- 在日志中查找“Done (Xs)!” = 服务器已准备就绪
 - 测试连接：玩家在多人游戏中添加服务器 IP

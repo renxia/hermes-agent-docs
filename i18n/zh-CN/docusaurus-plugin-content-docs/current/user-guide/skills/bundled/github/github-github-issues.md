@@ -1,14 +1,14 @@
 ---
-title: "Github Issues — 创建、管理、分类和关闭 GitHub 问题"
+title: "Github Issues — 通过 gh 或 REST 创建、分类、标记、分配 GitHub Issues"
 sidebar_label: "Github Issues"
-description: "创建、管理、分类和关闭 GitHub 问题"
+description: "通过 gh 或 REST 创建、分类、标记、分配 GitHub Issues"
 ---
 
 {/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
 
 # Github Issues
 
-创建、管理、分类和关闭 GitHub 问题。搜索现有问题、添加标签、分配人员并链接到 PR。支持使用 gh CLI，或通过 curl 调用 git + GitHub REST API 作为备用方案。
+通过 gh 或 REST 创建、分类、标记、分配 GitHub Issues。
 
 ## 技能元数据
 
@@ -19,23 +19,23 @@ description: "创建、管理、分类和关闭 GitHub 问题"
 | 版本 | `1.1.0` |
 | 作者 | Hermes 智能体 |
 | 许可证 | MIT |
-| 标签 | `GitHub`、`Issues`、`Project-Management`、`Bug-Tracking`、`Triage` |
-| 相关技能 | [`github-auth`](/docs/user-guide/skills/bundled/github/github-github-auth)、[`github-pr-workflow`](/docs/user-guide/skills/bundled/github/github-github-pr-workflow) |
+| 标签 | `GitHub`, `Issues`, `项目管理`, `Bug 跟踪`, `分类` |
+| 相关技能 | [`github-auth`](/docs/user-guide/skills/bundled/github/github-github-auth), [`github-pr-workflow`](/docs/user-guide/skills/bundled/github/github-github-pr-workflow) |
 
 ## 参考：完整的 SKILL.md
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是 Hermes 在此技能被触发时加载的完整技能定义。这是当技能处于活动状态时，智能体看到的指令。
 :::
 
-# GitHub Issues 管理
+# GitHub 问题管理
 
-创建、搜索、分类和管理 GitHub Issues。每个部分首先展示 `gh` 命令，然后是 `curl` 备用方案。
+创建、搜索、分类和管理 GitHub 问题。每个部分首先显示 `gh` 命令，然后是 `curl` 备用方案。
 
 ## 先决条件
 
-- 已通过 GitHub 身份验证（参见 `github-auth` 技能）
-- 位于带有 GitHub 远程仓库的 git 仓库中，或显式指定仓库
+- 已通过 GitHub 认证（参见 `github-auth` 技能）
+- 位于具有 GitHub 远程仓库的 git 仓库中，或明确指定仓库
 
 ### 设置
 
@@ -61,7 +61,7 @@ REPO=$(echo "$OWNER_REPO" | cut -d/ -f2)
 
 ---
 
-## 1. 查看 Issues
+## 1. 查看问题
 
 **使用 gh：**
 
@@ -76,7 +76,7 @@ gh issue view 42
 **使用 curl：**
 
 ```bash
-# 列出开放 issues
+# 列出开放问题
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/$OWNER/$REPO/issues?state=open&per_page=20" \
@@ -97,7 +97,7 @@ for i in json.load(sys.stdin):
     if 'pull_request' not in i:
         print(f\"#{i['number']}  {i['title']}\")"
 
-# 查看特定 issue
+# 查看特定问题
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/issues/42 \
@@ -111,7 +111,7 @@ print(f\"状态: {i['state']}  标签: {labels}  负责人: {assignees}\")
 print(f\"作者: {i['user']['login']}  创建时间: {i['created_at']}\")
 print(f\"\n{i['body']}\")"
 
-# 搜索 issues
+# 搜索问题
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/search/issues?q=authentication+error+repo:$OWNER/$REPO" \
@@ -121,7 +121,7 @@ for i in json.load(sys.stdin)['items']:
     print(f\"#{i['number']}  {i['state']:6}  {i['title']}\")"
 ```
 
-## 2. 创建 Issues
+## 2. 创建问题
 
 **使用 gh：**
 
@@ -138,7 +138,7 @@ gh issue create \
 4. 实际结果：跳转到 /dashboard（应跳转到 /settings）
 
 ## 预期行为
-应遵循 ?next= 查询参数。" \
+应尊重 ?next= 查询参数。" \
   --label "bug,backend" \
   --assignee "username"
 ```
@@ -151,7 +151,7 @@ curl -s -X POST \
   https://api.github.com/repos/$OWNER/$REPO/issues \
   -d '{
     "title": "登录重定向忽略 ?next= 参数",
-    "body": "## 描述\n登录后，用户总是跳转到 /dashboard。\n\n## 复现步骤\n1. 在未登录状态下访问 /settings\n2. 被重定向到 /login?next=/settings\n3. 登录\n4. 实际结果：跳转到 /dashboard\n\n## 预期行为\n应遵循 ?next= 查询参数。",
+    "body": "## 描述\n登录后，用户总是跳转到 /dashboard。\n\n## 复现步骤\n1. 在未登录状态下访问 /settings\n2. 被重定向到 /login?next=/settings\n3. 登录\n4. 实际结果：跳转到 /dashboard\n\n## 预期行为\n应尊重 ?next= 查询参数。",
     "labels": ["bug", "backend"],
     "assignees": ["username"]
   }'
@@ -187,14 +187,14 @@ curl -s -X POST \
 ## 动机
 <为什么这会有用>
 
-## 建议方案
+## 建议解决方案
 <它如何工作>
 
 ## 考虑过的替代方案
 <其他方法>
 ```
 
-## 3. 管理 Issues
+## 3. 管理问题
 
 ### 添加/移除标签
 
@@ -229,7 +229,7 @@ for l in json.load(sys.stdin):
     print(f\"  {l['name']:30}  {l.get('description', '')}\")"
 ```
 
-### 分配负责人
+### 分配
 
 **使用 gh：**
 
@@ -290,9 +290,9 @@ curl -s -X PATCH \
   -d '{"state": "open"}'
 ```
 
-### 将 Issues 链接到 PRs
+### 将问题链接到 PR
 
-当 PR 合并时，如果其正文包含正确的关键词，Issues 会自动关闭：
+当 PR 合并时，如果其正文包含正确的关键词，问题会自动关闭：
 
 ```
 Closes #42
@@ -300,7 +300,7 @@ Fixes #42
 Resolves #42
 ```
 
-要从 Issue 创建分支：
+要从问题创建分支：
 
 **使用 gh：**
 
@@ -315,11 +315,11 @@ git checkout main && git pull origin main
 git checkout -b fix/issue-42-login-redirect
 ```
 
-## 4. Issue 分类工作流
+## 4. 问题分类工作流
 
-当被要求对 Issues 进行分类时：
+当被要求对问题进行分类时：
 
-1. **列出未分类的 Issues：**
+1. **列出未分类的问题：**
 
 ```bash
 # 使用 gh
@@ -336,22 +336,22 @@ for i in json.load(sys.stdin):
         print(f\"#{i['number']}  {i['title']}\")"
 ```
 
-2. **阅读并分类**每个 Issue（查看详情，理解 Bug/功能）
+2. **阅读并分类** 每个问题（查看详情，理解 bug/功能）
 
-3. **应用标签和优先级**（参见上文“管理 Issues”）
+3. **应用标签和优先级**（参见上文“管理问题”）
 
-4. **分配负责人**（如果所有者明确）
+4. **分配** 如果负责人明确
 
 5. **添加分类注释**（如果需要）
 
 ## 5. 批量操作
 
-对于批量操作，可将 API 调用与 Shell 脚本结合使用：
+对于批量操作，可以将 API 调用与 shell 脚本结合使用：
 
 **使用 gh：**
 
 ```bash
-# 关闭所有带有特定标签的 Issues
+# 关闭所有带有特定标签的问题
 gh issue list --label "wontfix" --json number --jq '.[].number' | \
   xargs -I {} gh issue close {} --reason "not planned"
 ```
@@ -359,7 +359,7 @@ gh issue list --label "wontfix" --json number --jq '.[].number' | \
 **使用 curl：**
 
 ```bash
-# 列出带有标签的 Issue 编号，然后逐个关闭
+# 列出带有标签的问题编号，然后逐个关闭
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/$OWNER/$REPO/issues?labels=wontfix&state=open" \
@@ -377,11 +377,11 @@ curl -s \
 
 | 操作 | gh | curl 端点 |
 |--------|-----|--------------|
-| 列出 Issues | `gh issue list` | `GET /repos/{o}/{r}/issues` |
-| 查看 Issue | `gh issue view N` | `GET /repos/{o}/{r}/issues/N` |
-| 创建 Issue | `gh issue create ...` | `POST /repos/{o}/{r}/issues` |
+| 列出问题 | `gh issue list` | `GET /repos/{o}/{r}/issues` |
+| 查看问题 | `gh issue view N` | `GET /repos/{o}/{r}/issues/N` |
+| 创建问题 | `gh issue create ...` | `POST /repos/{o}/{r}/issues` |
 | 添加标签 | `gh issue edit N --add-label ...` | `POST /repos/{o}/{r}/issues/N/labels` |
-| 分配负责人 | `gh issue edit N --add-assignee ...` | `POST /repos/{o}/{r}/issues/N/assignees` |
+| 分配 | `gh issue edit N --add-assignee ...` | `POST /repos/{o}/{r}/issues/N/assignees` |
 | 评论 | `gh issue comment N --body ...` | `POST /repos/{o}/{r}/issues/N/comments` |
 | 关闭 | `gh issue close N` | `PATCH /repos/{o}/{r}/issues/N` |
 | 搜索 | `gh issue list --search "..."` | `GET /search/issues?q=...` |

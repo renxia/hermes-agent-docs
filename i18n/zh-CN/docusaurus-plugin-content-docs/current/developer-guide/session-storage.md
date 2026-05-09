@@ -1,29 +1,32 @@
 # 会话存储
 
-Hermes 智能体使用 SQLite 数据库 (`~/.hermes/state.db`) 来持久化会话元数据、完整的消息历史记录以及跨 CLI 和网关会话的模型配置。这取代了之前每个会话使用 JSONL 文件的方法。
+Hermes 智能体使用 SQLite 数据库 (`~/.hermes/state.db`) 来持久化会话元数据、完整消息历史以及 CLI 和网关会话之间的模型配置。这取代了之前每个会话使用 JSONL 文件的方法。
 
 源文件：`hermes_state.py`
+
 
 ## 架构概览
 
 ```
 ~/.hermes/state.db (SQLite, WAL 模式)
-├── sessions          — 会话元数据、token 计数、计费
-├── messages          — 每个会话的完整消息历史记录
-├── messages_fts      — 用于全文搜索的 FTS5 虚拟表
-└── schema_version    — 跟踪迁移状态的单行表
+├── sessions              — 会话元数据、令牌计数、计费信息
+├── messages              — 每个会话的完整消息历史
+├── messages_fts          — FTS5 虚拟表（内容 + 工具名称 + 工具调用）
+├── messages_fts_trigram  — 使用三元语法分词器的 FTS5 虚拟表（CJK / 子字符串搜索）
+├── state_meta            — 键/值元数据表
+└── schema_version        — 跟踪迁移状态的单行表
 ```
 
 关键设计决策：
-- **WAL 模式**，支持并发读取器 + 一个写入器（网关多平台）
-- **FTS5 虚拟表**，用于在所有会话消息中进行快速文本搜索
+- **WAL 模式** 支持并发读取器 + 单个写入器（网关多平台）
+- **FTS5 虚拟表** 用于在所有会话消息中进行快速文本搜索
 - 通过 `parent_session_id` 链实现**会话谱系**（由压缩触发的拆分）
-- **来源标记**（`cli`、`telegram`、`discord` 等），用于平台过滤
-- 批处理运行器和强化学习轨迹不存储在此处（独立系统）
+- **来源标记**（`cli`、`telegram`、`discord` 等）用于平台过滤
+- 批量运行器和强化学习轨迹不存储在此处（独立系统）
 
-## SQLite 架构
+## SQLite 数据库模式
 
-### 会话表
+### 会话表（Sessions Table）
 
 ```sql
 CREATE TABLE IF NOT EXISTS sessions (
@@ -53,6 +56,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     cost_source TEXT,
     pricing_version TEXT,
     title TEXT,
+    api_call_count INTEGER DEFAULT 0,
     FOREIGN KEY (parent_session_id) REFERENCES sessions(id)
 );
 
@@ -63,7 +67,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_title_unique
     ON sessions(title) WHERE title IS NOT NULL;
 ```
 
-### 消息表
+### 消息表（Messages Table）
 
 ```sql
 CREATE TABLE IF NOT EXISTS messages (
@@ -103,7 +107,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS messages_fts USING fts5(
 );
 ```
 
-FTS5 表通过三个触发器与 `messages` 表保持同步，分别在 `messages` 表的 INSERT、UPDATE 和 DELETE 操作时触发：
+FTS5 表通过三个触发器保持同步，分别在 `messages` 表发生 INSERT、UPDATE 和 DELETE 时触发：
 
 ```sql
 CREATE TRIGGER IF NOT EXISTS messages_fts_insert AFTER INSERT ON messages BEGIN
@@ -122,36 +126,38 @@ CREATE TRIGGER IF NOT EXISTS messages_fts_update AFTER UPDATE ON messages BEGIN
 END;
 ```
 
-## 架构版本与迁移
+## 模式版本与迁移
 
-当前架构版本：**9**
+当前模式版本：**11**
 
-`schema_version` 表存储一个整数值。初始化时，`_init_schema()` 会检查当前版本并按顺序应用迁移：
+`schema_version` 表存储一个整数。简单的列添加由 `_reconcile_columns()` 函数声明式处理（该函数将当前列与 `SCHEMA_SQL` 进行比对，并 ADD 任何缺失的列）。版本控制链保留用于数据迁移以及无法声明式表达的索引/FTS 变更：
 
 | 版本 | 变更 |
 |------|------|
-| 1 | 初始架构（sessions、messages、FTS5） |
-| 2 | 为 messages 表添加 `finish_reason` 列 |
-| 3 | 为 sessions 表添加 `title` 列 |
-| 4 | 为 `title` 添加唯一索引（允许 NULL，非 NULL 值必须唯一） |
+| 1 | 初始模式（sessions、messages、FTS5） |
+| 2 | 向 messages 添加 `finish_reason` 列 |
+| 3 | 向 sessions 添加 `title` 列 |
+| 4 | 在 `title` 上添加唯一索引（允许 NULL，非 NULL 值必须唯一） |
 | 5 | 添加计费相关列：`cache_read_tokens`、`cache_write_tokens`、`reasoning_tokens`、`billing_provider`、`billing_base_url`、`billing_mode`、`estimated_cost_usd`、`actual_cost_usd`、`cost_status`、`cost_source`、`pricing_version` |
-| 6 | 为 messages 表添加推理相关列：`reasoning`、`reasoning_details`、`codex_reasoning_items` |
-| 7 | 为 messages 表添加 `reasoning_content` 列 |
-| 8 | 为 sessions 表添加 `api_call_count` 列 |
-| 9 | 为 messages 表添加 `codex_message_items` 列，用于 Codex Responses 的消息 ID/阶段重放 |
+| 6 | 向 messages 添加推理相关列：`reasoning`、`reasoning_details`、`codex_reasoning_items` |
+| 7 | 向 messages 添加 `reasoning_content` 列 |
+| 8 | 向 sessions 添加 `api_call_count` 列 |
+| 9 | 向 messages 添加 `codex_message_items` 列，用于 Codex Responses 消息 ID/阶段重放 |
+| 10 | 添加 `messages_fts_trigram` 虚拟表（三元语法分词器，用于中日韩语言/子字符串搜索），并回填现有行 |
+| 11 | 重新索引 `messages_fts` 和 `messages_fts_trigram`，使其涵盖 `tool_name` + `tool_calls`，并从外部内容模式切换为内联模式；删除旧触发器并回填每条消息行 |
 
-每次迁移均使用 `ALTER TABLE ADD COLUMN` 并在 try/except 块中处理列已存在的情况（幂等操作）。每次成功迁移后，版本号递增。
+声明式列添加使用 `ALTER TABLE ADD COLUMN` 包装在 try/except 中，以处理列已存在的情况（幂等操作）。每次成功迁移块后，版本号递增。
 
-## 写入争用处理
+## 写竞争处理
 
-多个 hermes 进程（网关 + CLI 会话 + 工作树智能体）共享同一个 `state.db`。`SessionDB` 类通过以下方式处理写入争用：
+多个 hermes 进程（网关 + CLI 会话 + 工作树智能体）共享一个 `state.db`。`SessionDB` 类通过以下方式处理写竞争：
 
 - **短 SQLite 超时**（1 秒），而非默认的 30 秒
-- **应用层重试**，带随机抖动（20-150 毫秒，最多重试 15 次）
-- **BEGIN IMMEDIATE 事务**，以便在事务开始时暴露锁争用
-- **定期 WAL 检查点**，每成功写入 50 次执行一次（PASSIVE 模式）
+- **应用层重试**，带有随机抖动（20-150 毫秒，最多重试 15 次）
+- **BEGIN IMMEDIATE 事务**，在事务开始时即暴露锁竞争
+- **定期 WAL 检查点**，每 50 次成功写入执行一次（PASSIVE 模式）
 
-这避免了“ convoy 效应”，即 SQLite 确定性内部退避导致所有竞争写入者以相同间隔重试。
+这避免了“ convoy 效应”，即 SQLite 确定性内部退避导致所有竞争写入器以相同间隔重试。
 
 ```
 _WRITE_MAX_RETRIES = 15
@@ -171,7 +177,7 @@ db = SessionDB()                           # 默认路径：~/.hermes/state.db
 db = SessionDB(db_path=Path("/tmp/test.db"))  # 自定义路径
 ```
 
-### 创建与管理会话
+### 创建和管理会话
 
 ```python
 # 创建新会话
@@ -200,17 +206,17 @@ msg_id = db.append_message(
     tool_calls=[{"id": "call_1", "function": {"name": "terminal", "arguments": "{}"}}],
     token_count=150,
     finish_reason="stop",
-    reasoning="让我想想...",
+    reasoning="让我想想这个...",
 )
 ```
 
 ### 检索消息
 
 ```python
-# 获取包含所有元数据的原始消息
+# 包含所有元数据的原始消息
 messages = db.get_messages("sess_abc123")
 
-# 获取 OpenAI 对话格式（用于 API 重放）
+# OpenAI 对话格式（用于 API 重放）
 conversation = db.get_messages_as_conversation("sess_abc123")
 # 返回：[{"role": "user", "content": "..."}, {"role": "assistant", ...}]
 ```
@@ -231,7 +237,7 @@ next_title = db.get_next_title_in_lineage("修复 Docker 构建")
 
 ## 全文搜索
 
-`search_messages()` 方法支持 FTS5 查询语法，并自动对用户输入进行 sanitization（清理）。
+`search_messages()` 方法支持 FTS5 查询语法，并自动对用户输入进行清理。
 
 ### 基础搜索
 
@@ -252,7 +258,7 @@ results = db.search_messages("docker deployment")
 ### 过滤搜索
 
 ```python
-# 仅搜索 CLI 会话
+# 仅在 CLI 会话中搜索
 results = db.search_messages("error", source_filter=["cli"])
 
 # 排除网关会话
@@ -267,17 +273,17 @@ results = db.search_messages("help", role_filter=["user"])
 每个结果包含：
 - `id`、`session_id`、`role`、`timestamp`
 - `snippet` — FTS5 生成的片段，带有 `>>>match<<<` 标记
-- `context` — 匹配消息前后各一条消息（内容截断至 200 字符）
+- `context` — 匹配项前后各一条消息（内容截断至 200 字符）
 - `source`、`model`、`session_started` — 来自父会话
 
-`_sanitize_fts5_query()` 方法处理边界情况：
-- 去除未匹配的引号和特殊字符
-- 将连字符术语用引号包裹（`chat-send` → `"chat-send"`）
+`_sanitize_fts5_query()` 方法处理边缘情况：
+- 去除不匹配的引号和特殊字符
+- 将带连字符的术语用引号包裹（`chat-send` → `"chat-send"`）
 - 移除悬空的布尔运算符（`hello AND` → `hello`）
 
 ## 会话谱系
 
-会话可通过 `parent_session_id` 形成链式结构。当上下文压缩触发网关中的会话拆分时，即会发生此情况。
+会话可通过 `parent_session_id` 形成链式结构。当上下文压缩触发网关中的会话分割时，就会发生这种情况。
 
 ### 查询：查找会话谱系
 
@@ -335,7 +341,7 @@ WHERE model IS NOT NULL
 GROUP BY model
 ORDER BY total_cost DESC;
 
--- 使用 token 最多的会话
+-- Token 使用量最高的会话
 SELECT id, title, model, input_tokens + output_tokens AS total_tokens,
        estimated_cost_usd
 FROM sessions
@@ -349,7 +355,7 @@ LIMIT 10;
 # 导出单个会话及其消息
 data = db.export_session("sess_abc123")
 
-# 将所有会话（包含消息）以字典列表形式导出
+# 导出所有会话（包含消息）为字典列表
 all_data = db.export_all(source="cli")
 
 # 删除旧会话（仅限已结束的会话）
@@ -367,6 +373,8 @@ db.delete_session("sess_abc123")
 
 默认路径：`~/.hermes/state.db`
 
-该路径由 `hermes_constants.get_hermes_home()` 函数确定，默认解析为 `~/.hermes/`，或由 `HERMES_HOME` 环境变量的值决定。
+该路径由 `hermes_constants.get_hermes_home()` 推导得出，默认解析为
+`~/.hermes/`，或 `HERMES_HOME` 环境变量的值。
 
-数据库文件、WAL 文件（`state.db-wal`）和共享内存文件（`state.db-shm`）均创建于同一目录中。
+数据库文件、WAL 文件（`state.db-wal`）和共享内存文件（`state.db-shm`）
+均创建于同一目录中。
