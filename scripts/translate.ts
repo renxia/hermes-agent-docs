@@ -192,7 +192,7 @@ IMPORTANT TERMINOLOGY MAPPING (must follow these exact translations):
 
 CRITICAL: Do NOT translate YAML frontmatter keys (keys inside the "---" block at the top of the file). Only translate the values. For example, keep "title:", "description:", "slug:", etc. as they are in English.
 
-CRITICAL: Preserve ALL HTML entities exactly as they appear. Do NOT convert \`&lt;\` to \`<\`, \`&gt;\` to \`>\`, \`&amp;\` to \`&\`, etc. For example, \`&lt;100ms\` must remain \`&lt;100ms\`, not \`<100ms\`.\n\n${text}`;
+CRITICAL: Preserve ALL HTML entities exactly as they appear. Do NOT convert \`&lt;\` to \`<\`, \`&gt;\` to \`>\`, \`&amp;\` to \`&\`, \`&#123;\` to \`{\`,, \`&#125;\` to \`}\`, etc. For example, \`&lt;100ms\` must remain \`&lt;100ms\`, not \`<100ms\`.\n\n${text}`;
 
   const response = await openai.chat.completions.create({
     model: options.model,

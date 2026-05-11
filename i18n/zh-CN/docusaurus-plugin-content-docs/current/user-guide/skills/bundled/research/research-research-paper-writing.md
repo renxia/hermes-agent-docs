@@ -909,8 +909,8 @@ LaTeX质量清单（每次编辑后验证）：
 - [ ] 没有未闭合的数学符号（$符号平衡）
 - [ ] 仅引用存在的图表/表格（\ref匹配\label）
 - [ ] 没有虚构的引用（\cite匹配.bib中的条目）
-- [ ] 每个\begin{env}都有匹配的\end{env}（特别是figure、table、algorithm）
-- [ ] 没有HTML污染（&lt;/end{figure}>而不是\end{figure}）
+- [ ] 每个`\begin{env}`都有匹配的`\end{env}`（特别是figure、table、algorithm）
+- [ ] 没有HTML污染（`</end{figure}>`而不是`\end{figure}`）
 - [ ] 在数学模式外没有未转义的下划线（在文本中使用\_）
 - [ ] 没有重复的\label定义
 - [ ] 没有重复的章节标题
