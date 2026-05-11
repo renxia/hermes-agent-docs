@@ -124,7 +124,7 @@ pip install locust
 # 运行：locust -f test_load.py --host http://localhost:8000
 ```
 
-验证 TTFT（首个 token 时间）< 500ms 且吞吐量 > 100 请求/秒。
+验证 TTFT（首个 token 时间）&lt; 500ms 且吞吐量 > 100 请求/秒。
 
 **步骤 3：启用监控**
 
@@ -155,7 +155,7 @@ docker run --gpus all -p 8000:8000 \
 **步骤 5：验证性能指标**
 
 检查部署是否满足目标：
-- TTFT < 500ms（针对短提示）
+- TTFT &lt; 500ms（针对短提示）
 - 吞吐量 > 目标请求/秒
 - GPU 利用率 > 80%
 - 日志中无 OOM 错误
@@ -338,7 +338,7 @@ vllm serve MODEL --enable-chunked-prefill
 vllm serve MODEL --trust-remote-code
 ```
 
-**问题：吞吐量低（<50 请求/秒）**
+**问题：吞吐量低（&lt;50 请求/秒）**
 
 增加并发序列数：
 ```bash

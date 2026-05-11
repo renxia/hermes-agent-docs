@@ -17,7 +17,7 @@ function build() {
   const distDir = join(rootDir, 'dist');
   const targetDir = join(distDir, 'hermes-agent-docs');
   const docsDir = join(targetDir, 'docs');
-  const staticIndexHtml = join(docsDir, '_index.html');
+  const staticIndexHtml = join(rootDir, 'scripts', '_index.html');
   const zipFileName = 'hermes-agent-docs.zip';
 
   // Step 1: 执行 docusaurus build，产出 build 目录

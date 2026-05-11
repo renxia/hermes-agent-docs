@@ -215,7 +215,7 @@ vector_store = FaissVectorStore(faiss_index=faiss_index)
 
 ## 最佳实践
 
-1. **选择合适的索引类型** - Flat 适用于 <10K，IVF 适用于 10K-1M，HNSW 适用于追求质量
+1. **选择合适的索引类型** - Flat 适用于 &lt;10K，IVF 适用于 10K-1M，HNSW 适用于追求质量
 2. **余弦归一化** - 对归一化向量使用 IndexFlatIP
 3. **对大型数据集使用 GPU** - 快 10-100 倍
 4. **保存训练好的索引** - 训练成本高昂

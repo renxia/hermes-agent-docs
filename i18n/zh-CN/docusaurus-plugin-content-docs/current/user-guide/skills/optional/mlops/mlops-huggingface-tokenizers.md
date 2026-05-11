@@ -35,14 +35,14 @@ description: "面向研究和生产环境优化的快速分词器"
 ## 何时使用 HuggingFace Tokenizers
 
 **在以下情况下使用 HuggingFace Tokenizers：**
-- 需要极快的分词速度（每 GB 文本 <20 秒）
+- 需要极快的分词速度（每 GB 文本 &lt;20 秒）
 - 从头开始训练自定义分词器
 - 需要对齐跟踪（分词 → 原始文本位置）
 - 构建生产级 NLP 流水线
 - 需要高效地对大型语料库进行分词
 
 **性能**：
-- **速度**：在 CPU 上分词 1GB 文本 <20 秒
+- **速度**：在 CPU 上分词 1GB 文本 &lt;20 秒
 - **实现**：Rust 核心，带有 Python/Node.js 绑定
 - **效率**：比纯 Python 实现快 10-100 倍
 
@@ -310,7 +310,7 @@ tokenizer.post_processor = TemplateProcessing(
 
 **常见模式**：
 ```python
-# GPT-2：句子 
+# GPT-2：句子
 TemplateProcessing(
     single="$A ",
     special_tokens=[("", 50256)]

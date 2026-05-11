@@ -148,7 +148,7 @@ cat ~/.ssh/id_ed25519.pub
 指导用户在以下位置添加公钥：**https://github.com/settings/keys**
 - 点击 "New SSH key"
 - 粘贴公钥内容
-- 为其命名，例如 "hermes-agent-<机器名>"
+- 为其命名，例如 "hermes-agent-&lt;机器名>"
 
 **步骤 3：测试连接**
 

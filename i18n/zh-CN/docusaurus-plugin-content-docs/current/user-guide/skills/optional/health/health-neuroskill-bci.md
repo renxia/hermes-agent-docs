@@ -59,7 +59,7 @@ npx neuroskill status --json      # 可机器解析的 JSON
 
 ---
 
-## CLI 参考：`npx neuroskill <command>`
+## CLI 参考：`npx neuroskill &lt;command>`
 
 所有命令均支持 `--json`（原始 JSON，可管道传输）和 `--full`（人类可读摘要 + JSON）。
 
@@ -86,11 +86,11 @@ npx neuroskill status --json      # 可机器解析的 JSON
 |------|-------------|
 | `--json` | 原始 JSON 输出（无 ANSI 转义，可管道传输） |
 | `--full` | 人类可读摘要 + 彩色 JSON |
-| `--port <N>` | 覆盖服务器端口（默认：自动发现，通常为 8375） |
+| `--port &lt;N>` | 覆盖服务器端口（默认：自动发现，通常为 8375） |
 | `--ws` | 强制使用 WebSocket 传输 |
 | `--http` | 强制使用 HTTP 传输 |
-| `--k <N>` | 最近邻数量（用于 search、search-labels） |
-| `--seconds <N>` | listen 持续时间（默认：5） |
+| `--k &lt;N>` | 最近邻数量（用于 search、search-labels） |
+| `--seconds &lt;N>` | listen 持续时间（默认：5） |
 | `--trends` | 显示每次会话的指标趋势（用于 sessions） |
 | `--dot` | Graphviz DOT 输出（用于 interactive） |
 
@@ -150,13 +150,13 @@ npx neuroskill status --json
 
 关键解读阈值（完整指南请参见 `references/metrics.md`）：
 - **专注度 > 0.70** → 接近心流状态，需保护
-- **专注度 < 0.40** → 建议休息或启动干预协议
+- **专注度 &lt; 0.40** → 建议休息或启动干预协议
 - **困倦度 > 0.60** → 疲劳警告，存在微睡眠风险
-- **放松度 < 0.30** → 需要压力干预
+- **放松度 &lt; 0.30** → 需要压力干预
 - **认知负荷 > 0.70 持续** → 建议思维清空或休息
 - **TBR > 1.5** → θ 波主导，执行控制能力下降
-- **FAA < 0** → 退缩/负面情绪 — 考虑 FAA 再平衡
-- **SNR < 3 dB** → 信号不可靠，建议重新调整电极位置
+- **FAA &lt; 0** → 退缩/负面情绪 — 考虑 FAA 再平衡
+- **SNR &lt; 3 dB** → 信号不可靠，建议重新调整电极位置
 
 ---
 
@@ -187,7 +187,7 @@ npx neuroskill sessions --trends      # 显示每次会话的指标趋势
 ```bash
 npx neuroskill search --json                    # 自动：最近一次会话，k=5
 npx neuroskill search --k 10 --json             # 10 个最近邻
-npx neuroskill search --start <UTC> --end <UTC> --json
+npx neuroskill search --start &lt;UTC> --end &lt;UTC> --json
 ```
 
 使用 HNSW 近似最近邻搜索在 128 维 ZUNA 嵌入中查找历史上神经状态相似的时刻。返回距离统计、时间分布（一天中的小时）以及最匹配的日期。
@@ -211,7 +211,7 @@ npx neuroskill interactive "deep focus" --json
 npx neuroskill interactive "deep focus" --dot | dot -Tsvg > graph.svg
 ```
 
-四层图结构：查询 → 文本标签 → EXG 点 → 附近标签。可使用 `--k-text`、`--k-EXG`、`--reach <minutes>` 进行调优。
+四层图结构：查询 → 文本标签 → EXG 点 → 附近标签。可使用 `--k-text`、`--k-EXG`、`--reach &lt;minutes>` 进行调优。
 
 ---
 
@@ -241,7 +241,7 @@ npx neuroskill sleep --start <UTC> --end <UTC> --json
 返回逐段睡眠分期（5秒窗口）及分析：
 - **分期代码**：0=清醒，1=N1，2=N2，3=N3（深睡），4=REM（快速眼动）
 - **分析指标**：efficiency_pct（睡眠效率百分比）、onset_latency_min（入睡潜伏期分钟）、rem_latency_min（REM潜伏期分钟）、各睡眠阶段持续段数（bout counts）
-- **健康目标**：N3 15–25%，REM 20–25%，睡眠效率 >85%，入睡潜伏期 <20 分钟
+- **健康目标**：N3 15–25%，REM 20–25%，睡眠效率 >85%，入睡潜伏期 &lt;20 分钟
 
 ```bash
 npx neuroskill sleep --json | jq '.summary | {n3: .n3_epochs, rem: .rem_epochs}'
@@ -291,7 +291,7 @@ npx neuroskill umap --a-start <UTC> --a-end <UTC> --b-start <UTC> --b-end <UTC> 
 
 对 ZUNA 嵌入进行 GPU 加速的 3D UMAP 投影。`separation_score` 表示两次会话在神经层面的差异程度：
 - **> 1.5** → 会话在神经层面显著不同（不同脑状态）
-- **< 0.5** → 两次会话脑状态相似
+- **&lt; 0.5** → 两次会话脑状态相似
 
 ---
 
@@ -311,7 +311,7 @@ npx neuroskill status --json
 仅在以下情况提及认知状态：
 - 用户明确询问（“我状态如何？”、“检查我的专注度”）
 - 用户报告难以集中注意力、压力或疲劳
-- 跨越关键阈值（嗜睡度 > 0.70，专注度 < 0.30 持续）
+- 跨越关键阈值（嗜睡度 > 0.70，专注度 &lt; 0.30 持续）
 - 用户即将进行认知要求高的活动并询问准备情况
 
 **切勿** 为了报告指标而打断心流状态。如果专注度 > 0.75，请保护该会话 —— 保持沉默是正确的回应。
@@ -325,14 +325,14 @@ npx neuroskill status --json
 > “你的专注度在过去 15 分钟内持续下降，且 TBR 已攀升至 1.5 以上 —— 这是 θ 波主导和精神疲劳的迹象。是否要我引导你进行一个 θ-β 神经反馈锚定练习？这是一个 90 秒的练习，通过节奏性计数和呼吸来抑制 θ 波并提升 β 波。”
 
 关键触发条件：
-- **专注度 < 0.40，TBR > 1.5** → θ-β 神经反馈锚定 或 箱式呼吸法
-- **放松度 < 0.30，stress_index 高** → 心脏相干性训练 或 4-7-8 呼吸法
+- **专注度 &lt; 0.40，TBR > 1.5** → θ-β 神经反馈锚定 或 箱式呼吸法
+- **放松度 &lt; 0.30，stress_index 高** → 心脏相干性训练 或 4-7-8 呼吸法
 - **认知负荷 > 0.70 持续** → 认知负荷卸载（思维清空）
 - **嗜睡度 > 0.60** → 超昼夜节律重置 或 清醒重置
-- **FAA < 0（负值）** → FAA 再平衡
+- **FAA &lt; 0（负值）** → FAA 再平衡
 - **心流状态（专注度 > 0.75，参与度 > 0.70）** → 切勿打断
 - **高度静止 + headache_index 高** → 颈部释放序列
-- **RMSSD 低（< 25ms）** → 迷走神经张力训练
+- **RMSSD 低（&lt; 25ms）** → 迷走神经张力训练
 
 ---
 
@@ -371,8 +371,8 @@ npx neuroskill raw '{"command":"status"}' --json
 | `npx neuroskill status` 卡住 | NeuroSkill 应用未运行 | 打开 NeuroSkill 桌面应用 |
 | `device.state: "disconnected"` | BCI 设备未连接 | 检查蓝牙、设备电量 |
 | 所有评分返回 0 | 电极接触不良 | 重新调整头带位置，润湿电极 |
-| `signal_quality` 值 < 0.7 | 电极松动 | 调整佩戴，清洁电极接触点 |
-| SNR < 3 dB | 信号噪声大 | 减少头部运动，检查环境 |
+| `signal_quality` 值 &lt; 0.7 | 电极松动 | 调整佩戴，清洁电极接触点 |
+| SNR &lt; 3 dB | 信号噪声大 | 减少头部运动，检查环境 |
 | `command not found: npx` | 未安装 Node.js | 安装 Node.js 20+ |
 
 ---

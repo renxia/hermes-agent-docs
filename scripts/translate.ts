@@ -192,7 +192,7 @@ IMPORTANT TERMINOLOGY MAPPING (must follow these exact translations):
 
 CRITICAL: Do NOT translate YAML frontmatter keys (keys inside the "---" block at the top of the file). Only translate the values. For example, keep "title:", "description:", "slug:", etc. as they are in English.
 
-CRITICAL: Preserve ALL HTML entities exactly as they appear. Do NOT convert `&lt;` to `<`, `&gt;` to `>`, `&amp;` to `&`, `&#123;` to `{`, etc. For example, `&lt;100ms` must remain `&lt;100ms`, not `<100ms`.\n\n${text}`;
+CRITICAL: Preserve ALL HTML entities exactly as they appear. Do NOT convert \`&lt;\` to \`<\`, \`&gt;\` to \`>\`, \`&amp;\` to \`&\`, etc. For example, \`&lt;100ms\` must remain \`&lt;100ms\`, not \`<100ms\`.\n\n${text}`;
 
   const response = await openai.chat.completions.create({
     model: options.model,
@@ -252,7 +252,7 @@ async function syncHermesAgentDocs(): Promise<void> {
     process.exit(1);
   }
 
-  ['docs', 'src', 'scripts', 'sidebar.ts'].forEach(dir => {
+  ['docs', 'src', 'scripts', 'static', 'sidebar.ts'].forEach(dir => {
     const sourceDir = join(sourceDocsDir, dir);
     const targetDir = join(targetDocsDir, dir);
     if (existsSync(sourceDir)) {
@@ -301,6 +301,11 @@ async function translateFile(srcFile: string, sourceLang: string, targetLang: st
   if (extname(srcFile) === '.json') {
     const json = JSON.parse(translatedContent.trim().replace(/^```json/, '').replace(/```$/, '').trim());
     translatedContent = JSON.stringify(json, null, 2);
+  } else {
+    // 删除 markdown 内容修正
+    translatedContent = translatedContent.trim()
+    .replace('localhost:3000**。', 'localhost:3000** 。')
+    .trim();
   }
 
   writeFileSync(destFile, translatedContent, 'utf-8');
@@ -341,4 +346,12 @@ async function main() {
   let current = 0;
   const total = filesToTranslate.length;
 
-  const tasks = filesToTranslate.map(file => () => translateFile(file, sourceLang, targetLang, ++current, total).catch(error => logger.error(`Error transl
+  const tasks = filesToTranslate.map(file => () => translateFile(file, sourceLang, targetLang, ++current, total).catch(error => logger.error(`Error translating ${file}:`, error)));
+  await concurrency(tasks, Number(threads));
+
+  logger.log(color.greenBright('Translation completed!'));
+
+  if (options.build) await build();
+}
+
+main().catch(logger.error);

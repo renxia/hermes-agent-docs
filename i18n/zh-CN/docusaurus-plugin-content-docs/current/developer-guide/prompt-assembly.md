@@ -89,13 +89,13 @@ Hermes 刻意将以下两者分离：
 ## 技能（必需）
 在回复之前，请扫描以下技能。如果其中一项技能与您的任务明显匹配，请使用 skill_view(name) 加载它并遵循其说明。
 ...
-<可用技能>
+<available_skills>
   software-development:
     - code-review: 结构化代码审查工作流
     - test-driven-development: TDD 方法论
   research:
     - arxiv: 搜索并总结 arXiv 论文
-</可用技能>
+</available_skills>
 
 # 第8层：上下文文件（来自项目目录）
 # 项目上下文

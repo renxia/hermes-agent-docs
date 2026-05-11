@@ -501,11 +501,11 @@ echo $!  # 记录进程ID（PID）
 
 ```
 监控提示模板：
-1. 检查进程是否仍在运行：ps aux | grep <pattern>
-2. 读取日志最后30行：tail -30 <logfile>
-3. 检查是否有已完成的结果：ls <result_dir>
-4. 如果结果存在，读取并报告：cat <result_file>
-5. 如果全部完成，提交：git add -A && git commit -m "<描述性消息>" && git push
+1. 检查进程是否仍在运行：ps aux | grep &lt;pattern>
+2. 读取日志最后30行：tail -30 &lt;logfile>
+3. 检查是否有已完成的结果：ls &lt;result_dir>
+4. 如果结果存在，读取并报告：cat &lt;result_file>
+5. 如果全部完成，提交：git add -A && git commit -m "&lt;描述性消息>" && git push
 6. 以结构化格式报告（含关键指标的表格）
 7. 回答本实验的关键分析问题
 ```
@@ -779,7 +779,7 @@ Baseline & 85.2 & 45ms \\
 
 | 失败 | 检测 | 修复 |
 |---------|-----------|-----|
-| 不收敛（A 从未获胜） | A 在 20+ 次迭代中获胜率 <15% | 为任务添加范围约束 |
+| 不收敛（A 从未获胜） | A 在 20+ 次迭代中获胜率 &lt;15% | 为任务添加范围约束 |
 | 综合漂移 | 词数无限增长 | 约束结构和交付物 |
 | 低于单次通过的质量退化 | 基线得分高于迭代输出 | 切换到单次通过；模型可能太弱 |
 | 过拟合（代码） | 公共测试通过率高，私有测试通过率低 | 使用结构化分析，而非仅测试反馈 |
@@ -910,7 +910,7 @@ LaTeX质量清单（每次编辑后验证）：
 - [ ] 仅引用存在的图表/表格（\ref匹配\label）
 - [ ] 没有虚构的引用（\cite匹配.bib中的条目）
 - [ ] 每个\begin{env}都有匹配的\end{env}（特别是figure、table、algorithm）
-- [ ] 没有HTML污染（</end{figure}>而不是\end{figure}）
+- [ ] 没有HTML污染（&lt;/end{figure}>而不是\end{figure}）
 - [ ] 在数学模式外没有未转义的下划线（在文本中使用\_）
 - [ ] 没有重复的\label定义
 - [ ] 没有重复的章节标题
@@ -976,55 +976,55 @@ LaTeX质量清单（每次编辑后验证）：
 
 ### 步骤5.4：方法
 
-启用重新实现：  
-- 概念性大纲或伪代码  
-- 列出所有超参数  
-- 足以复现的架构细节  
-- 呈现最终设计决策；消融实验见实验部分  
+启用重新实现：
+- 概念性大纲或伪代码
+- 列出所有超参数
+- 足以复现的架构细节
+- 呈现最终设计决策；消融实验见实验部分
 
-### 第5.5步：实验与结果  
+### 第5.5步：实验与结果
 
-每个实验需明确说明：  
-- **支持什么主张**  
-- 如何与主要贡献相关联  
-- 观察重点：“蓝线显示X，这证明了Y”  
+每个实验需明确说明：
+- **支持什么主张**
+- 如何与主要贡献相关联
+- 观察重点：“蓝线显示X，这证明了Y”
 
-要求：  
-- 误差条及其方法论（标准差 vs 标准误）  
-- 超参数搜索范围  
-- 计算基础设施（GPU类型、总小时数）  
-- 随机种子设置方法  
+要求：
+- 误差条及其方法论（标准差 vs 标准误）
+- 超参数搜索范围
+- 计算基础设施（GPU类型、总小时数）
+- 随机种子设置方法
 
-### 第5.6步：相关工作  
+### 第5.6步：相关工作
 
-按方法论组织，而非逐篇罗列论文。充分引用——审稿人很可能就是相关论文的作者。  
+按方法论组织，而非逐篇罗列论文。充分引用——审稿人很可能就是相关论文的作者。
 
-### 第5.7步：局限性（必需）  
+### 第5.7步：局限性（必需）
 
-所有主流会议均要求此部分。坦诚有助于：  
-- 审稿人被指示不得因诚实的局限性承认而扣分  
-- 通过率先指出弱点来 preempt 批评  
-- 解释为何局限性不会削弱核心主张  
+所有主流会议均要求此部分。坦诚有助于：
+- 审稿人被指示不得因诚实的局限性承认而扣分
+- 通过率先指出弱点来 preempt 批评
+- 解释为何局限性不会削弱核心主张
 
-### 第5.8步：结论与讨论  
+### 第5.8步：结论与讨论
 
-**结论**（必需，0.5–1页）：  
-- 用一句话重申贡献（措辞需与摘要不同）  
-- 总结关键发现（2–3句话，非列表形式）  
-- 意义：这对领域意味着什么？  
-- 未来工作：2–3项具体后续步骤（避免模糊表述如“我们将X留给未来工作”）  
+**结论**（必需，0.5–1页）：
+- 用一句话重申贡献（措辞需与摘要不同）
+- 总结关键发现（2–3句话，非列表形式）
+- 意义：这对领域意味着什么？
+- 未来工作：2–3项具体后续步骤（避免模糊表述如“我们将X留给未来工作”）
 
-**讨论**（可选，有时与结论合并）：  
-- 超出直接结果的更广泛意义  
-- 与其他子领域的联系  
-- 对方法适用与不适用场景的诚实评估  
-- 实际部署考量  
+**讨论**（可选，有时与结论合并）：
+- 超出直接结果的更广泛意义
+- 与其他子领域的联系
+- 对方法适用与不适用场景的诚实评估
+- 实际部署考量
 
-**切勿**在结论中引入新结果或主张。  
+**切勿**在结论中引入新结果或主张。
 
-### 第5.9步：附录策略  
+### 第5.9步：附录策略
 
-所有主流会议均允许无限附录，且附录对可复现性至关重要。结构如下：  
+所有主流会议均允许无限附录，且附录对可复现性至关重要。结构如下：
 
 | 附录章节 | 内容 |
 |---------|------|
@@ -1034,17 +1034,17 @@ LaTeX质量清单（每次编辑后验证）：
 | **数据集文档** | 数据收集过程、标注指南、许可信息、预处理步骤 |
 | **提示词与模板** | 使用的精确提示词（针对基于LLM的方法）、评估模板 |
 | **人工评估** | 标注界面截图、给标注者的说明、IRB详情 |
-| **补充图表** | 按任务拆分结果、轨迹可视化、失败案例示例 |  
+| **补充图表** | 按任务拆分结果、轨迹可视化、失败案例示例 |
 
-**规则**：  
-- 主论文必须自包含——不要求审稿人阅读附录  
-- 切勿将关键证据仅放在附录中  
-- 交叉引用：“完整结果见表5（附录B）”，而非仅写“见附录”  
-- 使用 `\appendix` 命令，然后使用 `\section{A: 证明}` 等  
+**规则**：
+- 主论文必须自包含——不要求审稿人阅读附录
+- 切勿将关键证据仅放在附录中
+- 交叉引用：“完整结果见表5（附录B）”，而非仅写“见附录”
+- 使用 `\appendix` 命令，然后使用 `\section{A: 证明}` 等
 
-### 页数预算管理  
+### 页数预算管理
 
-当超出页数限制时：  
+当超出页数限制时：
 
 | 削减策略 | 节省页数 | 风险 |
 |---------|--------|------|
@@ -1053,15 +1053,15 @@ LaTeX质量清单（每次编辑后验证）：
 | 将表格与子图合并 | 0.25–0.5页 | 低——通常提升可读性 |
 | 谨慎使用 `\vspace{-Xpt}` | 0.1–0.3页 | 若 subtle 则低，若明显则高 |
 | 移除定性示例 | 0.5–1页 | 中——审稿人喜欢示例 |
-| 缩小图表尺寸 | 0.25–0.5页 | 高——图表必须保持可读 |  
+| 缩小图表尺寸 | 0.25–0.5页 | 高——图表必须保持可读 |
 
-**切勿**：减小字体、更改页边距、删除必需章节（局限性、广泛影响）、或对正文使用 `\small`/`\footnotesize`。  
+**切勿**：减小字体、更改页边距、删除必需章节（局限性、广泛影响）、或对正文使用 `\small`/`\footnotesize`。
 
-### 第5.10步：伦理与广泛影响声明  
+### 第5.10步：伦理与广泛影响声明
 
-多数会议现在要求或强烈鼓励提供伦理/广泛影响声明。这不是模板化内容——审稿人会阅读，并可能因伦理问题触发直接拒稿。  
+多数会议现在要求或强烈鼓励提供伦理/广泛影响声明。这不是模板化内容——审稿人会阅读，并可能因伦理问题触发直接拒稿。
 
-**应包含内容**：  
+**应包含内容**：
 
 | 组成部分 | 内容 | 要求方 |
 |---------|------|--------|
@@ -1070,9 +1070,9 @@ LaTeX质量清单（每次编辑后验证）：
 | **公平性与偏见** | 您的方法/数据是否存在已知偏见？ | 所有会议（隐含要求） |
 | **环境影响** | 大规模训练的计算碳足迹 | ICML，NeurIPS 日益要求 |
 | **隐私** | 您的工作是否使用或支持处理个人数据？ | ACL、NeurIPS |
-| **LLM披露** | 是否在写作或实验中使用AI？ | ICLR（强制）、ACL |  
+| **LLM披露** | 是否在写作或实验中使用AI？ | ICLR（强制）、ACL |
 
-**撰写声明**：  
+**撰写声明**：
 
 ```latex
 \section*{广泛影响声明}
@@ -1086,15 +1086,15 @@ LaTeX质量清单（每次编辑后验证）：
 
 % 3. 影响主张的局限性（1句话）
 我们的评估局限于[特定领域]；更广泛的部署需要[具体额外工作]。
-```  
+```
 
-**常见错误**：  
-- 写“我们预见无负面影响”（几乎从不成立——审稿人不信任此说法）  
-- 表述模糊：“这可能被滥用”而未说明具体方式  
-- 忽略大规模工作的计算成本  
-- 忘记在要求披露的会议中说明LLM使用情况  
+**常见错误**：
+- 写“我们预见无负面影响”（几乎从不成立——审稿人不信任此说法）
+- 表述模糊：“这可能被滥用”而未说明具体方式
+- 忽略大规模工作的计算成本
+- 忘记在要求披露的会议中说明LLM使用情况
 
-**计算碳足迹**（针对训练密集型论文）：  
+**计算碳足迹**（针对训练密集型论文）：
 ```python
 # 使用 ML CO2 Impact 工具方法论估算
 gpu_hours = 1000  # 总GPU小时数
@@ -1105,13 +1105,13 @@ carbon_intensity = 0.429  # kg CO2/kWh（美国平均值；因地区而异）
 energy_kwh = (gpu_hours * gpu_tdp_watts * pue) / 1000
 carbon_kg = energy_kwh * carbon_intensity
 print(f"能耗: {energy_kwh:.0f} kWh, 碳排放: {carbon_kg:.0f} kg CO2eq")
-```  
+```
 
-### 第5.11步：数据集表与模型卡（如适用）  
+### 第5.11步：数据集表与模型卡（如适用）
 
-如果您的论文引入了**新数据集**或**发布模型**，请包含结构化文档。审稿人日益期望此内容，且 NeurIPS 数据集与基准赛道强制要求。  
+如果您的论文引入了**新数据集**或**发布模型**，请包含结构化文档。审稿人日益期望此内容，且 NeurIPS 数据集与基准赛道强制要求。
 
-**数据集表**（Gebru et al., 2021）——置于附录中：  
+**数据集表**（Gebru et al., 2021）——置于附录中：
 
 ```
 数据集文档（附录）：
@@ -1123,9 +1123,9 @@ print(f"能耗: {energy_kwh:.0f} kWh, 碳排放: {carbon_kg:.0f} kg CO2eq")
 - 维护：谁维护它？如何报告问题？
 - 伦理考量：是否包含个人数据？是否获得同意？
   潜在危害？已知偏见？
-```  
+```
 
-**模型卡**（Mitchell et al., 2019）——模型发布时置于附录中：  
+**模型卡**（Mitchell et al., 2019）——模型发布时置于附录中：
 
 ```
 模型卡（附录）：
@@ -1134,11 +1134,11 @@ print(f"能耗: {energy_kwh:.0f} kWh, 碳排放: {carbon_kg:.0f} kg CO2eq")
 - 指标：基准上的评估指标与结果
 - 伦理考量：已知偏见、公平性评估
 - 局限性：已知失败模式、模型表现不佳的领域
-```  
+```
 
-### 写作风格  
+### 写作风格
 
-**句子层面清晰性（Gopen & Swan 的7原则）**：  
+**句子层面清晰性（Gopen & Swan 的7原则）**：
 
 | 原则 | 规则 |
 |------|------|
@@ -1148,19 +1148,19 @@ print(f"能耗: {energy_kwh:.0f} kWh, 碳排放: {carbon_kg:.0f} kg CO2eq")
 | 旧信息先于新信息 | 熟悉信息 → 陌生信息 |
 | 一单位一功能 | 每段只表达一个观点 |
 | 动词表动作 | 使用动词，而非名词化 |
-| 上下文先于新内容 | 先铺垫，再呈现 |  
+| 上下文先于新内容 | 先铺垫，再呈现 |
 
-**用词选择（Lipton, Steinhardt）**：  
-- 具体化：“准确率”而非“性能”  
-- 消除模糊：除非真正不确定，否则删除“可能”  
-- 全文术语一致  
-- 避免增量词汇：“开发”而非“结合”  
+**用词选择（Lipton, Steinhardt）**：
+- 具体化：“准确率”而非“性能”
+- 消除模糊：除非真正不确定，否则删除“可能”
+- 全文术语一致
+- 避免增量词汇：“开发”而非“结合”
 
-**完整写作指南及示例**：参见 [references/writing-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/research/research-paper-writing/references/writing-guide.md)  
+**完整写作指南及示例**：参见 [references/writing-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/research/research-paper-writing/references/writing-guide.md)
 
-### 使用 LaTeX 模板  
+### 使用 LaTeX 模板
 
-**始终先复制整个模板目录，再在其中写作。**  
+**始终先复制整个模板目录，再在其中写作。**
 
 ```
 模板设置检查清单：
@@ -1170,31 +1170,31 @@ print(f"能耗: {energy_kwh:.0f} kWh, 碳排放: {carbon_kg:.0f} kg CO2eq")
 - [ ] 步骤4：逐节替换示例内容
 - [ ] 步骤5：使用模板宏（检查导言区中的 \newcommand 定义）
 - [ ] 步骤6：仅在最后清理模板残留内容
-```  
+```
 
-**步骤1：复制完整模板**  
+**步骤1：复制完整模板**
 
 ```bash
 cp -r templates/neurips2025/ ~/papers/my-paper/
 cd ~/papers/my-paper/
 ls -la  # 应看到：main.tex, neurips.sty, Makefile 等
-```  
+```
 
-复制整个目录，而非仅 .tex 文件。模板包含样式文件（.sty）、参考文献样式（.bst）、示例内容和 Makefile。  
+复制整个目录，而非仅 .tex 文件。模板包含样式文件（.sty）、参考文献样式（.bst）、示例内容和 Makefile。
 
-**步骤2：先验证模板能否编译**  
+**步骤2：先验证模板能否编译**
 
-进行任何修改前：  
+进行任何修改前：
 ```bash
 latexmk -pdf main.tex
 # 或手动：pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
-```  
+```
 
-若未修改的模板无法编译，请先修复（通常是缺少 TeX 包——通过 `tlmgr install <package>` 安装）。  
+若未修改的模板无法编译，请先修复（通常是缺少 TeX 包——通过 `tlmgr install &lt;package>` 安装）。
 
-**步骤3：保留模板内容作为参考**  
+**步骤3：保留模板内容作为参考**
 
-不要立即删除示例内容。将其注释掉并用作格式参考：  
+不要立即删除示例内容。将其注释掉并用作格式参考：
 ```latex
 % 模板示例（保留作参考）：
 % \begin{figure}[t]
@@ -1209,7 +1209,7 @@ latexmk -pdf main.tex
   \includegraphics[width=0.8\linewidth]{your-figure.pdf}
   \caption{您的标题，遵循相同样式。}
 \end{figure}
-```  
+```
 
 **步骤4：逐节替换内容**
 
@@ -1422,7 +1422,7 @@ TikZ 是机器学习论文中方法图示的标准。常见模式：
 \centering
 \begin{tikzpicture}[
   node distance=1.8cm,
-  box/.style={rectangle, draw, rounded corners, minimum height=1cm, 
+  box/.style={rectangle, draw, rounded corners, minimum height=1cm,
               minimum width=2cm, align=center, font=\small},
   arrow/.style={-{Stealth[length=3mm]}, thick},
 ]
@@ -1431,7 +1431,7 @@ TikZ 是机器学习论文中方法图示的标准。常见模式：
   \node[box, fill=okgreen!20, right of=encoder] (latent) {潜在表示\\$z$};
   \node[box, fill=okorange!20, right of=latent] (decoder) {解码器\\$g_\phi$};
   \node[box, fill=okred!20, right of=decoder] (output) {输出\\$\hat{x}$};
-  
+
   \draw[arrow] (input) -- (encoder);
   \draw[arrow] (encoder) -- (latent);
   \draw[arrow] (latent) -- (decoder);
@@ -1446,7 +1446,7 @@ TikZ 是机器学习论文中方法图示的标准。常见模式：
 
 ```latex
 \begin{tikzpicture}[
-  cell/.style={rectangle, draw, minimum width=2.5cm, minimum height=1cm, 
+  cell/.style={rectangle, draw, minimum width=2.5cm, minimum height=1cm,
                align=center, font=\small},
   header/.style={cell, fill=gray!20, font=\small\bfseries},
 ]
@@ -1472,7 +1472,7 @@ TikZ 是机器学习论文中方法图示的标准。常见模式：
 ```latex
 \begin{tikzpicture}[
   node distance=2cm,
-  box/.style={rectangle, draw, rounded corners, minimum height=0.8cm, 
+  box/.style={rectangle, draw, rounded corners, minimum height=0.8cm,
               minimum width=1.8cm, align=center, font=\small},
   arrow/.style={-{Stealth[length=3mm]}, thick},
   label/.style={font=\scriptsize, midway, above},
@@ -1480,7 +1480,7 @@ TikZ 是机器学习论文中方法图示的标准。常见模式：
   \node[box, fill=okblue!20] (gen) {生成器};
   \node[box, fill=okred!20, right=2.5cm of gen] (critic) {判别器};
   \node[box, fill=okgreen!20, below=1.5cm of $(gen)!0.5!(critic)$] (judge) {评审团};
-  
+
   \draw[arrow] (gen) -- node[label] {输出 $A$} (critic);
   \draw[arrow] (critic) -- node[label, right] {批评 $C$} (judge);
   \draw[arrow] (judge) -| node[label, left, pos=0.3] {胜者} (gen);
@@ -1669,7 +1669,7 @@ with plt.style.context(['science', 'no-latex']):
 > R1-W1: "论文缺少与方法 X 的比较。"
 
 我们感谢审查者的这一建议。我们已在表 3（修订版）中添加了与方法 X 的比较。
-我们的方法在 [指标] 上优于 X 3.2 个百分点（p<0.05）。
+我们的方法在 [指标] 上优于 X 3.2 个百分点（p&lt;0.05）。
 我们注意到 X 需要 2 倍于我们的计算预算。
 ```
 
@@ -1953,7 +1953,7 @@ your-method/
 [设置环境的精确命令]
 
 ## 复现
-要复现表1：`bash scripts/reproduce_table1.sh`  
+要复现表1：`bash scripts/reproduce_table1.sh`
 要复现图2：`python scripts/make_figure2.py`
 
 ## 引用
@@ -2195,7 +2195,7 @@ results = sch.search_paper("attention mechanism transformers", limit=5)
 for paper in results:
     doi = paper.externalIds.get('DOI', 'N/A')
     if doi != 'N/A':
-        bibtex = requests.get(f"https://doi.org/{doi}", 
+        bibtex = requests.get(f"https://doi.org/{doi}",
                               headers={"Accept": "application/x-bibtex"}).text
         print(bibtex)
 ```

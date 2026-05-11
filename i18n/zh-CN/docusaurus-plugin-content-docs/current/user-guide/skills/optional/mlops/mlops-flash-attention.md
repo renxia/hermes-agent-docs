@@ -80,7 +80,7 @@ python -c "import torch; print(torch.__version__)"
 # 应为 ≥2.2.0
 ```
 
-如果 <2.2，请升级：
+如果 &lt;2.2，请升级：
 ```bash
 pip install --upgrade torch
 ```
@@ -305,7 +305,7 @@ out = flash_attn_func(q_fp8, k_fp8, v_fp8)
 - 使用 PyTorch 2.2+ 或可以安装 flash-attn
 
 **使用替代方案：**
-- **标准注意力**：序列 <256 个 token（开销不值得）
+- **标准注意力**：序列 &lt;256 个 token（开销不值得）
 - **xFormers**：需要更多注意力变体（不仅仅是速度）
 - **内存高效注意力**：CPU 推理（Flash Attention 需要 GPU）
 
@@ -327,7 +327,7 @@ pip install flash-attn --no-build-isolation
 **问题：比预期慢（无加速）**
 
 Flash Attention 的收益随序列长度增加而增加：
-- <512 个 token：最小加速（10-20%）
+- &lt;512 个 token：最小加速（10-20%）
 - 512-2K 个 token：2-3 倍加速
 - >2K 个 token：3-4 倍加速
 

@@ -195,8 +195,8 @@ python3 scripts/run_batch.py \
 | "安装 ComfyUI" | comfy-cli | `bash scripts/comfyui_setup.sh` |
 | "启动 ComfyUI" | comfy-cli | `comfy launch --background` |
 | "停止 ComfyUI" | comfy-cli | `comfy stop` |
-| "安装 X 节点" | comfy-cli | `comfy node install <name>` |
-| "下载 X 模型" | comfy-cli | `comfy model download --url <url> --relative-path models/checkpoints` |
+| "安装 X 节点" | comfy-cli | `comfy node install &lt;name>` |
+| "下载 X 模型" | comfy-cli | `comfy model download --url &lt;url> --relative-path models/checkpoints` |
 | "列出已安装模型" | comfy-cli | `comfy model list` |
 | "列出已安装节点" | comfy-cli | `comfy node show installed` |
 | **执行（使用脚本）** | | |
@@ -207,8 +207,8 @@ python3 scripts/run_batch.py \
 | "生成一张图像" | 脚本 | `run_workflow.py --workflow W --args '{...}'` |
 | "使用此图像"（图生图） | 脚本 | `run_workflow.py --input-image image=./x.png ...` |
 | "8 个随机种子的变体" | 脚本 | `run_batch.py --count 8 --randomize-seed ...` |
-| "向我展示实时进度" | 脚本 | `ws_monitor.py --prompt-id <id>` |
-| "获取任务 X 的错误" | 脚本 | `fetch_logs.py <prompt_id>` |
+| "向我展示实时进度" | 脚本 | `ws_monitor.py --prompt-id &lt;id>` |
+| "获取任务 X 的错误" | 脚本 | `fetch_logs.py &lt;prompt_id>` |
 | **直接 REST** | | |
 | "队列中有什么？" | REST | `curl http://HOST:8188/queue`（本地）或 `--host https://cloud.comfy.org` |
 | "取消那个" | REST | `curl -X POST http://HOST:8188/interrupt` |
@@ -256,7 +256,7 @@ python3 scripts/hardware_check.py --json --check-pytorch
 |------------|---------------------------------------------------------------|--------|
 | `ok`       | ≥8 GB 显存（独立显卡）或 ≥32 GB 统一内存（Apple Silicon）       | 本地安装 — 使用报告中的 `comfy_cli_flag` |
 | `marginal` | SD1.5 可用；SDXL 紧张；Flux/视频不太可能                  | 本地可用于轻量工作流，否则**路径 A（云端）** |
-| `cloud`    | 无可用的 GPU，<6 GB 显存，<16 GB Apple 统一内存，Intel Mac，Rosetta Python | **切换到云端**，除非用户明确强制本地 |
+| `cloud`    | 无可用的 GPU，&lt;6 GB 显存，&lt;16 GB Apple 统一内存，Intel Mac，Rosetta Python | **切换到云端**，除非用户明确强制本地 |
 
 脚本还会显示 `wsl: true`（WSL2 带 NVIDIA 透传）和 `rosetta: true`（Apple Silicon 上的 x86_64 Python — 必须重新安装为 ARM64）。
 
@@ -489,7 +489,7 @@ curl -X POST "https://cloud.comfy.org/api/upload/image" \
 - **与本地 ComfyUI 的端点差异：**
   - `/api/object_info`、`/api/queue`、`/api/userdata` —— **免费版返回 403**；仅限付费用户。
   - `/history` 在云端重命名为 `/history_v2`（脚本会自动路由）。
-  - `/models/<folder>` 在云端重命名为 `/experiment/models/<folder>`（脚本会自动路由）。
+  - `/models/&lt;folder>` 在云端重命名为 `/experiment/models/&lt;folder>`（脚本会自动路由）。
   - WebSocket 中的 `clientId` 目前被忽略 —— 同一用户的所有连接都会收到相同的广播消息。请在客户端通过 `prompt_id` 进行过滤。
   - 上传时接受 `subfolder` 参数但会被忽略 —— 云端采用扁平命名空间。
 - **并发任务数：** 免费版/标准版：1 个，创作者版：3 个，专业版：5 个。超额任务会自动排队。使用 `run_batch.py --parallel N` 可充分利用你的套餐额度。
@@ -519,7 +519,7 @@ python3 scripts/fetch_logs.py --tail-queue --host https://cloud.comfy.org
 
 4. **缺少自定义节点** —— 出现“class_type not found”错误意味着某个必需的节点未安装。`check_deps.py` 会报告需要安装哪个包；`auto_fix_deps.py` 会替你执行安装。
 
-5. **工作目录** —— `comfy-cli` 会自动检测 ComfyUI 工作空间。如果命令因“未找到工作空间”而失败，请使用 `comfy --workspace /path/to/ComfyUI <command>` 或 `comfy set-default /path/to/ComfyUI`。
+5. **工作目录** —— `comfy-cli` 会自动检测 ComfyUI 工作空间。如果命令因“未找到工作空间”而失败，请使用 `comfy --workspace /path/to/ComfyUI &lt;command>` 或 `comfy set-default /path/to/ComfyUI`。
 
 6. **云端免费版 API 限制** —— 免费账户调用 `/api/prompt`、`/api/view`、`/api/upload/*`、`/api/object_info` 均会返回 403。`health_check.py` 和 `check_deps.py` 能妥善处理此情况，并给出明确提示。
 
