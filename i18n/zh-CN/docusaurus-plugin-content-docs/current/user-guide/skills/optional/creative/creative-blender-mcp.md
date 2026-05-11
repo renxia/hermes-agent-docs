@@ -1,14 +1,14 @@
 ---
-title: "Blender Mcp — 通过套接字连接 Hermes 直接控制 Blender"
+title: "Blender Mcp — 通过与blender-mcp插件的套接字连接，直接从Hermes控制Blender"
 sidebar_label: "Blender Mcp"
-description: "通过套接字连接 Hermes 直接控制 Blender"
+description: "通过与blender-mcp插件的套接字连接，直接从Hermes控制Blender"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 本页面由网站脚本/scripts/generate-skill-docs.py根据技能的SKILL.md文件自动生成。请编辑源文件SKILL.md，而非本页面。 */}
 
 # Blender Mcp
 
-通过套接字连接 Hermes 直接控制 Blender。创建 3D 对象、材质、动画，并运行任意 Blender Python (bpy) 代码。当用户想要在 Blender 中创建或修改任何内容时使用。
+通过与blender-mcp插件的套接字连接，直接从Hermes控制Blender。创建3D对象、材质、动画，并运行任意Blender Python (bpy) 代码。当用户希望在Blender中创建或修改任何内容时使用此技能。
 
 ## 技能元数据
 
@@ -18,31 +18,32 @@ description: "通过套接字连接 Hermes 直接控制 Blender"
 | 路径 | `optional-skills/creative/blender-mcp` |
 | 版本 | `1.0.0` |
 | 作者 | alireza78a |
+| 平台 | linux, macos, windows |
 
-## 参考：完整 SKILL.md
+## 参考：完整的SKILL.md
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是此技能被触发时Hermes加载的完整技能定义。这是技能激活时智能体看到的说明。
 :::
 
 # Blender MCP
 
-通过 TCP 端口 9876 上的套接字从 Hermes 控制正在运行的 Blender 实例。
+通过TCP端口9876上的套接字，从Hermes控制一个正在运行的Blender实例。
 
 ## 设置（一次性）
 
-### 1. 安装 Blender 插件
+### 1. 安装Blender插件
 
     curl -sL https://raw.githubusercontent.com/ahujasid/blender-mcp/main/addon.py -o ~/Desktop/blender_mcp_addon.py
 
-在 Blender 中：
-    编辑 > 首选项 > 插件 > 安装 > 选择 blender_mcp_addon.py
-    启用“界面：Blender MCP”
+在Blender中：
+    编辑 > 偏好设置 > 插件 > 安装 > 选择 blender_mcp_addon.py
+    启用 "Interface: Blender MCP"
 
-### 2. 在 Blender 中启动套接字服务器
+### 2. 在Blender中启动套接字服务器
 
-在 Blender 视口中按 N 打开侧边栏。
-找到“BlenderMCP”选项卡并点击“启动服务器”。
+在Blender视口按N键打开侧边栏。
+找到 "BlenderMCP" 选项卡并点击 "启动服务器"。
 
 ### 3. 验证连接
 
@@ -50,7 +51,7 @@ description: "通过套接字连接 Hermes 直接控制 Blender"
 
 ## 协议
 
-通过 TCP 传输纯 UTF-8 JSON — 无前缀长度。
+通过TCP传输纯UTF-8 JSON —— 无长度前缀。
 
 发送：     &#123;"type": "&lt;command>", "params": &#123;&lt;kwargs>&#125;&#125;
 接收：  &#123;"status": "success", "result": &lt;value>&#125;
@@ -58,16 +59,16 @@ description: "通过套接字连接 Hermes 直接控制 Blender"
 
 ## 可用命令
 
-| type                    | params            | description                     |
+| 类型                    | 参数              | 描述                            |
 |-------------------------|-------------------|---------------------------------|
-| execute_code            | code (str)        | 运行任意 bpy Python 代码   |
-| get_scene_info          | (none)            | 列出场景中所有对象       |
-| get_object_info         | object_name (str) | 特定对象的详细信息    |
-| get_viewport_screenshot | (none)            | 当前视口的截图  |
+| execute_code            | code (str)        | 运行任意bpy Python代码          |
+| get_scene_info          | (无)              | 列出场景中的所有对象            |
+| get_object_info         | object_name (str) | 获取特定对象的详细信息          |
+| get_viewport_screenshot | (无)              | 当前视口的截图                  |
 
-## Python 辅助函数
+## Python辅助函数
 
-在 execute_code 工具调用中使用此函数：
+在execute_code工具调用中使用此函数：
 
     import socket, json
 
@@ -94,9 +95,9 @@ description: "通过套接字连接 Hermes 直接控制 Blender"
         s.close()
         return json.loads(buf.decode("utf-8"))
 
-## 常见 bpy 模式
+## 常用bpy模式
 
-### 清除场景
+### 清空场景
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.delete()
 
@@ -125,10 +126,10 @@ description: "通过套接字连接 Hermes 直接控制 Blender"
     bpy.context.scene.render.engine = 'CYCLES'
     bpy.ops.render.render(write_still=True)
 
-## 陷阱
+## 注意事项
 
 - 运行前必须检查套接字是否打开 (nc -z localhost 9876)
-- 每次会话必须在 Blender 内部启动插件服务器 (N 面板 > BlenderMCP > 连接)
-- 将复杂场景分解为多个较小的 execute_code 调用，以避免超时
+- 插件服务器在每次会话中必须在Blender内部启动 (N面板 > BlenderMCP > 连接)
+- 将复杂场景分解为多个较小的execute_code调用以避免超时
 - 渲染输出路径必须是绝对路径 (/tmp/...)，而非相对路径
-- shade_smooth() 要求对象被选中并处于对象模式
+- shade_smooth() 要求对象处于已选中且为对象模式

@@ -1,14 +1,14 @@
 ---
-title: "药物发现 — 用于药物发现流程的制药研究助手"
+title: "药物发现 — 用于药物发现工作流程的药学研究助手"
 sidebar_label: "药物发现"
-description: "用于药物发现流程的制药研究助手"
+description: "用于药物发现工作流程的药学研究助手"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 本页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 文件自动生成。请编辑源 SKILL.md，而非本页面。 */}
 
 # 药物发现
 
-用于药物发现流程的制药研究助手。在 ChEMBL 上搜索生物活性化合物，计算类药性（Lipinski 五规则、QED、TPSA、合成可及性），通过 OpenFDA 查询药物-药物相互作用，解读 ADMET 谱，并协助先导化合物优化。适用于药物化学问题、分子性质分析、临床药理学以及开放科学药物研究。
+用于药物发现工作流程的药学研究助手。在 ChEMBL 上搜索生物活性化合物，计算类药性（Lipinski Ro5, QED, TPSA, 合成可及性），通过 OpenFDA 查询药物相互作用，解读 ADMET 谱，并协助先导化合物优化。适用于药物化学问题、分子性质分析、临床药理学及开放科学药物研究。
 
 ## 技能元数据
 
@@ -19,24 +19,25 @@ description: "用于药物发现流程的制药研究助手"
 | 版本 | `1.0.0` |
 | 作者 | bennytimz |
 | 许可证 | MIT |
-| 标签 | `science`, `chemistry`, `pharmacology`, `research`, `health` |
+| 平台 | linux, macos, windows |
+| 标签 | `科学`, `化学`, `药理学`, `研究`, `健康` |
 
 ## 参考：完整 SKILL.md
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是当技能激活时，智能体所看到的指令。
+以下是当此技能被触发时，Hermes 加载的完整技能定义。这是智能体在技能激活时看到的说明。
 :::
 
-# 药物发现与制药研究
+# 药物发现与药学研究
 
-你是一位在药物发现、化学信息学和临床药理学方面具有深厚知识的制药科学家和药物化学专家。
-将此技能用于所有制药/化学研究任务。
+你是一位在药物发现、化学信息学和临床药理学方面具有深厚知识的专家药学家和药物化学家。
+将此技能用于所有药学/化学研究任务。
 
 ## 核心工作流程
 
 ### 1 — 生物活性化合物搜索 (ChEMBL)
 
-在 ChEMBL（世界上最大的开放式生物活性数据库）中按靶点、活性或分子名称搜索化合物。无需 API 密钥。
+在 ChEMBL（全球最大的开放生物活性数据库）上按靶点、活性或分子名称搜索化合物。无需 API 密钥。
 
 ```bash
 # 按靶点名称搜索化合物（例如 "EGFR", "COX-2", "ACE"）
@@ -56,14 +57,14 @@ for t in targets:
 ```
 
 ```bash
-# 获取 ChEMBL 靶点 ID 的生物活性数据
+# 根据 ChEMBL 靶点 ID 获取生物活性数据
 TARGET_ID="$1"   # 例如 CHEMBL203
 curl -s "https://www.ebi.ac.uk/chembl/api/data/activity?target_chembl_id=${TARGET_ID}&pchembl_value__gte=6&limit=10&format=json" \
   | python3 -c "
 import json,sys
 data=json.load(sys.stdin)
 acts=data.get('activities',[])
-print(f'找到 {len(acts)} 个活性数据 (pChEMBL >= 6):')
+print(f'找到 {len(acts)} 项活性数据 (pChEMBL >= 6):')
 for a in acts:
     print(f\"  分子: {a.get('molecule_chembl_id')}  |  {a.get('standard_type')}: {a.get('standard_value')} {a.get('standard_units')}  |  pChEMBL: {a.get('pchembl_value')}\")
 "
@@ -81,17 +82,17 @@ print(f\"名称       : {m.get('pref_name','N/A')}\")
 print(f\"SMILES     : {m.get('molecule_structures',{}).get('canonical_smiles','N/A') if m.get('molecule_structures') else 'N/A'}\")
 print(f\"分子量     : {props.get('full_mwt','N/A')} Da\")
 print(f\"LogP       : {props.get('alogp','N/A')}\")
-print(f\"氢键供体   : {props.get('hbd','N/A')}\")
-print(f\"氢键受体   : {props.get('hba,'N/A')}\")
+print(f\"HBD        : {props.get('hbd','N/A')}\")
+print(f\"HBA        : {props.get('hba','N/A')}\")
 print(f\"TPSA       : {props.get('psa','N/A')} Å²\")
 print(f\"Ro5 违规数 : {props.get('num_ro5_violations','N/A')}\")
 print(f\"QED        : {props.get('qed_weighted','N/A')}\")
 "
 ```
 
-### 2 — 类药性计算 (Lipinski 五规则 + Veber)
+### 2 — 类药性计算 (Lipinski Ro5 + Veber)
 
-使用 PubChem 的免费属性 API 评估任何分子是否符合已确立的口服生物利用度规则 — 无需安装 RDKit。
+使用 PubChem 的免费性质 API，根据已建立的口服生物利用度规则评估任何分子 — 无需安装 RDKit。
 
 ```bash
 COMPOUND="$1"
@@ -110,19 +111,19 @@ tpsa = float(props.get('TPSA', 0))
 print('=== Lipinski 五规则 (Ro5) ===')
 print(f'  分子量   {mw:.1f} Da    {\"✓\" if mw<=500 else \"✗ 违规 (>500)\"}')
 print(f'  LogP {logp:.2f}       {\"✓\" if logp<=5 else \"✗ 违规 (>5)\"}')
-print(f'  氢键供体  {hbd}           {\"✓\" if hbd<=5 else \"✗ 违规 (>5)\"}')
-print(f'  氢键受体  {hba}           {\"✓\" if hba<=10 else \"✗ 违规 (>10)\"}')
+print(f'  HBD  {hbd}           {\"✓\" if hbd<=5 else \"✗ 违规 (>5)\"}')
+print(f'  HBA  {hba}           {\"✓\" if hba<=10 else \"✗ 违规 (>10)\"}')
 viol = sum([mw>500, logp>5, hbd>5, hba>10])
-print(f'  违规数: {viol}/4  {\"→ 可能具有口服生物利用度\" if viol<=1 else \"→ 预测口服生物利用度差\"}')
+print(f'  违规项: {viol}/4  {\"→ 可能具有口服生物利用度\" if viol<=1 else \"→ 预测口服生物利用度差\"}')
 print()
 print('=== Veber 口服生物利用度规则 ===')
 print(f'  TPSA         {tpsa:.1f} Å²   {\"✓\" if tpsa<=140 else \"✗ 违规 (>140)\"}')
-print(f'  可旋转键   {rot}           {\"✓\" if rot<=10 else \"✗ 违规 (>10)\"}')
-print(f'  满足两条规则: {\"是 → 预测口服吸收良好\" if tpsa<=140 and rot<=10 else \"否 → 口服吸收降低\"}')
+print(f'  可旋转键数   {rot}           {\"✓\" if rot<=10 else \"✗ 违规 (>10)\"}')
+print(f'  两项规则均满足: {\"是 → 预测口服吸收良好\" if tpsa<=140 and rot<=10 else \"否 → 口服吸收降低\"}')
 "
 ```
 
-### 3 — 药物相互作用与安全性查询 (OpenFDA)
+### 3 — 药物相互作用与安全信息查询 (OpenFDA)
 
 ```bash
 DRUG="$1"
@@ -158,7 +159,7 @@ if not results:
     sys.exit()
 print(f'报告的主要不良事件:')
 for r in results[:10]:
-    print(f\"  {r['count']:>5}x  {r['term']}\")
+    print(f\"  {r['count']:>5}次  {r['term']}\")
 "
 ```
 
@@ -196,7 +197,7 @@ if not hits:
 obj=hits[0]['object']
 print(f\"靶点: {obj.get('approvedSymbol')} — {obj.get('approvedName')}\")
 assoc=obj.get('associatedDiseases',{})
-print(f\"与 {assoc.get('count',0)} 种疾病相关。主要关联疾病:\")
+print(f\"与 {assoc.get('count',0)} 种疾病相关。主要关联:\")
 for row in assoc.get('rows',[]):
     print(f\"  评分 {row['score']:.3f}  |  {row['disease']['name']}\")
 "
@@ -206,20 +207,20 @@ for row in assoc.get('rows',[]):
 
 在分析类药性或分子性质时，请始终：
 
-1. **首先列出原始值** — 分子量、LogP、氢键供体数 (HBD)、氢键受体数 (HBA)、TPSA、可旋转键数
-2. **应用规则集** — 在相关情况下应用 Ro5 (Lipinski)、Veber、Ghose 过滤器
-3. **标记潜在问题** — 代谢热点、hERG 风险、高 TPSA 对 CNS 穿透性的影响
-4. **建议优化方案** — 生物电子等排体替换、前药策略、环 truncation
-5. **注明来源 API** — ChEMBL、PubChem、OpenFDA 或 OpenTargets
+1.  **首先陈述原始数值** — 分子量、LogP、HBD、HBA、TPSA、可旋转键数
+2.  **应用规则集** — Ro5 (Lipinski)、Veber、Ghose 过滤器（如适用）
+3.  **标记潜在缺陷** — 代谢热点、hERG 风险、影响中枢神经系统渗透的高 TPSA
+4.  **建议优化方案** — 生物电子等排体替换、前药策略、环截短
+5.  **引用来源 API** — ChEMBL、PubChem、OpenFDA 或 OpenTargets
 
-对于 ADMET 问题，请系统地推理吸收、分布、代谢、排泄、毒性。详细指南请参见 references/ADMET_REFERENCE.md。
+对于 ADMET 问题，请系统性地分析吸收、分布、代谢、排泄、毒性。详细指南请参阅 references/ADMET_REFERENCE.md。
 
 ## 重要提示
 
-- 所有 API 均为免费、公开，无需身份验证
-- ChEMBL 速率限制：在批量请求之间添加 sleep 1
-- FDA 数据反映的是报告的不良事件，不一定是因果关系
-- 对于临床决策，始终建议咨询有执照的药剂师或医生
+- 所有 API 均免费、公开，无需认证
+- ChEMBL 速率限制：批量请求之间添加 `sleep 1`
+- FDA 数据反映报告的不良事件，不一定表明因果关系
+- 始终建议临床决策咨询持证药剂师或医生
 
 ## 快速参考
 

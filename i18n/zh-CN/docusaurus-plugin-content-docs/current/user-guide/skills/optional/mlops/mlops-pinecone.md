@@ -1,57 +1,58 @@
 ---
-title: "Pinecone — 适用于生产级 AI 应用的托管向量数据库"
+title: "Pinecone — 面向生产级AI应用的托管向量数据库"
 sidebar_label: "Pinecone"
-description: "适用于生产级 AI 应用的托管向量数据库"
+description: "面向生产级AI应用的托管向量数据库"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 此页面由网站脚本/scripts/generate-skill-docs.py从技能的SKILL.md自动生成。请编辑源文件SKILL.md，而非此页面。 */}
 
 # Pinecone
 
-适用于生产级 AI 应用的托管向量数据库。完全托管、自动扩缩容，支持混合搜索（密集 + 稀疏）、元数据过滤和命名空间。低延迟（&lt;100ms p95）。适用于生产级 RAG、推荐系统或大规模语义搜索。最适合无服务器、托管基础设施。
+面向生产级AI应用的托管向量数据库。全托管、自动扩展，支持混合搜索（稠密+稀疏）、元数据过滤和命名空间。低延迟（&lt;100ms p95）。适用于生产级RAG、推荐系统或大规模语义搜索。最适配无服务器托管基础设施。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/mlops/pinecone` 安装 |
+| 源 | 可选 — 通过 `hermes skills install official/mlops/pinecone` 安装 |
 | 路径 | `optional-skills/mlops/pinecone` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `pinecone-client` |
-| 标签 | `RAG`, `Pinecone`, `向量数据库`, `托管服务`, `无服务器`, `混合搜索`, `生产级`, `自动扩缩容`, `低延迟`, `推荐系统` |
+| 平台 | linux, macos, windows |
+| 标签 | `RAG`, `Pinecone`, `向量数据库`, `托管服务`, `无服务器`, `混合搜索`, `生产`, `自动扩展`, `低延迟`, `推荐` |
 
-## 参考：完整 SKILL.md
+## 参考：完整SKILL.md
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
-::>
+以下是Hermes加载此技能时看到的完整技能定义。这是技能激活时智能体看到的指令。
+:::
 
 # Pinecone - 托管向量数据库
 
-适用于生产级 AI 应用的向量数据库。
+面向生产级AI应用的向量数据库。
 
-## 何时使用 Pinecone
+## 何时使用Pinecone
 
-**使用场景：**
-- 需要托管、无服务器向量数据库
-- 生产级 RAG 应用
-- 需要自动扩缩容
+**在以下情况使用：**
+- 需要托管、无服务器的向量数据库
+- 生产级RAG应用
+- 需要自动扩展
 - 低延迟至关重要（&lt;100ms）
 - 不想管理基础设施
-- 需要混合搜索（密集 + 稀疏向量）
+- 需要混合搜索（稠密+稀疏向量）
 
 **指标**：
-- 完全托管的 SaaS
-- 可自动扩缩容至数十亿向量
-- **p95 延迟 &lt;100ms**
-- 99.9% 正常运行时间 SLA
+- 全托管SaaS
+- 自动扩展至数十亿向量
+- **p95延迟 &lt;100ms**
+- 99.9% 可用性SLA
 
-**使用替代方案**：
+**改用替代方案**：
 - **Chroma**：自托管、开源
 - **FAISS**：离线、纯相似性搜索
-- **Weaviate**：自托管，功能更丰富
+- **Weaviate**：自托管，功能更多
 
 ## 快速开始
 
@@ -80,7 +81,7 @@ pc.create_index(
 # 连接到索引
 index = pc.Index("my-index")
 
-# 插入/更新向量
+# 插入或更新向量
 index.upsert(vectors=[
     {"id": "vec1", "values": [0.1, 0.2, ...], "metadata": {"category": "A"}},
     {"id": "vec2", "values": [0.3, 0.4, ...], "metadata": {"category": "B"}}
@@ -112,7 +113,7 @@ pc.create_index(
     )
 )
 
-# 基于 Pod（适用于一致性能）
+# Pod模式（为获得一致性能）
 from pinecone import PodSpec
 
 pc.create_index(
@@ -126,23 +127,23 @@ pc.create_index(
 )
 ```
 
-### 插入/更新向量
+### 插入或更新向量
 
 ```python
-# 单次插入/更新
+# 单次插入
 index.upsert(vectors=[
     {
         "id": "doc1",
-        "values": [0.1, 0.2, ...],  # 1536 维
+        "values": [0.1, 0.2, ...],  # 1536维
         "metadata": {
             "text": "文档内容",
-            "category": "tutorial",
+            "category": "教程",
             "timestamp": "2025-01-01"
         }
     }
 ])
 
-# 批量插入/更新（推荐）
+# 批量插入（推荐）
 vectors = [
     {"id": f"vec{i}", "values": embedding, "metadata": metadata}
     for i, (embedding, metadata) in enumerate(zip(embeddings, metadatas))
@@ -166,7 +167,7 @@ results = index.query(
 results = index.query(
     vector=[0.1, 0.2, ...],
     top_k=5,
-    filter={"category": {"$eq": "tutorial"}}
+    filter={"category": {"$eq": "教程"}}
 )
 
 # 命名空间查询
@@ -179,7 +180,7 @@ results = index.query(
 # 访问结果
 for match in results["matches"]:
     print(f"ID: {match['id']}")
-    print(f"得分: {match['score']}")
+    print(f"分数: {match['score']}")
     print(f"元数据: {match['metadata']}")
 ```
 
@@ -187,27 +188,27 @@ for match in results["matches"]:
 
 ```python
 # 精确匹配
-filter = {"category": "tutorial"}
+filter = {"category": "教程"}
 
-# 比较
+# 比较操作
 filter = {"price": {"$gte": 100}}  # $gt, $gte, $lt, $lte, $ne
 
 # 逻辑运算符
 filter = {
     "$and": [
-        {"category": "tutorial"},
+        {"category": "教程"},
         {"difficulty": {"$lte": 3}}
     ]
-}  # 还有: $or
+}  # 也支持: $or
 
-# In 操作符
+# In操作符
 filter = {"tags": {"$in": ["python", "ml"]}}
 ```
 
 ## 命名空间
 
 ```python
-# 按命名空间分区数据
+# 通过命名空间分区数据
 index.upsert(
     vectors=[{"id": "vec1", "values": [...]}],
     namespace="user-123"
@@ -225,17 +226,17 @@ stats = index.describe_index_stats()
 print(stats['namespaces'])
 ```
 
-## 混合搜索（密集 + 稀疏）
+## 混合搜索（稠密 + 稀疏）
 
 ```python
-# 插入/更新带稀疏向量
+# 带稀疏向量的插入
 index.upsert(vectors=[
     {
         "id": "doc1",
-        "values": [0.1, 0.2, ...],  # 密集向量
+        "values": [0.1, 0.2, ...],  # 稠密向量
         "sparse_values": {
-            "indices": [10, 45, 123],  # 词元 ID
-            "values": [0.5, 0.3, 0.8]   # TF-IDF 分数
+            "indices": [10, 45, 123],  # 词元ID
+            "values": [0.5, 0.3, 0.8]   # TF-IDF分数
         },
         "metadata": {"text": "..."}
     }
@@ -249,11 +250,11 @@ results = index.query(
         "values": [0.5, 0.3]
     },
     top_k=5,
-    alpha=0.5  # 0=稀疏, 1=密集, 0.5=混合
+    alpha=0.5  # 0=稀疏, 1=稠密, 0.5=混合
 )
 ```
 
-## LangChain 集成
+## LangChain集成
 
 ```python
 from langchain_pinecone import PineconeVectorStore
@@ -267,32 +268,32 @@ vectorstore = PineconeVectorStore.from_documents(
 )
 
 # 查询
-results = vectorstore.similarity_search("query", k=5)
+results = vectorstore.similarity_search("查询", k=5)
 
 # 带元数据过滤
 results = vectorstore.similarity_search(
-    "query",
+    "查询",
     k=5,
-    filter={"category": "tutorial"}
+    filter={"category": "教程"}
 )
 
 # 作为检索器
 retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
 ```
 
-## LlamaIndex 集成
+## LlamaIndex集成
 
 ```python
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 
-# 连接到 Pinecone
+# 连接到Pinecone
 pc = Pinecone(api_key="your-key")
 pinecone_index = pc.Index("my-index")
 
 # 创建向量存储
 vector_store = PineconeVectorStore(pinecone_index=pinecone_index)
 
-# 在 LlamaIndex 中使用
+# 在LlamaIndex中使用
 from llama_index.core import StorageContext, VectorStoreIndex
 
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
@@ -321,52 +322,52 @@ pc.delete_index("my-index")
 ## 删除向量
 
 ```python
-# 按 ID 删除
+# 按ID删除
 index.delete(ids=["vec1", "vec2"])
 
-# 按过滤器删除
-index.delete(filter={"category": "old"})
+# 按过滤条件删除
+index.delete(filter={"category": "旧"})
 
 # 删除命名空间中的所有向量
 index.delete(delete_all=True, namespace="test")
 
-# 删除整个索引
+# 删除整个索引中的所有向量
 index.delete(delete_all=True)
 ```
 
 ## 最佳实践
 
-1. **使用无服务器** - 自动扩缩容，成本效益高
-2. **批量插入/更新** - 更高效（每批 100-200 个）
-3. **添加元数据** - 启用过滤
+1. **使用无服务器模式** - 自动扩展，性价比高
+2. **批量插入** - 效率更高（每批100-200个）
+3. **添加元数据** - 以便进行过滤
 4. **使用命名空间** - 按用户/租户隔离数据
-5. **监控使用情况** - 检查 Pinecone 控制台
-6. **优化过滤器** - 为频繁过滤的字段建立索引
-7. **使用免费层测试** - 1 个索引，10 万个向量免费
+5. **监控使用情况** - 检查Pinecone控制台
+6. **优化过滤条件** - 为常用过滤字段建立索引
+7. **使用免费层测试** - 1个索引，10万向量免费
 8. **使用混合搜索** - 质量更好
-9. **设置合适的维度** - 匹配嵌入模型
+9. **设置适当的维度** - 与嵌入模型匹配
 10. **定期备份** - 导出重要数据
 
 ## 性能
 
-| 操作 | 延迟 | 说明 |
+| 操作 | 延迟 | 备注 |
 |-----------|---------|-------|
-| 插入/更新 | ~50-100ms | 每批 |
+| 插入或更新 | ~50-100ms | 每批 |
 | 查询 (p50) | ~50ms | 取决于索引大小 |
-| 查询 (p95) | ~100ms | SLA 目标 |
+| 查询 (p95) | ~100ms | SLA目标 |
 | 元数据过滤 | ~+10-20ms | 额外开销 |
 
-## 定价（截至 2025 年）
+## 定价（截至2025年）
 
-**无服务器**：
-- 每百万读取单元 $0.096
-- 每百万写入单元 $0.06
-- 每 GB 存储/月 $0.06
+**无服务器模式**：
+- 每百万读取单元 0.096 美元
+- 每百万写入单元 0.06 美元
+- 每GB存储/月 0.06 美元
 
 **免费层**：
-- 1 个无服务器索引
-- 10 万个向量（1536 维）
-- 非常适合原型设计
+- 1个无服务器索引
+- 10万向量（1536维）
+- 非常适合原型开发
 
 ## 资源
 

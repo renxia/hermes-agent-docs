@@ -1,64 +1,69 @@
 ---
-title: "使用 Torchtitan 进行分布式 LLM 预训练"
-sidebar_label: "使用 Torchtitan 进行分布式 LLM 预训练"
-description: "使用 Torchtitan 提供原生 PyTorch 分布式 LLM 预训练，支持 4D 并行（FSDP2、TP、PP、CP）"
+title: "使用 Torchtitan 进行分布式大语言模型预训练"
+sidebar_label: "使用 Torchtitan 进行分布式大语言模型预训练"
+description: "提供基于 PyTorch 原生、使用 torchtitan 实现 4D 并行（FSDP2、TP、PP、CP）的分布式大语言模型预训练"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 根据技能的 SKILL.md 文件自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
-# 使用 Torchtitan 进行分布式 LLM 预训练
+# 使用 Torchtitan 进行分布式大语言模型预训练
 
-使用 Torchtitan 提供原生 PyTorch 分布式 LLM 预训练，支持 4D 并行（FSDP2、TP、PP、CP）。适用于在 8 至 512+ GPU 上使用 Float8、torch.compile 和分布式检查点技术对 Llama 3.1、DeepSeek V3 或自定义模型进行大规模预训练。
+提供基于 PyTorch 原生、使用 torchtitan 实现 4D 并行（FSDP2、TP、PP、CP）的分布式大语言模型预训练。当需要使用 Float8、torch.compile 和分布式检查点，在 8 到 512+ 个 GPU 上大规模预训练 Llama 3.1、DeepSeek V3 或自定义模型时使用此技能。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/mlops/torchtitan` 安装 |
+| 来源 | 可选 — 通过 `hermes skills install official/mlops/torchtitan` 安装 |
 | 路径 | `optional-skills/mlops/torchtitan` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `torch>=2.6.0`, `torchtitan>=0.2.0`, `torchao>=0.5.0` |
-| 标签 | `模型架构`, `分布式训练`, `Torchtitan`, `FSDP2`, `张量并行`, `流水线并行`, `上下文并行`, `Float8`, `Llama`, `预训练` |
+| 平台 | linux, macos |
+| 标签 | `模型架构`, `分布式训练`, `TorchTitan`, `FSDP2`, `张量并行`, `流水线并行`, `上下文并行`, `Float8`, `Llama`, `预训练` |
 
-## 参考：完整的 SKILL.md
-
+```markdown
+---
+title: "TorchTitan - PyTorch 原生分布式大语言模型预训练"
+description: "TorchTitan 是 PyTorch 官方的可组合 4D 并行平台，用于大规模大语言模型预训练。"
+slug: torchtit-an
+---
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是在该技能触发时，Hermes 加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
 # TorchTitan - PyTorch 原生分布式大语言模型预训练
 
 ## 快速入门
 
-TorchTitan 是 PyTorch 官方的大规模 LLM 预训练平台，采用可组合的 4D 并行（FSDP2、TP、PP、CP），在 H100 GPU 上相比基线实现了 65%+ 的加速。
+TorchTitan 是 PyTorch 官方的用于大规模大语言模型预训练的平台，具备可组合的 4D 并行性（FSDP2, TP, PP, CP），在 H100 GPU 上相比基线可实现 65% 以上的加速。
 
-**安装**：
+**安装**:
 ```bash
-# 从 PyPI 安装（稳定版）
+# 通过 PyPI（稳定版）
 pip install torchtitan
 
-# 从源码安装（最新功能，需要 PyTorch nightly 版本）
+# 通过源码（最新功能，需要 PyTorch nightly 版本）
 git clone https://github.com/pytorch/torchtitan
 cd torchtitan
 pip install -r requirements.txt
 ```
 
-**下载分词器**：
+**下载分词器**:
 ```bash
-# 从 https://huggingface.co/settings/tokens 获取 HF token
+# 从 https://huggingface.co/settings/tokens 获取 HF 令牌
 python scripts/download_hf_assets.py --repo_id meta-llama/Llama-3.1-8B --assets tokenizer --hf_token=...
 ```
 
-**在 8 块 GPU 上开始训练**：
+**在 8 个 GPU 上启动训练**:
 ```bash
 CONFIG_FILE="./torchtitan/models/llama3/train_configs/llama3_8b.toml" ./run_train.sh
 ```
 
-## 常见工作流
+## 常见工作流程
 
-### 工作流 1：在单节点上预训练 Llama 3.1 8B
+### 工作流程 1：在单节点上预训练 Llama 3.1 8B
 
 复制此清单：
 
@@ -67,7 +72,7 @@ CONFIG_FILE="./torchtitan/models/llama3/train_configs/llama3_8b.toml" ./run_trai
 - [ ] 步骤 1：下载分词器
 - [ ] 步骤 2：配置训练
 - [ ] 步骤 3：启动训练
-- [ ] 步骤 4：监控和检查点
+- [ ] 步骤 4：监控与设置检查点
 ```
 
 **步骤 1：下载分词器**
@@ -109,7 +114,7 @@ steps = 1000
 dataset = "c4"
 
 [parallelism]
-data_parallel_shard_degree = -1  # 使用所有 GPU 进行 FSDP
+data_parallel_shard_degree = -1  # 所有 GPU 用于 FSDP
 
 [activation_checkpoint]
 mode = "selective"
@@ -124,7 +129,7 @@ interval = 500
 **步骤 3：启动训练**
 
 ```bash
-# 单节点 8 块 GPU
+# 单节点 8 个 GPU
 CONFIG_FILE="./llama3_8b_custom.toml" ./run_train.sh
 
 # 或者显式使用 torchrun
@@ -133,32 +138,32 @@ torchrun --nproc_per_node=8 \
   --job.config_file ./llama3_8b_custom.toml
 ```
 
-**步骤 4：监控和检查点**
+**步骤 4：监控与设置检查点**
 
 TensorBoard 日志保存在 `./outputs/tb/`：
 ```bash
 tensorboard --logdir ./outputs/tb
 ```
 
-### 工作流 2：使用 SLURM 进行多节点训练
+### 工作流程 2：使用 SLURM 进行多节点训练
 
 ```
 多节点训练：
-- [ ] 步骤 1：配置并行以扩展规模
+- [ ] 步骤 1：为扩展配置并行性
 - [ ] 步骤 2：设置 SLURM 脚本
 - [ ] 步骤 3：提交作业
 - [ ] 步骤 4：从检查点恢复
 ```
 
-**步骤 1：配置并行以扩展规模**
+**步骤 1：为扩展配置并行性**
 
-对于 256 块 GPU（32 节点）上的 70B 模型：
+在 256 个 GPU（32 个节点）上运行 70B 模型：
 ```toml
 [parallelism]
-data_parallel_shard_degree = 32  # 在 32 个 rank 上进行 FSDP
-tensor_parallel_degree = 8        # 节点内 TP
-pipeline_parallel_degree = 1      # 70B 模型无需 PP
-context_parallel_degree = 1       # 长序列时增加
+data_parallel_shard_degree = 32  # 32 个 rank 之间的 FSDP
+tensor_parallel_degree = 8        # 节点内的 TP
+pipeline_parallel_degree = 1      # 70B 不使用 PP
+context_parallel_degree = 1       # 对于长序列可增加
 ```
 
 **步骤 2：设置 SLURM 脚本**
@@ -187,17 +192,17 @@ sbatch multinode_trainer.slurm
 
 **步骤 4：从检查点恢复**
 
-如果配置文件夹中存在检查点，训练会自动恢复。
+如果在配置的文件夹中存在检查点，训练会自动恢复。
 
-### 工作流 3：为 H100 启用 Float8 训练
+### 工作流程 3：为 H100 启用 Float8 训练
 
-Float8 在 H100 GPU 上可提供 30-50% 的加速。
+Float8 可在 H100 GPU 上提供 30-50% 的加速。
 
 ```
 Float8 训练：
 - [ ] 步骤 1：安装 torchao
 - [ ] 步骤 2：配置 Float8
-- [ ] 步骤 3：使用 compile 启动
+- [ ] 步骤 3：使用编译启动
 ```
 
 **步骤 1：安装 torchao**
@@ -223,7 +228,7 @@ enable = true
 components = ["model", "loss"]
 ```
 
-**步骤 3：使用 compile 启动**
+**步骤 3：使用编译启动**
 
 ```bash
 CONFIG_FILE="./llama3_8b.toml" ./run_train.sh \
@@ -232,18 +237,18 @@ CONFIG_FILE="./llama3_8b.toml" ./run_train.sh \
   --compile.enable
 ```
 
-### 工作流 4：4D 并行用于 405B 模型
+### 工作流程 4：用于 405B 模型的 4D 并行
 
 ```
-4D 并行（FSDP + TP + PP + CP）：
+4D 并行 (FSDP + TP + PP + CP)：
 - [ ] 步骤 1：创建种子检查点
 - [ ] 步骤 2：配置 4D 并行
-- [ ] 步骤 3：在 512 块 GPU 上启动
+- [ ] 步骤 3：在 512 个 GPU 上启动
 ```
 
 **步骤 1：创建种子检查点**
 
-PP 阶段之间需要一致初始化：
+为确保 PP 阶段间初始化的一致性所需：
 ```bash
 NGPU=1 CONFIG_FILE=./llama3_405b.toml ./run_train.sh \
   --checkpoint.enable \
@@ -258,44 +263,44 @@ NGPU=1 CONFIG_FILE=./llama3_405b.toml ./run_train.sh \
 ```toml
 [parallelism]
 data_parallel_shard_degree = 8   # FSDP
-tensor_parallel_degree = 8       # 节点内 TP
-pipeline_parallel_degree = 8     # 跨节点 PP
-context_parallel_degree = 1      # 长序列 CP
+tensor_parallel_degree = 8       # 节点内的 TP
+pipeline_parallel_degree = 8     # 跨节点的 PP
+context_parallel_degree = 1      # 用于长序列的 CP
 
 [training]
 local_batch_size = 32
 seq_len = 8192
 ```
 
-**步骤 3：在 512 块 GPU 上启动**
+**步骤 3：在 512 个 GPU 上启动**
 
 ```bash
-# 64 节点 x 8 块 GPU = 512 块 GPU
+# 64 个节点 x 8 个 GPU = 512 个 GPU
 srun torchrun --nnodes=64 --nproc_per_node=8 \
   -m torchtitan.train \
   --job.config_file ./llama3_405b.toml
 ```
 
-## 何时使用 vs 替代方案
+## 何时使用与替代方案的对比
 
 **使用 TorchTitan 当：**
-- 从零开始预训练 LLM（8B 到 405B+）
+- 从头预训练大语言模型（8B 到 405B+）
 - 需要无第三方依赖的 PyTorch 原生解决方案
-- 需要可组合的 4D 并行（FSDP2、TP、PP、CP）
-- 在支持 Float8 的 H100 上训练
-- 希望与 torchtune/HuggingFace 的检查点可互操作
+- 需要可组合的 4D 并行性（FSDP2, TP, PP, CP）
+- 在 H100 上使用 Float8 支持进行训练
+- 需要与 torchtune/HuggingFace 可互操作的检查点
 
-**使用替代方案：**
-- **Megatron-LM**：仅限 NVIDIA 部署时的最大性能
+**使用替代方案当：**
+- **Megatron-LM**：针对纯 NVIDIA 部署追求极致性能
 - **DeepSpeed**：更广泛的 ZeRO 优化生态系统，支持推理
-- **Axolotl/TRL**：微调而非预训练
-- **LitGPT**：教学用途，小规模训练
+- **Axolotl/TRL**：用于微调而非预训练
+- **LitGPT**：用于教育、较小规模的训练
 
 ## 常见问题
 
 **问题：大模型内存不足**
 
-启用激活检查点并减小批次大小：
+启用激活检查点并减小批量大小：
 ```toml
 [activation_checkpoint]
 mode = "full"  # 而非 "selective"
@@ -311,24 +316,24 @@ local_batch_size = 1
 global_batch_size = 32  # 累积梯度
 ```
 
-**问题：TP 导致异步集合操作内存过高**
+**问题：异步集合通信导致 TP 内存占用高**
 
 设置环境变量：
 ```bash
 export TORCH_NCCL_AVOID_RECORD_STREAMS=1
 ```
 
-**问题：Float8 训练未加速**
+**问题：Float8 训练未提速**
 
-Float8 仅对大型 GEMM 有益。过滤小层：
+Float8 仅对大型矩阵乘法有益。过滤小层：
 ```toml
 [quantize.linear.float8]
 filter_fqns = ["attention.wk", "attention.wv", "output", "auto_filter_small_kn"]
 ```
 
-**问题：并行更改后检查点加载失败**
+**问题：并行性更改后检查点加载失败**
 
-使用 DCP 的重分片功能：
+使用 DCP 的重分片能力：
 ```bash
 # 将分片检查点转换为单个文件
 python -m torch.distributed.checkpoint.format_utils \
@@ -337,22 +342,22 @@ python -m torch.distributed.checkpoint.format_utils \
 
 **问题：流水线并行初始化**
 
-首先创建种子检查点（参见工作流 4，步骤 1）。
+首先创建种子检查点（参见工作流程 4，步骤 1）。
 
 ## 支持的模型
 
-| 模型 | 大小 | 状态 |
+| 模型 | 尺寸 | 状态 |
 |-------|-------|--------|
-| Llama 3.1 | 8B, 70B, 405B | 生产环境 |
-| Llama 4 | 多种 | 实验性 |
+| Llama 3.1 | 8B, 70B, 405B | 生产 |
+| Llama 4 | 各种尺寸 | 实验性 |
 | DeepSeek V3 | 16B, 236B, 671B (MoE) | 实验性 |
 | GPT-OSS | 20B, 120B (MoE) | 实验性 |
-| Qwen 3 | 多种 | 实验性 |
+| Qwen 3 | 各种尺寸 | 实验性 |
 | Flux | 扩散模型 | 实验性 |
 
-## 性能基准（H100）
+## 性能基准 (H100)
 
-| 模型 | GPU 数量 | 并行方式 | 每秒 token 数/GPU | 技术 |
+| 模型 | GPU 数量 | 并行性 | TPS/GPU | 技术 |
 |-------|------|-------------|---------|------------|
 | Llama 8B | 8 | FSDP | 5,762 | 基线 |
 | Llama 8B | 8 | FSDP+compile+FP8 | 8,532 | +48% |
@@ -361,13 +366,13 @@ python -m torch.distributed.checkpoint.format_utils \
 
 ## 高级主题
 
-**FSDP2 配置**：详见 [references/fsdp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/fsdp.md)，了解 FSDP2 与 FSDP1 的详细对比及 ZeRO 等效方案。
+**FSDP2 配置**：参见 [references/fsdp.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/fsdp.md) 了解 FSDP2 与 FSDP1 的详细对比和 ZeRO 等效项。
 
-**Float8 训练**：详见 [references/float8.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/float8.md)，了解张量级与行级缩放方案。
+**Float8 训练**：参见 [references/float8.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/float8.md) 了解逐张量与逐行缩放方案。
 
-**检查点**：详见 [references/checkpoint.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/checkpoint.md)，了解 HuggingFace 转换及异步检查点。
+**检查点**：参见 [references/checkpoint.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/checkpoint.md) 了解 HuggingFace 转换和异步检查点。
 
-**添加自定义模型**：详见 [references/custom-models.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/custom-models.md)，了解 TrainSpec 协议。
+**添加自定义模型**：参见 [references/custom-models.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/torchtitan/references/custom-models.md) 了解 TrainSpec 协议。
 
 ## 资源
 
@@ -375,3 +380,4 @@ python -m torch.distributed.checkpoint.format_utils \
 - 论文: https://arxiv.org/abs/2410.06511
 - ICLR 2025: https://iclr.cc/virtual/2025/poster/29620
 - PyTorch 论坛: https://discuss.pytorch.org/c/distributed/torchtitan/44
+```

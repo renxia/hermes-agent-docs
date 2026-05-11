@@ -4,11 +4,11 @@ sidebar_label: "Whisper"
 description: "OpenAI 的通用语音识别模型"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 本页面由 website/scripts/generate-skill-docs.py 脚本根据技能的 SKILL.md 文件自动生成。请编辑源文件 SKILL.md，而非本页面。 */}
 
 # Whisper
 
-OpenAI 的通用语音识别模型。支持 99 种语言、转录、翻译为英语以及语言识别。提供六种模型尺寸，从 tiny（3900 万参数）到 large（15.5 亿参数）。可用于语音转文本、播客转录或多语言音频处理。最适合稳健、多语言的自动语音识别（ASR）。
+OpenAI 的通用语音识别模型。支持 99 种语言、转录、翻译为英语以及语言识别。六种模型尺寸，从 tiny（3900 万参数）到 large（15.5 亿参数）。可用于语音转文本、播客转录或多语言音频处理。最适合稳健的多语言自动语音识别。
 
 ## 技能元数据
 
@@ -20,12 +20,13 @@ OpenAI 的通用语音识别模型。支持 99 种语言、转录、翻译为英
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `openai-whisper`, `transformers`, `torch` |
+| 平台 | linux, macos |
 | 标签 | `Whisper`, `语音识别`, `ASR`, `多模态`, `多语言`, `OpenAI`, `语音转文本`, `转录`, `翻译`, `音频处理` |
 
 ## 参考：完整的 SKILL.md
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是当技能激活时，智能体看到的指令。
+以下是 Hermes 触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
 :::
 
 # Whisper - 稳健的语音识别
@@ -34,7 +35,7 @@ OpenAI 的多语言语音识别模型。
 
 ## 何时使用 Whisper
 
-**使用场景：**
+**适用于：**
 - 语音转文本转录（99 种语言）
 - 播客/视频转录
 - 会议记录自动化
@@ -43,15 +44,15 @@ OpenAI 的多语言语音识别模型。
 - 多语言音频处理
 
 **指标**：
-- **72,900+ GitHub stars**
+- **GitHub 星标超过 72,900+**
 - 支持 99 种语言
-- 在 680,000 小时的音频上训练
+- 使用 680,000 小时的音频进行训练
 - MIT 许可证
 
-**使用替代方案**：
-- **AssemblyAI**：托管 API，说话人日志
+**请改用替代方案**：
+- **AssemblyAI**：托管 API，说话人分离
 - **Deepgram**：实时流式 ASR
-- **Google Speech-to-Text**：基于云
+- **Google Speech-to-Text**：基于云的
 
 ## 快速开始
 
@@ -67,7 +68,7 @@ pip install -U openai-whisper
 # Windows: choco install ffmpeg
 ```
 
-### 基础转录
+### 基本转录
 
 ```python
 import whisper
@@ -81,7 +82,7 @@ result = model.transcribe("audio.mp3")
 # 打印文本
 print(result["text"])
 
-# 访问片段
+# 访问分段
 for segment in result["segments"]:
     print(f"[{segment['start']:.2f}s - {segment['end']:.2f}s] {segment['text']}")
 ```
@@ -93,7 +94,7 @@ for segment in result["segments"]:
 models = ["tiny", "base", "small", "medium", "large", "turbo"]
 
 # 加载特定模型
-model = whisper.load_model("turbo")  # 最快，质量良好
+model = whisper.load_model("turbo")  # 最快，质量好
 ```
 
 | 模型 | 参数 | 仅英语 | 多语言 | 速度 | 显存 |
@@ -105,7 +106,7 @@ model = whisper.load_model("turbo")  # 最快，质量良好
 | large | 1550M | ✗ | ✓ | 1x | ~10 GB |
 | turbo | 809M | ✗ | ✓ | ~8x | ~6 GB |
 
-**建议**：使用 `turbo` 以获得最佳速度/质量，`base` 用于原型设计
+**建议**：使用 `turbo` 以获得最佳速度/质量平衡，使用 `base` 进行原型设计
 
 ## 转录选项
 
@@ -118,7 +119,7 @@ result = model.transcribe("audio.mp3")
 # 指定语言（更快）
 result = model.transcribe("audio.mp3", language="en")
 
-# 支持：en, es, fr, de, it, pt, ru, ja, ko, zh，以及另外 89 种
+# 支持：en, es, fr, de, it, pt, ru, ja, ko, zh 等共 99 种语言
 ```
 
 ### 任务选择
@@ -138,19 +139,19 @@ result = model.transcribe("spanish.mp3", task="translate")
 # 使用上下文提高准确性
 result = model.transcribe(
     "audio.mp3",
-    initial_prompt="这是一个关于机器学习和 AI 的技术播客。"
+    initial_prompt="这是一段关于机器学习和人工智能的技术播客。"
 )
 
 # 有助于：
 # - 技术术语
 # - 专有名词
-# - 领域特定词汇
+# - 特定领域词汇
 ```
 
 ### 时间戳
 
 ```python
-# 词级时间戳
+# 单词级时间戳
 result = model.transcribe("audio.mp3", word_timestamps=True)
 
 for segment in result["segments"]:
@@ -161,17 +162,17 @@ for segment in result["segments"]:
 ### 温度回退
 
 ```python
-# 如果置信度低，使用不同温度重试
+# 如果置信度低，则使用不同温度重试
 result = model.transcribe(
     "audio.mp3",
     temperature=(0.0, 0.2, 0.4, 0.6, 0.8, 1.0)
 )
 ```
 
-## 命令行使用
+## 命令行用法
 
 ```bash
-# 基础转录
+# 基本转录
 whisper audio.mp3
 
 # 指定模型
@@ -190,7 +191,7 @@ whisper audio.mp3 --language Spanish
 whisper spanish.mp3 --task translate
 ```
 
-## 批量处理
+## 批处理
 
 ```python
 import os
@@ -210,14 +211,14 @@ for audio_file in audio_files:
 ## 实时转录
 
 ```python
-# 对于流式音频，请使用 faster-whisper
+# 对于流式音频，使用 faster-whisper
 # pip install faster-whisper
 
 from faster_whisper import WhisperModel
 
 model = WhisperModel("base", device="cuda", compute_type="float16")
 
-# 使用流式进行转录
+# 使用流式转录
 segments, info = model.transcribe("audio.mp3", beam_size=5)
 
 for segment in segments:
@@ -238,7 +239,7 @@ model = whisper.load_model("turbo", device="cpu")
 # 强制使用 GPU
 model = whisper.load_model("turbo", device="cuda")
 
-# 在 GPU 上快 10-20 倍
+# GPU 上速度快 10-20 倍
 ```
 
 ## 与其他工具集成
@@ -260,7 +261,7 @@ from langchain.document_loaders import WhisperTranscriptionLoader
 loader = WhisperTranscriptionLoader(file_path="audio.mp3")
 docs = loader.load()
 
-# 在 RAG 中使用转录
+# 在 RAG 中使用转录内容
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
@@ -279,12 +280,12 @@ whisper audio.wav
 
 ## 最佳实践
 
-1. **使用 turbo 模型** - 英语的最佳速度/质量
+1. **使用 turbo 模型** - 英语最佳速度/质量平衡
 2. **指定语言** - 比自动检测更快
-3. **添加初始提示** - 提高技术术语准确性
-4. **使用 GPU** - 快 10-20 倍
-5. **批量处理** - 更高效
-6. **转换为 WAV** - 更好的兼容性
+3. **添加初始提示** - 改善技术术语识别
+4. **使用 GPU** - 速度快 10-20 倍
+5. **批处理** - 更高效
+6. **转换为 WAV** - 兼容性更好
 7. **拆分长音频** - &lt;30 分钟的块
 8. **检查语言支持** - 质量因语言而异
 9. **使用 faster-whisper** - 比 openai-whisper 快 4 倍
@@ -292,7 +293,7 @@ whisper audio.wav
 
 ## 性能
 
-| 模型 | 实时因子（CPU） | 实时因子（GPU） |
+| 模型 | 实时因子 (CPU) | 实时因子 (GPU) |
 |-------|------------------------|------------------------|
 | tiny | ~0.32 | ~0.01 |
 | base | ~0.16 | ~0.01 |
@@ -303,7 +304,7 @@ whisper audio.wav
 
 ## 语言支持
 
-最受支持的语言：
+主要支持的语言：
 - 英语 (en)
 - 西班牙语 (es)
 - 法语 (fr)
@@ -319,17 +320,17 @@ whisper audio.wav
 
 ## 局限性
 
-1. **幻觉** - 可能重复或编造文本
-2. **长时准确性** - 在 >30 分钟的音频上会下降
-3. **说话人识别** - 无日志功能
-4. **口音** - 质量各异
+1. **幻觉** - 可能会重复或编造文本
+2. **长音频准确性** - 超过 30 分钟的音频会下降
+3. **说话人识别** - 无分离功能
+4. **口音** - 质量不一
 5. **背景噪音** - 可能影响准确性
 6. **实时延迟** - 不适合实时字幕
 
 ## 资源
 
-- **GitHub**: https://github.com/openai/whisper ⭐ 72,900+
-- **论文**: https://arxiv.org/abs/2212.04356
-- **模型卡**: https://github.com/openai/whisper/blob/main/model-card.md
-- **Colab**: 在仓库中可用
-- **许可证**: MIT
+- **GitHub**：https://github.com/openai/whisper ⭐ 72,900+
+- **论文**：https://arxiv.org/abs/2212.04356
+- **模型卡**：https://github.com/openai/whisper/blob/main/model-card.md
+- **Colab**：仓库中可用
+- **许可证**：MIT

@@ -1,49 +1,48 @@
 ---
-title: "评估 LLM Harness — lm-eval-harness：基准测试 LLM（MMLU、GSM8K 等）"
-sidebar_label: "评估 LLM Harness"
-description: "lm-eval-harness：基准测试 LLM（MMLU、GSM8K 等）"
+title: "评估大模型工具 — lm-eval-harness：LLM基准测试（MMLU、GSM8K等）"
+sidebar_label: "评估大模型工具"
+description: "lm-eval-harness：LLM基准测试（MMLU、GSM8K等）"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成的。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 此页面由网站脚本/scripts/generate-skill-docs.py从技能SKILL.md自动生成。请编辑源文件SKILL.md，而非本页面。 */}
 
-# 评估 LLM Harness
+# 评估大模型工具
 
-lm-eval-harness：基准测试 LLM（MMLU、GSM8K 等）。
+lm-eval-harness：LLM基准测试（MMLU、GSM8K等）。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 捆绑（默认安装） |
+| 来源 | 内置（默认安装） |
 | 路径 | `skills/mlops/evaluation/lm-evaluation-harness` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
-| 依赖项 | `lm-eval`、`transformers`、`vllm` |
-| 标签 | `评估`、`LM 评估 Harness`、`基准测试`、`MMLU`、`HumanEval`、`GSM8K`、`EleutherAI`、`模型质量`、`学术基准`、`行业标准` |
-
-## 参考：完整的 SKILL.md
+| 依赖 | `lm-eval`, `transformers`, `vllm` |
+| 平台 | linux, macos |
+| 标签 | `评估`, `LM评估工具`, `基准测试`, `MMLU`, `HumanEval`, `GSM8K`, `EleutherAI`, `模型质量`, `学术基准`, `行业标准` |
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是当技能激活时智能体看到的指令。
+以下是 Hermes 在触发此技能时加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
-# lm-evaluation-harness - 大语言模型基准测试
+# lm-evaluation-harness - LLM 基准测试
 
-## 内容概览
+## 里面有什么
 
-在 60 多个学术基准测试（MMLU、HumanEval、GSM8K、TruthfulQA、HellaSwag）上评估大语言模型。适用于基准测试模型质量、比较模型、报告学术成果或跟踪训练进度。由 EleutherAI、HuggingFace 和主要实验室使用的行业标准。支持 HuggingFace、vLLM、API。
+在超过 60 个学术基准（MMLU, HumanEval, GSM8K, TruthfulQA, HellaSwag）上评估 LLM。用于对模型质量进行基准测试、比较模型、报告学术结果或跟踪训练进度。EleutherAI、HuggingFace 和主要实验室使用的行业标准。支持 HuggingFace、vLLM、API。
 
 ## 快速开始
 
-lm-evaluation-harness 使用标准化提示和指标在 60 多个学术基准测试上评估大语言模型。
+lm-evaluation-harness 使用标准化的提示和指标，在超过 60 个学术基准上评估 LLM。
 
-**安装**：
+**安装**:
 ```bash
 pip install lm-eval
 ```
 
-**评估任意 HuggingFace 模型**：
+**评估任何 HuggingFace 模型**:
 ```bash
 lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf \
@@ -52,39 +51,39 @@ lm_eval --model hf \
   --batch_size 8
 ```
 
-**查看可用任务**：
+**查看可用任务**:
 ```bash
 lm_eval --tasks list
 ```
 
 ## 常见工作流
 
-### 工作流 1：标准基准测试评估
+### 工作流 1：标准基准评估
 
-在核心基准测试（MMLU、GSM8K、HumanEval）上评估模型。
+在核心基准（MMLU、GSM8K、HumanEval）上评估模型。
 
-复制此检查清单：
+复制此清单：
 
 ```
-基准测试评估：
-- [ ] 步骤 1：选择基准测试套件
+基准评估：
+- [ ] 步骤 1：选择基准套件
 - [ ] 步骤 2：配置模型
 - [ ] 步骤 3：运行评估
 - [ ] 步骤 4：分析结果
 ```
 
-**步骤 1：选择基准测试套件**
+**步骤 1：选择基准套件**
 
-**核心推理基准测试**：
+**核心推理基准**：
 - **MMLU**（大规模多任务语言理解）- 57 个学科，多项选择
-- **GSM8K** - 小学年级数学应用题
+- **GSM8K** - 小学数学应用题
 - **HellaSwag** - 常识推理
-- **TruthfulQA** - 真实性和事实性
+- **TruthfulQA** - 真实性和事实准确性
 - **ARC**（AI2 推理挑战）- 科学问题
 
-**代码基准测试**：
+**代码基准**：
 - **HumanEval** - Python 代码生成（164 个问题）
-- **MBPP**（主要是基础 Python 问题）- Python 编码
+- **MBPP**（主要是基础 Python 问题）- Python 编程
 
 **标准套件**（推荐用于模型发布）：
 ```bash
@@ -99,10 +98,10 @@ lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf,dtype=bfloat16 \
   --tasks mmlu \
   --device cuda:0 \
-  --batch_size auto  # 自动检测最佳批处理大小
+  --batch_size auto  # 自动检测最优批大小
 ```
 
-**量化模型（4 位/8 位）**：
+**量化模型（4位/8位）**：
 ```bash
 lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf,load_in_4bit=True \
@@ -121,16 +120,16 @@ lm_eval --model hf \
 **步骤 3：运行评估**
 
 ```bash
-# 完整 MMLU 评估（57 个学科）
+# 完整的 MMLU 评估（57 个学科）
 lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf \
   --tasks mmlu \
-  --num_fewshot 5 \  # 5 次少量示例评估（标准）
+  --num_fewshot 5 \  # 5-shot 评估（标准）
   --batch_size 8 \
   --output_path results/ \
   --log_samples  # 保存单个预测
 
-# 同时运行多个基准测试
+# 一次评估多个基准
 lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf \
   --tasks mmlu,gsm8k,hellaswag,truthfulqa,arc_challenge \
@@ -174,14 +173,14 @@ lm_eval --model hf \
 ```
 训练进度跟踪：
 - [ ] 步骤 1：设置定期评估
-- [ ] 步骤 2：选择快速基准测试
+- [ ] 步骤 2：选择快速基准
 - [ ] 步骤 3：自动化评估
 - [ ] 步骤 4：绘制学习曲线
 ```
 
 **步骤 1：设置定期评估**
 
-每 N 个训练步骤评估一次：
+每 N 个训练步评估一次：
 
 ```bash
 #!/bin/bash
@@ -193,25 +192,25 @@ STEP=$2
 lm_eval --model hf \
   --model_args pretrained=$CHECKPOINT_DIR/checkpoint-$STEP \
   --tasks gsm8k,hellaswag \
-  --num_fewshot 0 \  # 0 次少量示例以提高速度
+  --num_fewshot 0 \  # 0-shot 以提高速度
   --batch_size 16 \
   --output_path results/step-$STEP.json
 ```
 
-**步骤 2：选择快速基准测试**
+**步骤 2：选择快速基准**
 
-用于频繁评估的快速基准测试：
+用于频繁评估的快速基准：
 - **HellaSwag**：在 1 个 GPU 上约 10 分钟
 - **GSM8K**：约 5 分钟
 - **PIQA**：约 2 分钟
 
-避免用于频繁评估（太慢）：
+避免频繁评估（太慢）：
 - **MMLU**：约 2 小时（57 个学科）
-- **HumanEval**：需要代码执行
+- **HumanEval**：需要执行代码
 
 **步骤 3：自动化评估**
 
-集成到训练脚本中：
+与训练脚本集成：
 
 ```python
 # 在训练循环中
@@ -266,7 +265,7 @@ plt.savefig("training_curve.png")
 
 ### 工作流 3：比较多个模型
 
-用于模型比较的基准测试套件。
+用于模型比较的基准套件。
 
 ```
 模型比较：
@@ -354,7 +353,7 @@ print(df.to_markdown(index=False))
 
 ### 工作流 4：使用 vLLM 评估（更快的推理）
 
-使用 vLLM 后端进行 5-10 倍更快的评估。
+使用 vLLM 后端实现 5-10 倍更快的评估。
 
 ```
 vLLM 评估：
@@ -383,13 +382,13 @@ lm_eval --model vllm \
 vLLM 比标准 HuggingFace 快 5-10 倍：
 
 ```bash
-# 标准 HF：在 7B 模型上 MMLU 约 2 小时
+# 标准 HF：在 7B 模型上运行 MMLU 约 2 小时
 lm_eval --model hf \
   --model_args pretrained=meta-llama/Llama-2-7b-hf \
   --tasks mmlu \
   --batch_size 8
 
-# vLLM：在 7B 模型上 MMLU 约 15-20 分钟
+# vLLM：在 7B 模型上运行 MMLU 约 15-20 分钟
 lm_eval --model vllm \
   --model_args pretrained=meta-llama/Llama-2-7b-hf,tensor_parallel_size=2 \
   --tasks mmlu \
@@ -398,22 +397,22 @@ lm_eval --model vllm \
 
 ## 何时使用 vs 替代方案
 
-**当以下情况时使用 lm-evaluation-harness：**
-- 为学术论文进行模型基准测试
-- 跨标准任务比较模型质量
+**在以下情况下使用 lm-evaluation-harness：**
+- 对学术论文中的模型进行基准测试
+- 比较模型在标准任务上的质量
 - 跟踪训练进度
-- 报告标准化指标（每个人都使用相同的提示）
+- 报告标准化指标（所有人使用相同的提示）
 - 需要可重现的评估
 
-**使用替代方案：**
-- **HELM**（斯坦福）：更广泛的评估（公平性、效率、校准）
-- **AlpacaEval**：使用大语言模型评判的指令遵循评估
+**改用替代方案：**
+- **HELM**（斯坦福大学）：更广泛的评估（公平性、效率、校准）
+- **AlpacaEval**：使用 LLM 评委进行指令遵循评估
 - **MT-Bench**：对话式多轮评估
-- **自定义脚本**：特定领域评估
+- **自定义脚本**：特定领域的评估
 
 ## 常见问题
 
-**问题：评估速度过慢**
+**问题：评估速度太慢**
 
 使用 vLLM 后端：
 ```bash
@@ -421,14 +420,14 @@ lm_eval --model vllm \
   --model_args pretrained=model-name,tensor_parallel_size=2
 ```
 
-或减少少样本示例数量：
+或者减少少样本示例数量：
 ```bash
 --num_fewshot 0  # 而不是 5
 ```
 
-或仅评估 MMLU 的子集：
+或者评估 MMLU 的子集：
 ```bash
---tasks mmlu_stem  # 仅 STEM 科目
+--tasks mmlu_stem  # 仅 STEM 学科
 ```
 
 **问题：内存不足**
@@ -450,22 +449,22 @@ lm_eval --model vllm \
 
 **问题：结果与报告不符**
 
-检查少样本数量：
+检查少样本计数：
 ```bash
 --num_fewshot 5  # 大多数论文使用 5-shot
 ```
 
-检查确切的评测任务名称：
+检查确切的任务名称：
 ```bash
 --tasks mmlu  # 而不是 mmlu_direct 或 mmlu_fewshot
 ```
 
-验证模型和分词器是否匹配：
+验证模型和分词器匹配：
 ```bash
 --model_args pretrained=model-name,tokenizer=same-model-name
 ```
 
-**问题：HumanEval 无法执行代码**
+**问题：HumanEval 未执行代码**
 
 安装执行依赖项：
 ```bash
@@ -482,30 +481,30 @@ lm_eval --model hf \
 
 ## 高级主题
 
-**评测基准描述**：请参阅 [references/benchmark-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/benchmark-guide.md) 以了解所有 60 多个任务的详细描述、它们衡量的内容以及解释。
+**基准测试描述**：所有 60 多项任务的详细描述、测量内容和解释，请参见 [references/benchmark-guide.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/benchmark-guide.md)。
 
-**自定义任务**：请参阅 [references/custom-tasks.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/custom-tasks.md) 以创建特定领域的评测任务。
+**自定义任务**：创建特定领域的评估任务，请参见 [references/custom-tasks.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/custom-tasks.md)。
 
-**API 评测**：请参阅 [references/api-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/api-evaluation.md) 以评测 OpenAI、Anthropic 和其他 API 模型。
+**API 评估**：评估 OpenAI、Anthropic 和其他 API 模型，请参见 [references/api-evaluation.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/api-evaluation.md)。
 
-**多 GPU 策略**：请参阅 [references/distributed-eval.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/distributed-eval.md) 以了解数据并行和张量并行评测。
+**多 GPU 策略**：数据并行和张量并行评估，请参见 [references/distributed-eval.md](https://github.com/NousResearch/hermes-agent/blob/main/skills/mlops/evaluation/lm-evaluation-harness/references/distributed-eval.md)。
 
 ## 硬件要求
 
-- **GPU**：NVIDIA（CUDA 11.8+），可在 CPU 上运行（速度非常慢）
-- **显存 (VRAM)**：
+- **GPU**：NVIDIA (CUDA 11.8+)，可在 CPU 上运行（非常慢）
+- **显存**：
   - 7B 模型：16GB (bf16) 或 8GB (8-bit)
   - 13B 模型：28GB (bf16) 或 14GB (8-bit)
   - 70B 模型：需要多 GPU 或量化
-- **时间**（7B 模型，单个 A100）：
+- **时间**（7B 模型，单块 A100）：
   - HellaSwag：10 分钟
   - GSM8K：5 分钟
-  - MMLU（完整）：2 小时
+  - MMLU (完整)：2 小时
   - HumanEval：20 分钟
 
 ## 资源
 
 - GitHub：https://github.com/EleutherAI/lm-evaluation-harness
 - 文档：https://github.com/EleutherAI/lm-evaluation-harness/tree/main/docs
-- 任务库：60 多个任务，包括 MMLU、GSM8K、HumanEval、TruthfulQA、HellaSwag、ARC、WinoGrande 等。
-- 排行榜：https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard（使用此评测工具）
+- 任务库：60 多项任务，包括 MMLU、GSM8K、HumanEval、TruthfulQA、HellaSwag、ARC、WinoGrande 等。
+- 排行榜：https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard （使用此工具）

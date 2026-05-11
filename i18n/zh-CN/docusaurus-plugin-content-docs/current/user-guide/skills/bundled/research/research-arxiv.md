@@ -1,14 +1,14 @@
 ---
-title: "Arxiv — 通过关键词、作者、类别或 ID 搜索 arXiv 论文"
+title: "Arxiv — 通过关键词、作者、类别或ID搜索arXiv论文"
 sidebar_label: "Arxiv"
-description: "通过关键词、作者、类别或 ID 搜索 arXiv 论文"
+description: "通过关键词、作者、类别或ID搜索arXiv论文"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从 skill 的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 此页面由网站脚本/scripts/generate-skill-docs.py从技能的SKILL.md文件自动生成。请编辑源文件SKILL.md，而非此页面。 */}
 
 # Arxiv
 
-通过关键词、作者、类别或 ID 搜索 arXiv 论文。
+通过关键词、作者、类别或ID搜索arXiv论文。
 
 ## 技能元数据
 
@@ -19,18 +19,17 @@ description: "通过关键词、作者、类别或 ID 搜索 arXiv 论文"
 | 版本 | `1.0.0` |
 | 作者 | Hermes 智能体 |
 | 许可证 | MIT |
+| 平台 | linux, macos, windows |
 | 标签 | `研究`, `Arxiv`, `论文`, `学术`, `科学`, `API` |
 | 相关技能 | [`ocr-and-documents`](/docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents) |
 
-## 参考：完整的 SKILL.md
-
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是Hermes在此技能触发时加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
 # arXiv 研究
 
-通过 arXiv 的免费 REST API 搜索并检索学术论文。无需 API 密钥，无需依赖 —— 只需 curl。
+通过其免费的REST API搜索和获取arXiv学术论文。无需API密钥，无依赖项 — 只需curl即可。
 
 ## 快速参考
 
@@ -38,20 +37,20 @@ description: "通过关键词、作者、类别或 ID 搜索 arXiv 论文"
 |--------|---------|
 | 搜索论文 | `curl "https://export.arxiv.org/api/query?search_query=all:QUERY&max_results=5"` |
 | 获取特定论文 | `curl "https://export.arxiv.org/api/query?id_list=2402.03300"` |
-| 阅读摘要（网页） | `web_extract(urls=["https://arxiv.org/abs/2402.03300"])` |
-| 阅读全文（PDF） | `web_extract(urls=["https://arxiv.org/pdf/2402.03300"])` |
+| 阅读摘要 (网页) | `web_extract(urls=["https://arxiv.org/abs/2402.03300"])` |
+| 阅读全文 (PDF) | `web_extract(urls=["https://arxiv.org/pdf/2402.03300"])` |
 
 ## 搜索论文
 
-API 返回 Atom XML。使用 `grep`/`sed` 解析，或通过 `python3` 管道输出以获得清晰结果。
+API返回Atom XML。使用 `grep`/`sed` 解析，或通过 `python3` 传输以获得整洁输出。
 
-### 基本搜索
+### 基础搜索
 
 ```bash
 curl -s "https://export.arxiv.org/api/query?search_query=all:GRPO+reinforcement+learning&max_results=5"
 ```
 
-### 清晰输出（将 XML 解析为可读格式）
+### 整洁输出 (将XML解析为可读格式)
 
 ```bash
 curl -s "https://export.arxiv.org/api/query?search_query=all:GRPO+reinforcement+learning&max_results=5&sortBy=submittedDate&sortOrder=descending" | python3 -c "
@@ -82,13 +81,13 @@ for i, entry in enumerate(root.findall('a:entry', ns)):
 | `ti:` | 标题 | `ti:large+language+models` |
 | `au:` | 作者 | `au:vaswani` |
 | `abs:` | 摘要 | `abs:reinforcement+learning` |
-| `cat:` | 类别 | `cat:cs.AI` |
-| `co:` | 备注 | `co:accepted+NeurIPS` |
+| `cat:` | 分类 | `cat:cs.AI` |
+| `co:` | 注释 | `co:accepted+NeurIPS` |
 
 ### 布尔运算符
 
 ```
-# AND（使用 + 时默认为 AND）
+# AND (使用 + 时的默认操作)
 search_query=all:transformer+attention
 
 # OR
@@ -100,7 +99,7 @@ search_query=all:language+model+ANDNOT+all:vision
 # 精确短语
 search_query=ti:"chain+of+thought"
 
-# 组合使用
+# 组合
 search_query=au:hinton+AND+cat:cs.LG
 ```
 
@@ -110,11 +109,11 @@ search_query=au:hinton+AND+cat:cs.LG
 |-----------|---------|
 | `sortBy` | `relevance`, `lastUpdatedDate`, `submittedDate` |
 | `sortOrder` | `ascending`, `descending` |
-| `start` | 结果偏移量（从 0 开始） |
-| `max_results` | 结果数量（默认 10，最大 30000） |
+| `start` | 结果偏移量 (基于0) |
+| `max_results` | 结果数量 (默认10，最多30000) |
 
 ```bash
-# cs.AI 类别下最新的 10 篇论文
+# cs.AI 领域最新的10篇论文
 curl -s "https://export.arxiv.org/api/query?search_query=cat:cs.AI&sortBy=submittedDate&sortOrder=descending&max_results=10"
 ```
 
@@ -130,7 +129,7 @@ curl -s "https://export.arxiv.org/api/query?id_list=2402.03300,2401.12345,2403.0
 
 ## BibTeX 生成
 
-获取论文元数据后，生成 BibTeX 条目：
+获取论文元数据后，生成BibTeX条目：
 
 &#123;% raw %&#125;
 ```bash
@@ -162,28 +161,28 @@ print('}')
 
 ## 阅读论文内容
 
-找到论文后，阅读其内容：
+找到论文后，阅读它：
 
 ```
-# 摘要页面（快速，包含元数据 + 摘要）
+# 摘要页 (快速，含元数据和摘要)
 web_extract(urls=["https://arxiv.org/abs/2402.03300"])
 
-# 全文（PDF → 通过 Firecrawl 转换为 markdown）
+# 全文 (PDF → 通过Firecrawl转换的Markdown)
 web_extract(urls=["https://arxiv.org/pdf/2402.03300"])
 ```
 
-对于本地 PDF 处理，请参阅 `ocr-and-documents` 技能。
+关于本地PDF处理，请参见 `ocr-and-documents` 技能。
 
-## 常见类别
+## 常用分类
 
-| 类别 | 领域 |
+| 分类 | 领域 |
 |----------|-------|
 | `cs.AI` | 人工智能 |
-| `cs.CL` | 计算与语言（自然语言处理） |
+| `cs.CL` | 计算与语言 (NLP) |
 | `cs.CV` | 计算机视觉 |
 | `cs.LG` | 机器学习 |
 | `cs.CR` | 密码学与安全 |
-| `stat.ML` | 机器学习（统计学） |
+| `stat.ML` | 机器学习 (统计) |
 | `math.OC` | 优化与控制 |
 | `physics.comp-ph` | 计算物理 |
 
@@ -191,7 +190,7 @@ web_extract(urls=["https://arxiv.org/pdf/2402.03300"])
 
 ## 辅助脚本
 
-`scripts/search_arxiv.py` 脚本处理 XML 解析并提供清晰输出：
+`scripts/search_arxiv.py` 脚本处理XML解析并提供整洁输出：
 
 ```bash
 python scripts/search_arxiv.py "GRPO reinforcement learning"
@@ -202,15 +201,15 @@ python scripts/search_arxiv.py --id 2402.03300
 python scripts/search_arxiv.py --id 2402.03300,2401.12345
 ```
 
-无依赖 —— 仅使用 Python 标准库。
+无依赖项 — 仅使用Python标准库。
 
 ---
 
-## Semantic Scholar（引用、相关论文、作者主页）
+## Semantic Scholar (引用、相关论文、作者档案)
 
-arXiv 不提供引用数据或推荐。为此请使用 **Semantic Scholar API** —— 免费，基础使用无需密钥（1 请求/秒），返回 JSON。
+arXiv不提供引用数据或推荐。为此请使用 **Semantic Scholar API** — 免费，基础使用无需密钥 (1请求/秒)，返回JSON。
 
-### 获取论文详情 + 引用
+### 获取论文详情及引用数
 
 ```bash
 # 通过 arXiv ID
@@ -220,19 +219,19 @@ curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300?fields=
 curl -s "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1234/example?fields=title,citationCount"
 ```
 
-### 获取某论文的引用（谁引用了它）
+### 获取某论文的引用 (谁引用了它)
 
 ```bash
 curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300/citations?fields=title,authors,year,citationCount&limit=10" | python3 -m json.tool
 ```
 
-### 获取某论文的参考文献（它引用了什么）
+### 获取某论文的参考文献 (它引用了谁)
 
 ```bash
 curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:2402.03300/references?fields=title,authors,year,citationCount&limit=10" | python3 -m json.tool
 ```
 
-### 搜索论文（替代 arXiv 搜索，返回 JSON）
+### 搜索论文 (arXiv搜索的替代方案，返回JSON)
 
 ```bash
 curl -s "https://api.semanticscholar.org/graph/v1/paper/search?query=GRPO+reinforcement+learning&limit=5&fields=title,authors,year,citationCount,externalIds" | python3 -m json.tool
@@ -246,54 +245,54 @@ curl -s -X POST "https://api.semanticscholar.org/recommendations/v1/papers/" \
   -d '{"positivePaperIds": ["arXiv:2402.03300"], "negativePaperIds": []}' | python3 -m json.tool
 ```
 
-### 作者主页
+### 作者档案
 
 ```bash
 curl -s "https://api.semanticscholar.org/graph/v1/author/search?query=Yann+LeCun&fields=name,hIndex,citationCount,paperCount" | python3 -m json.tool
 ```
 
-### 有用的 Semantic Scholar 字段
+### 常用的 Semantic Scholar 字段
 
-`title`, `authors`, `year`, `abstract`, `citationCount`, `referenceCount`, `influentialCitationCount`, `isOpenAccess`, `openAccessPdf`, `fieldsOfStudy`, `publicationVenue`, `externalIds`（包含 arXiv ID、DOI 等）
+`title`, `authors`, `year`, `abstract`, `citationCount`, `referenceCount`, `influentialCitationCount`, `isOpenAccess`, `openAccessPdf`, `fieldsOfStudy`, `publicationVenue`, `externalIds` (包含 arXiv ID, DOI 等)
 
 ---
 
-## 完整研究流程
+## 完整研究工作流程
 
-1. **发现**：`python scripts/search_arxiv.py "your topic" --sort date --max 10`
-2. **评估影响力**：`curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:ID?fields=citationCount,influentialCitationCount"`
-3. **阅读摘要**：`web_extract(urls=["https://arxiv.org/abs/ID"])`
-4. **阅读全文**：`web_extract(urls=["https://arxiv.org/pdf/ID"])`
-5. **查找相关工作**：`curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:ID/references?fields=title,citationCount&limit=20"`
-6. **获取推荐**：向 Semantic Scholar 推荐端点发送 POST 请求
-7. **追踪作者**：`curl -s "https://api.semanticscholar.org/graph/v1/author/search?query=NAME"`
+1.  **发现**: `python scripts/search_arxiv.py "your topic" --sort date --max 10`
+2.  **评估影响力**: `curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:ID?fields=citationCount,influentialCitationCount"`
+3.  **阅读摘要**: `web_extract(urls=["https://arxiv.org/abs/ID"])`
+4.  **阅读全文**: `web_extract(urls=["https://arxiv.org/pdf/ID"])`
+5.  **查找相关工作**: `curl -s "https://api.semanticscholar.org/graph/v1/paper/arXiv:ID/references?fields=title,citationCount&limit=20"`
+6.  **获取推荐**: 向Semantic Scholar推荐端点发送POST请求
+7.  **跟踪作者**: `curl -s "https://api.semanticscholar.org/graph/v1/author/search?query=NAME"`
 
 ## 速率限制
 
 | API | 速率 | 认证 |
 |-----|------|------|
-| arXiv | 约 1 请求 / 3 秒 | 无需 |
-| Semantic Scholar | 1 请求 / 秒 | 无需（使用 API 密钥可达 100/秒） |
+| arXiv | ~1 请求 / 3 秒 | 无需 |
+| Semantic Scholar | 1 请求 / 秒 | 无需 (使用API密钥可达100请求/秒) |
 
 ## 注意事项
 
-- arXiv 返回 Atom XML —— 使用辅助脚本或解析片段以获得清晰输出
-- Semantic Scholar 返回 JSON —— 通过 `python3 -m json.tool` 管道输出以提高可读性
-- arXiv ID：旧格式（`hep-th/0601001`）vs 新格式（`2402.03300`）
-- PDF：`https://arxiv.org/pdf/{id}` —— 摘要：`https://arxiv.org/abs/{id}`
-- HTML（如有）：`https://arxiv.org/html/{id}`
-- 对于本地 PDF 处理，请参阅 `ocr-and-documents` 技能
+-   arXiv返回Atom XML — 使用辅助脚本或解析代码片段以获得整洁输出
+-   Semantic Scholar返回JSON — 通过 `python3 -m json.tool` 管道传输以提高可读性
+-   arXiv ID格式：旧格式 (`hep-th/0601001`) 与新格式 (`2402.03300`)
+-   PDF: `https://arxiv.org/pdf/{id}` — 摘要: `https://arxiv.org/abs/{id}`
+-   HTML (如可用): `https://arxiv.org/html/{id}`
+-   关于本地PDF处理，请参见 `ocr-and-documents` 技能
 
-## ID 版本控制
+## ID 版本管理
 
-- `arxiv.org/abs/1706.03762` 始终指向**最新**版本
-- `arxiv.org/abs/1706.03762v1` 指向**特定**不可变版本
-- 生成引用时，请保留您实际阅读的版本后缀，以防止引用漂移（后续版本可能会大幅更改内容）
-- API 的 `<id>` 字段返回带版本的 URL（例如：`http://arxiv.org/abs/1706.03762v7`）
+- `arxiv.org/abs/1706.03762` 始终解析到**最新**版本
+- `arxiv.org/abs/1706.03762v1` 指向一个**特定的**、不可变的版本
+- 生成引用时，请保留你实际阅读的版本后缀，以防止引用漂移（后续版本可能对内容做出重大修改）
+- API 的 `<id>` 字段返回带版本的 URL（例如 `http://arxiv.org/abs/1706.03762v7`）
 
-## 被撤回的论文
+## 已撤回的论文
 
-论文提交后可能会被撤回。发生这种情况时：
-- `<summary>` 字段包含撤回通知（请查找 "withdrawn" 或 "retracted"）
+论文在提交后可能会被撤回。发生这种情况时：
+- `<summary>` 字段包含撤回通知（查找 "withdrawn" 或 "retracted"）
 - 元数据字段可能不完整
-- 在将结果视为有效论文之前，请务必检查摘要
+- 在将某篇论文视为有效论文之前，请务必检查其摘要

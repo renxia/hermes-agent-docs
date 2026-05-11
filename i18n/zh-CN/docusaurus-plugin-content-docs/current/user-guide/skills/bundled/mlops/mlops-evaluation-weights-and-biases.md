@@ -1,47 +1,46 @@
 ---
-title: "Weights And Biases — W&B：记录机器学习实验、超参数搜索、模型注册表、仪表板"
+title: "Weights And Biases — W&B: 记录ML实验、超参搜索、模型注册表、仪表板"
 sidebar_label: "Weights And Biases"
-description: "W&B：记录机器学习实验、超参数搜索、模型注册表、仪表板"
+description: "W&B: 记录ML实验、超参搜索、模型注册表、仪表板"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 此页面由website/scripts/generate-skill-docs.py根据技能的SKILL.md自动生成。请编辑源文件SKILL.md，而非此页面。 */}
 
 # Weights And Biases
 
-W&B：记录机器学习实验、超参数搜索、模型注册表、仪表板。
+W&B: 记录ML实验、超参搜索、模型注册表、仪表板。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 捆绑（默认安装） |
+| 来源 | 内置（默认安装） |
 | 路径 | `skills/mlops/evaluation/weights-and-biases` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `wandb` |
-| 标签 | `MLOps`、`Weights And Biases`、`WandB`、`实验跟踪`、`超参数调优`、`模型注册表`、`协作`、`实时可视化`、`PyTorch`、`TensorFlow`、`HuggingFace` |
-
-## 参考：完整的 SKILL.md
+| 平台 | linux, macos, windows |
+| 标签 | `MLOps`、`Weights And Biases`、`WandB`、`实验跟踪`、`超参搜索`、`模型注册表`、`协作`、`实时可视化`、`PyTorch`、`TensorFlow`、`HuggingFace` |
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是 Hermes 触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的说明。
 :::
 
 # Weights & Biases：机器学习实验跟踪与 MLOps
 
 ## 何时使用此技能
 
-在需要以下功能时使用 Weights & Biases (W&B)：
+当你需要以下功能时，请使用 Weights & Biases (W&B)：
 - **跟踪机器学习实验**，自动记录指标
-- **实时可视化训练过程**，通过仪表板
-- **跨超参数和配置比较运行结果**
-- **通过自动化扫描优化超参数**
-- **管理模型注册表**，支持版本控制和谱系追踪
-- **在团队工作区中协作开展机器学习项目**
-- **跟踪制品**（数据集、模型、代码）及其谱系
+- **可视化训练过程**，通过实时仪表板
+- **比较运行结果**，分析不同超参数和配置的效果
+- **优化超参数**，通过自动扫描
+- **管理模型注册表**，实现版本控制和溯源
+- **在团队工作空间中协作**，共同进行机器学习项目
+- **跟踪构件**（数据集、模型、代码）及其溯源
 
-**用户数**：200,000+ 名机器学习从业者 | **GitHub 星标数**：10.5k+ | **集成工具**：100+
+**用户数**：超过 200,000 位机器学习从业者 | **GitHub 星标**：10,500+ | **集成**：超过 100 个
 
 ## 安装
 
@@ -52,8 +51,8 @@ pip install wandb
 # 登录（创建 API 密钥）
 wandb login
 
-# 或以编程方式设置 API 密钥
-export WANDB_API_KEY=your_api_key_here
+# 或者通过编程方式设置 API 密钥
+export WANDB_API_KEY=你的API密钥
 ```
 
 ## 快速入门
@@ -65,7 +64,7 @@ import wandb
 
 # 初始化一次运行
 run = wandb.init(
-    project="my-project",
+    project="我的项目",
     config={
         "learning_rate": 0.001,
         "epochs": 10,
@@ -93,7 +92,7 @@ for epoch in range(run.config.epochs):
 wandb.finish()
 ```
 
-### 与 PyTorch 结合使用
+### 结合 PyTorch 使用
 
 ```python
 import torch
@@ -130,7 +129,7 @@ for epoch in range(config.epochs):
 
 # 保存模型
 torch.save(model.state_dict(), "model.pth")
-wandb.save("model.pth")  # 上传至 W&B
+wandb.save("model.pth")  # 上传到 W&B
 
 wandb.finish()
 ```
@@ -139,16 +138,16 @@ wandb.finish()
 
 ### 1. 项目与运行
 
-**项目**：相关实验的集合  
-**运行**：训练脚本的单个执行实例
+**项目**：相关实验的集合
+**运行**：训练脚本的单次执行
 
 ```python
 # 创建/使用项目
 run = wandb.init(
-    project="image-classification",
+    project="图像分类",
     name="resnet50-experiment-1",  # 可选的运行名称
-    tags=["baseline", "resnet"],    # 使用标签组织
-    notes="First baseline run"      # 添加备注
+    tags=["基线", "resnet"],    # 使用标签进行组织
+    notes="第一次基线运行"      # 添加注释
 )
 
 # 每次运行都有唯一 ID
@@ -177,9 +176,9 @@ config = {
     "augmentation": "standard"
 }
 
-wandb.init(project="my-project", config=config)
+wandb.init(project="我的项目", config=config)
 
-# 在训练期间访问配置
+# 在训练过程中访问配置
 lr = wandb.config.learning_rate
 batch_size = wandb.config.batch_size
 ```
@@ -187,7 +186,7 @@ batch_size = wandb.config.batch_size
 ### 3. 指标记录
 
 ```python
-# 记录标量值
+# 记录标量
 wandb.log({"loss": 0.5, "accuracy": 0.92})
 
 # 记录多个指标
@@ -203,7 +202,7 @@ wandb.log({
 # 使用自定义 x 轴记录
 wandb.log({"loss": loss}, step=global_step)
 
-# 记录媒体（图像、音频、视频）
+# 记录媒体文件（图像、音频、视频）
 wandb.log({"examples": [wandb.Image(img) for img in images]})
 
 # 记录直方图
@@ -230,10 +229,10 @@ checkpoint = {
 
 torch.save(checkpoint, 'checkpoint.pth')
 
-# 上传至 W&B
+# 上传到 W&B
 wandb.save('checkpoint.pth')
 
-# 或使用制品（推荐）
+# 或者使用构件（推荐）
 artifact = wandb.Artifact('model', type='model')
 artifact.add_file('checkpoint.pth')
 wandb.log_artifact(artifact)
@@ -247,7 +246,7 @@ wandb.log_artifact(artifact)
 
 ```python
 sweep_config = {
-    'method': 'bayes',  # 或 'grid'、'random'
+    'method': 'bayes',  # 或 'grid', 'random'
     'metric': {
         'name': 'val/accuracy',
         'goal': 'maximize'
@@ -273,7 +272,7 @@ sweep_config = {
 }
 
 # 初始化扫描
-sweep_id = wandb.sweep(sweep_config, project="my-project")
+sweep_id = wandb.sweep(sweep_config, project="我的项目")
 ```
 
 ### 定义训练函数
@@ -288,7 +287,7 @@ def train():
     batch_size = wandb.config.batch_size
     optimizer_name = wandb.config.optimizer
 
-    # 根据扫描配置构建模型
+    # 使用扫描配置构建模型
     model = build_model(wandb.config)
     optimizer = get_optimizer(optimizer_name, lr)
 
@@ -310,7 +309,7 @@ wandb.agent(sweep_id, function=train, count=50)  # 运行 50 次试验
 ### 扫描策略
 
 ```python
-# 网格搜索 - 穷举式
+# 网格搜索 - 穷举法
 sweep_config = {
     'method': 'grid',
     'parameters': {
@@ -338,37 +337,37 @@ sweep_config = {
 }
 ```
 
-## 制品
+## 构件
 
-跟踪数据集、模型及其他文件，并记录其谱系。
+跟踪数据集、模型和其他文件及其溯源。
 
-### 记录制品
+### 记录构件
 
 ```python
-# 创建制品
+# 创建构件
 artifact = wandb.Artifact(
-    name='training-dataset',
+    name='训练数据集',
     type='dataset',
-    description='ImageNet 训练集',
-    metadata={'size': '1.2M 图像', 'split': 'train'}
+    description='ImageNet 训练集划分',
+    metadata={'size': '120 万张图片', 'split': 'train'}
 )
 
 # 添加文件
 artifact.add_file('data/train.csv')
 artifact.add_dir('data/images/')
 
-# 记录制品
+# 记录构件
 wandb.log_artifact(artifact)
 ```
 
-### 使用制品
+### 使用构件
 
 ```python
-# 下载并使用制品
-run = wandb.init(project="my-project")
+# 下载并使用构件
+run = wandb.init(project="我的项目")
 
-# 下载制品
-artifact = run.use_artifact('training-dataset:latest')
+# 下载构件
+artifact = run.use_artifact('训练数据集:latest')
 artifact_dir = artifact.download()
 
 # 使用数据
@@ -378,7 +377,7 @@ data = load_data(f"{artifact_dir}/train.csv")
 ### 模型注册表
 
 ```python
-# 将模型记录为制品
+# 将模型记录为构件
 model_artifact = wandb.Artifact(
     name='resnet50-model',
     type='model',
@@ -403,7 +402,7 @@ import wandb
 # 初始化 W&B
 wandb.init(project="hf-transformers")
 
-# 包含 W&B 的训练参数
+# 带有 W&B 的训练参数
 training_args = TrainingArguments(
     output_dir="./results",
     report_to="wandb",  # 启用 W&B 记录
@@ -412,7 +411,7 @@ training_args = TrainingArguments(
     save_steps=500
 )
 
-# Trainer 自动向 W&B 记录
+# Trainer 会自动记录到 W&B
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -436,7 +435,7 @@ wandb_logger = WandbLogger(
     log_model=True  # 记录模型检查点
 )
 
-# 与 Trainer 配合使用
+# 与 Trainer 一起使用
 trainer = Trainer(
     logger=wandb_logger,
     max_epochs=10
@@ -463,12 +462,12 @@ model.fit(
 )
 ```
 
-## 可视化与分析
+## 可视化 & 分析
 
 ### 自定义图表
 
 ```python
-# 记录自定义可视化内容
+# 记录自定义可视化
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
@@ -486,22 +485,22 @@ wandb.log({"conf_mat": wandb.plot.confusion_matrix(
 
 ### 报告
 
-在 W&B 用户界面中创建可共享的报告：
-- 组合运行、图表和文本
-- 支持 Markdown
+在 W&B UI 中创建可共享的报告：
+- 结合运行记录、图表和文本
+- 支持 Markdown 格式
 - 可嵌入的可视化内容
 - 团队协作
 
 ## 最佳实践
 
-### 1. 使用标签和分组进行组织
+### 1. 使用标签和组进行组织
 
 ```python
 wandb.init(
     project="my-project",
     tags=["baseline", "resnet50", "imagenet"],
-    group="resnet-experiments",  # 将相关运行分组
-    job_type="train"             # 任务类型
+    group="resnet-experiments",  # 将相关运行记录分组
+    job_type="train"             # 作业类型
 )
 ```
 
@@ -518,7 +517,7 @@ wandb.log({
 # 记录代码版本
 wandb.log({"git_commit": git_commit_hash})
 
-# 记录数据划分
+# 记录数据拆分
 wandb.log({
     "data/train_size": len(train_dataset),
     "data/val_size": len(val_dataset)
@@ -528,13 +527,13 @@ wandb.log({
 ### 3. 使用描述性名称
 
 ```python
-# ✅ 好：具有描述性的运行名称
+# ✅ 好的做法：描述性运行名称
 wandb.init(
     project="nlp-classification",
     name="bert-base-lr0.001-bs32-epoch10"
 )
 
-# ❌ 坏：通用名称
+# ❌ 不好的做法：通用名称
 wandb.init(project="nlp", name="run1")
 ```
 
@@ -546,7 +545,7 @@ artifact = wandb.Artifact('final-model', type='model')
 artifact.add_file('model.pth')
 wandb.log_artifact(artifact)
 
-# 保存用于分析的预测结果
+# 保存预测结果以供分析
 predictions_table = wandb.Table(
     columns=["id", "input", "prediction", "ground_truth"],
     data=predictions_data
@@ -554,7 +553,7 @@ predictions_table = wandb.Table(
 wandb.log({"predictions": predictions_table})
 ```
 
-### 5. 连接不稳定时使用离线模式
+### 5. 在连接不稳定时使用离线模式
 
 ```python
 import os
@@ -563,7 +562,7 @@ import os
 os.environ["WANDB_MODE"] = "offline"
 
 wandb.init(project="my-project")
-# ... 你的代码 ...
+# ... 您的代码 ...
 
 # 稍后同步
 # wandb sync <run_directory>
@@ -571,12 +570,12 @@ wandb.init(project="my-project")
 
 ## 团队协作
 
-### 共享运行
+### 共享运行记录
 
 ```python
-# 运行可通过 URL 自动共享
+# 运行记录可通过 URL 自动共享
 run = wandb.init(project="team-project")
-print(f"分享此 URL：{run.url}")
+print(f"Share this URL: {run.url}")
 ```
 
 ### 团队项目
@@ -584,25 +583,25 @@ print(f"分享此 URL：{run.url}")
 - 在 wandb.ai 创建团队账户
 - 添加团队成员
 - 设置项目可见性（私有/公开）
-- 使用团队级工件和模型注册表
+- 使用团队级别的工件和模型注册表
 
 ## 定价
 
-- **免费版**：无限公开项目，100GB 存储
-- **学术版**：学生/研究人员免费
-- **团队版**：$50/席位/月，私有项目，无限存储
-- **企业版**：定制价格，本地部署选项
+- **免费版**：无限公开项目，100GB 存储空间
+- **学术版**：对学生/研究人员免费
+- **团队版**：$50/席位/月，私有项目，无限存储空间
+- **企业版**：自定义定价，支持本地部署选项
 
 ## 资源
 
 - **文档**：https://docs.wandb.ai
-- **GitHub**：https://github.com/wandb/wandb（10.5k+ 星标）
+- **GitHub**：https://github.com/wandb/wandb (10.5k+ stars)
 - **示例**：https://github.com/wandb/examples
 - **社区**：https://wandb.ai/community
 - **Discord**：https://wandb.me/discord
 
-## 另见
+## 另请参阅
 
-- `references/sweeps.md` - 超参数优化综合指南
+- `references/sweeps.md` - 全面的超参数优化指南
 - `references/artifacts.md` - 数据和模型版本控制模式
 - `references/integrations.md` - 框架特定示例

@@ -1,72 +1,71 @@
 ---
-title: "Nemo Curator — 用于 LLM 训练的 GPU 加速数据整理"
+title: "Nemo Curator — 面向大语言模型训练的GPU加速数据策展工具"
 sidebar_label: "Nemo Curator"
-description: "用于 LLM 训练的 GPU 加速数据整理"
+description: "面向大语言模型训练的GPU加速数据策展工具"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 本页面由网站脚本 generate-skill-docs.py 从技能的 SKILL.md 文件自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
 # Nemo Curator
 
-用于 LLM 训练的 GPU 加速数据整理。支持文本/图像/视频/音频。具备模糊去重（速度提升 16 倍）、质量过滤（30+ 启发式规则）、语义去重、PII 脱敏、NSFW 检测等功能。借助 RAPIDS 实现跨 GPU 扩展。可用于准备高质量训练数据集、清理网络数据或对大型语料库进行去重。
+面向大语言模型训练的GPU加速数据策展工具。支持文本/图像/视频/音频数据。具备模糊去重（速度提升16倍）、质量过滤（超过30种启发式规则）、语义去重、个人身份信息脱敏、NSFW内容检测功能。可通过RAPIDS实现跨GPU扩展。适用于准备高质量训练数据集、清洗网络数据或大型语料库去重。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/mlops/nemo-curator` 安装 |
+| 来源 | 可选 — 通过 `hermes skills install official/mlops/nemo-curator` 安装 |
 | 路径 | `optional-skills/mlops/nemo-curator` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `nemo-curator`, `cudf`, `dask`, `rapids` |
-| 标签 | `数据处理`, `NeMo Curator`, `数据整理`, `GPU 加速`, `去重`, `质量过滤`, `NVIDIA`, `RAPIDS`, `PII 脱敏`, `多模态`, `LLM 训练数据` |
-
-## 参考：完整的 SKILL.md
+| 平台 | linux, macos |
+| 标签 | `数据处理`, `NeMo Curator`, `数据策展`, `GPU加速`, `去重`, `质量过滤`, `NVIDIA`, `RAPIDS`, `PII脱敏`, `多模态`, `大语言模型训练数据` |
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是 Hermes 在触发此技能时加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
-# NeMo Curator - GPU 加速数据整理
+# NeMo Curator - GPU 加速的数据策划
 
-NVIDIA 用于为 LLM 准备高质量训练数据的工具包。
+NVIDIA 用于为大语言模型准备高质量训练数据的工具包。
 
 ## 何时使用 NeMo Curator
 
-**在以下情况使用 NeMo Curator：**
-- 从网络爬取数据（Common Crawl）准备 LLM 训练数据
+**在以下情况下使用 NeMo Curator：**
+- 从网络抓取（Common Crawl）准备大语言模型训练数据
 - 需要快速去重（比 CPU 快 16 倍）
-- 整理多模态数据集（文本、图像、视频、音频）
+- 策划多模态数据集（文本、图像、视频、音频）
 - 过滤低质量或有害内容
 - 在 GPU 集群上扩展数据处理
 
 **性能**：
-- **模糊去重快 16 倍**（8TB RedPajama v2）
-- 与 CPU 替代方案相比，**TCO 降低 40%**
-- 在 GPU 节点上**近乎线性扩展**
+- **16 倍更快** 的模糊去重（8TB RedPajama v2）
+- **总拥有成本降低 40%** （与 CPU 方案相比）
+- **近乎线性扩展** 跨 GPU 节点
 
-**使用替代方案**：
+**改用替代方案**：
 - **datatrove**：基于 CPU 的开源数据处理
 - **dolma**：Allen AI 的数据工具包
-- **Ray Data**：通用 ML 数据处理（无整理重点）
+- **Ray Data**：通用 ML 数据处理（无策划重点）
 
 ## 快速开始
 
 ### 安装
 
 ```bash
-# 文本整理（CUDA 12）
+# 文本策划（CUDA 12）
 uv pip install "nemo-curator[text_cuda12]"
 
 # 所有模态
 uv pip install "nemo-curator[all_cuda12]"
 
-# 仅 CPU（较慢）
+# 仅 CPU（更慢）
 uv pip install "nemo-curator[cpu]"
 ```
 
-### 基本文本整理流水线
+### 基本文本策划管道
 
 ```python
 from nemo_curator import ScoreFilter, Modify
@@ -91,7 +90,7 @@ deduped = ExactDuplicates()(filtered)
 deduped.to_parquet("curated_data/")
 ```
 
-## 数据整理流水线
+## 数据策划管道
 
 ### 阶段 1：质量过滤
 
@@ -103,10 +102,10 @@ from nemo_curator.filters import (
     NonAlphaNumericFilter
 )
 
-# 应用 30+ 启发式过滤器
+# 应用 30 多个启发式过滤器
 from nemo_curator import ScoreFilter
 
-# 词数过滤器
+# 字数过滤器
 dataset = dataset.filter(WordCountFilter(min_words=50, max_words=100000))
 
 # 移除重复内容
@@ -126,7 +125,7 @@ from nemo_curator.modules import ExactDuplicates
 deduped = ExactDuplicates(id_field="id", text_field="text")(dataset)
 ```
 
-**模糊去重**（在 GPU 上快 16 倍）：
+**模糊去重**（GPU 上快 16 倍）：
 ```python
 from nemo_curator.modules import FuzzyDuplicates
 
@@ -157,13 +156,13 @@ semantic_dedup = SemanticDuplicates(
 deduped = semantic_dedup(dataset)
 ```
 
-### 阶段 3：PII 脱敏
+### 阶段 3：PII 编辑
 
 ```python
 from nemo_curator.modules import Modify
 from nemo_curator.modifiers import PIIRedactor
 
-# 脱敏个人身份信息
+# 编辑个人身份信息
 pii_redactor = PIIRedactor(
     supported_entities=["EMAIL_ADDRESS", "PHONE_NUMBER", "PERSON", "LOCATION"],
     anonymize_action="replace"  # 或 "redact"
@@ -194,8 +193,8 @@ high_quality = dataset.filter(lambda doc: quality_clf(doc["text"]) > 0.5)
 
 | 操作 | CPU（16 核） | GPU（A100） | 加速比 |
 |-----------|----------------|------------|---------|
-| 模糊去重（8TB） | 120 小时 | 7.5 小时 | 16× |
-| 精确去重（1TB） | 8 小时 | 0.5 小时 | 16× |
+| 模糊去重 (8TB) | 120 小时 | 7.5 小时 | 16× |
+| 精确去重 (1TB) | 8 小时 | 0.5 小时 | 16× |
 | 质量过滤 | 2 小时 | 0.2 小时 | 10× |
 
 ### 多 GPU 扩展
@@ -211,9 +210,9 @@ client = get_client(cluster_type="gpu", n_workers=8)
 deduped = FuzzyDuplicates(...)(dataset)
 ```
 
-## 多模态整理
+## 多模态策划
 
-### 图像整理
+### 图像策划
 
 ```python
 from nemo_curator.image import (
@@ -235,7 +234,7 @@ clip_embedder = CLIPEmbedder(model="openai/clip-vit-base-patch32")
 image_embeddings = clip_embedder(safe_images)
 ```
 
-### 视频整理
+### 视频策划
 
 ```python
 from nemo_curator.video import (
@@ -257,7 +256,7 @@ video_embedder = InternVideo2Embedder()
 video_embeddings = video_embedder(clips)
 ```
 
-### 音频整理
+### 音频策划
 
 ```python
 from nemo_curator.audio import (
@@ -270,7 +269,7 @@ from nemo_curator.audio import (
 asr = ASRInference(model="nvidia/stt_en_fastconformer_hybrid_large_pc")
 transcribed = asr(audio_dataset)
 
-# 按 WER（词错误率）过滤
+# 按词错误率过滤
 wer_filter = WERFilter(max_wer=0.3)
 high_quality_audio = wer_filter(transcribed)
 
@@ -281,7 +280,7 @@ filtered_audio = duration_filter(high_quality_audio)
 
 ## 常见模式
 
-### 网络爬取数据整理（Common Crawl）
+### 网络抓取策划（Common Crawl）
 
 ```python
 from nemo_curator import ScoreFilter, Modify
@@ -292,7 +291,7 @@ from nemo_curator.datasets import DocumentDataset
 # 加载 Common Crawl 数据
 dataset = DocumentDataset.read_parquet("common_crawl/*.parquet")
 
-# 流水线
+# 管道
 pipeline = [
     # 1. 质量过滤
     WordCountFilter(min_words=100, max_words=50000),
@@ -307,7 +306,7 @@ pipeline = [
     ExactDuplicates(id_field="id", text_field="text"),
     FuzzyDuplicates(id_field="id", text_field="text", num_hashes=260),
 
-    # 4. PII 脱敏
+    # 4. PII 编辑
     PIIRedactor(),
 
     # 5. NSFW 过滤
@@ -332,7 +331,7 @@ from dask_cuda import LocalCUDACluster
 cluster = LocalCUDACluster(n_workers=8)
 client = get_client(cluster=cluster)
 
-# 处理大型数据集
+# 处理大数据集
 dataset = DocumentDataset.read_parquet("s3://large_dataset/*.parquet")
 deduped = FuzzyDuplicates(...)(dataset)
 
@@ -361,35 +360,35 @@ cluster.close()
 - **GPU（2× A100）**：0.2 小时
 - **加速比**：10×
 
-## 成本对比
+## 成本比较
 
-**基于 CPU 的整理**（AWS c5.18xlarge × 10）：
+**基于 CPU 的策划**（AWS c5.18xlarge × 10）：
 - 成本：$3.60/小时 × 10 = $36/小时
 - 8TB 耗时：120 小时
 - **总计**：$4,320
 
-**基于 GPU 的整理**（AWS p4d.24xlarge × 2）：
+**基于 GPU 的策划**（AWS p4d.24xlarge × 2）：
 - 成本：$32.77/小时 × 2 = $65.54/小时
 - 8TB 耗时：7.5 小时
 - **总计**：$491.55
 
-**节省**：降低 89%（节省 $3,828）
+**节省**：减少 89%（节省 $3,828）
 
 ## 支持的数据格式
 
-- **输入**：Parquet、JSONL、CSV
-- **输出**：Parquet（推荐）、JSONL
-- **WebDataset**：用于多模态的 TAR 归档
+- **输入**：Parquet, JSONL, CSV
+- **输出**：Parquet（推荐），JSONL
+- **WebDataset**：TAR 存档（用于多模态）
 
 ## 用例
 
 **生产部署**：
-- NVIDIA 使用 NeMo Curator 准备 Nemotron-4 训练数据
-- 整理的开源数据集：RedPajama v2、The Pile
+- NVIDIA 使用 NeMo Curator 准备了 Nemotron-4 的训练数据
+- 策划的开源数据集：RedPajama v2, The Pile
 
-## 参考
+## 参考资料
 
-- **[过滤指南](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/nemo-curator/references/filtering.md)** - 30+ 质量过滤器、启发式方法
+- **[过滤指南](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/nemo-curator/references/filtering.md)** - 30+ 质量过滤器，启发式方法
 - **[去重指南](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/nemo-curator/references/deduplication.md)** - 精确、模糊、语义方法
 ## 资源
 

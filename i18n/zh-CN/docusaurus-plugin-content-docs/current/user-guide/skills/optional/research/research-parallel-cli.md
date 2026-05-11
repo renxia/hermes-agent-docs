@@ -1,64 +1,63 @@
 ---
 title: "Parallel Cli"
 sidebar_label: "Parallel Cli"
-description: "Parallel CLI 的可选供应商技能 — 智能体原生网页搜索、提取、深度研究、丰富化、FindAll 和监控"
+description: "Parallel CLI 的可选供应商技能——原生智能体网络搜索、提取、深度研究、富化、FindAll 及监控"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 本页面由网站脚本 generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源 SKILL.md，而非此页面。 */}
 
 # Parallel Cli
 
-Parallel CLI 的可选供应商技能 — 智能体原生网页搜索、提取、深度研究、丰富化、FindAll 和监控。优先使用 JSON 输出和非交互式流程。
+Parallel CLI 的可选供应商技能——原生智能体网络搜索、提取、深度研究、富化、FindAll 及监控。推荐使用 JSON 输出和非交互式流程。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/research/parallel-cli` 安装 |
+| 来源 | 可选 — 通过 `hermes skills install official/research/parallel-cli` 安装 |
 | 路径 | `optional-skills/research/parallel-cli` |
 | 版本 | `1.1.0` |
-| 作者 | Hermes Agent |
+| 作者 | Hermes 智能体 |
 | 许可证 | MIT |
-| 标签 | `Research`, `Web`, `Search`, `Deep-Research`, `Enrichment`, `CLI` |
+| 平台 | linux, macos, windows |
+| 标签 | `研究`, `网络`, `搜索`, `深度研究`, `富化`, `CLI` |
 | 相关技能 | [`duckduckgo-search`](/docs/user-guide/skills/optional/research/research-duckduckgo-search), [`mcporter`](/docs/user-guide/skills/optional/mcp/mcp-mcporter) |
 
-## 参考：完整 SKILL.md
-
 :::info
-以下是当此技能被触发时 Hermes 加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是此技能被触发时 Hermes 加载的完整技能定义。这是该技能激活时智能体所看到的指令。
 :::
 
-# Parallel CLI
+# 并行命令行工具
 
-当用户明确要求使用 Parallel，或终端原生工作流可从 Parallel 的特定供应商栈（用于网页搜索、提取、深度研究、丰富化、实体发现或监控）中受益时，请使用 `parallel-cli`。
+当用户明确要求使用 Parallel，或当终端原生工作流能够受益于 Parallel 针对网络搜索、内容提取、深度研究、数据增强、实体发现或监控的特定供应商技术栈时，请使用 `parallel-cli`。
 
-这是一个可选的第三方工作流，并非 Hermes 核心功能。
+这是一个可选的第三方工作流，而非 Hermes 的核心能力。
 
-重要注意事项：
-- Parallel 是一项付费服务，提供免费层级，而非完全免费的本地工具。
-- 它与 Hermes 原生的 `web_search` / `web_extract` 功能重叠，因此默认情况下不要优先用于普通查询。
-- 当用户明确提及 Parallel 或需要 Parallel 特有的功能（如丰富化、FindAll 或监控工作流）时，请优先使用此技能。
+重要预期说明：
+- Parallel 是一项有免费套餐的付费服务，并非完全免费的本地工具。
+- 它与 Hermes 原生的 `web_search` / `web_extract` 功能有重叠，因此对于普通查询，请勿默认优先使用它。
+- 当用户特别提及 Parallel，或需要 Parallel 的数据增强、FindAll 或监控工作流等能力时，请优先使用此技能。
 
-`parallel-cli` 专为智能体设计：
-- 通过 `--json` 输出 JSON 格式
+`parallel-cli` 是为智能体设计的：
+- 通过 `--json` 输出 JSON
 - 非交互式命令执行
-- 使用 `--no-wait`、`status` 和 `poll` 执行异步长时间运行任务
-- 使用 `--previous-interaction-id` 实现上下文链式调用
-- 在一个 CLI 中集成搜索、提取、研究、丰富化、实体发现和监控功能
+- 使用 `--no-wait`、`status` 和 `poll` 进行异步长时间运行任务
+- 使用 `--previous-interaction-id` 进行上下文链接
+- 在一个 CLI 中集成了搜索、提取、研究、增强、实体发现和监控功能
 
 ## 何时使用
 
 在以下情况下优先使用此技能：
 - 用户明确提及 Parallel 或 `parallel-cli`
 - 任务需要比简单的一次性搜索/提取更丰富的工作流
-- 您需要可以启动并稍后轮询的异步深度研究任务
-- 您需要结构化丰富化、FindAll 实体发现或监控功能
+- 需要可以启动并稍后轮询的异步深度研究任务
+- 需要结构化数据增强、FindAll 实体发现或监控功能
 
-当用户未明确要求 Parallel 且仅需快速一次性查询时，请优先使用 Hermes 原生的 `web_search` / `web_extract`。
+当用户未特别请求 Parallel，或仅需快速的一次性查询时，请优先使用 Hermes 原生的 `web_search` / `web_extract`。
 
 ## 安装
 
-尝试对环境侵入性最小的安装路径。
+尝试使用当前环境下侵入性最低的安装路径。
 
 ### Homebrew
 
@@ -78,20 +77,20 @@ npm install -g parallel-web-cli
 pip install "parallel-web-tools[cli]"
 ```
 
-### 独立安装程序
+### 独立安装器
 
 ```bash
 curl -fsSL https://parallel.ai/install.sh | bash
 ```
 
-如果您希望进行隔离的 Python 安装，`pipx` 也可以使用：
+如果您需要一个隔离的 Python 安装，也可以使用 `pipx`：
 
 ```bash
 pipx install "parallel-web-tools[cli]"
 pipx ensurepath
 ```
 
-## 身份验证
+## 认证
 
 交互式登录：
 
@@ -111,23 +110,23 @@ API 密钥环境变量：
 export PARALLEL_API_KEY="***"
 ```
 
-验证当前身份验证状态：
+验证当前认证状态：
 
 ```bash
 parallel-cli auth
 ```
 
-如果身份验证需要浏览器交互，请使用 `pty=true` 运行。
+如果认证需要浏览器交互，请使用 `pty=true` 运行。
 
 ## 核心规则集
 
-1. 当您需要机器可读输出时，始终优先使用 `--json`。
-2. 优先使用显式参数和非交互式流程。
-3. 对于长时间运行的任务，请使用 `--no-wait`，然后使用 `status` / `poll`。
-4. 仅引用 CLI 输出返回的 URL。
-5. 当后续可能出现追问时，将大型 JSON 输出保存到临时文件。
-6. 仅对真正长时间运行的工作流使用后台进程；否则在前台运行。
-7. 除非用户明确要求使用 Parallel 或需要 Parallel 特有的工作流，否则优先使用 Hermes 原生工具。
+1.  当需要机器可读输出时，始终优先使用 `--json`。
+2.  优先使用显式参数和非交互式流程。
+3.  对于长时间运行的任务，使用 `--no-wait`，然后使用 `status` / `poll`。
+4.  仅引用 CLI 输出返回的 URL。
+5.  当可能需要后续提问时，将大型 JSON 输出保存到临时文件。
+6.  仅对真正长时间运行的工作流使用后台进程；否则在前台运行。
+7.  除非用户特别想要 Parallel 或需要 Parallel 专有的工作流，否则优先使用 Hermes 原生工具。
 
 ## 快速参考
 
@@ -148,45 +147,45 @@ parallel-cli
 
 ## 常用标志和模式
 
-常用的有用标志：
+常用实用标志：
 - `--json` 用于结构化输出
 - `--no-wait` 用于异步任务
-- `--previous-interaction-id <id>` 用于重用先前上下文的后续任务
-- `--max-results <n>` 用于搜索结果数量
-- `--mode one-shot|agentic` 用于搜索行为
+- `--previous-interaction-id <id>` 用于重复使用先前上下文的后续任务
+- `--max-results <n>` 指定搜索结果数量
+- `--mode one-shot|agentic` 指定搜索行为
 - `--include-domains domain1.com,domain2.com`
 - `--exclude-domains domain1.com,domain2.com`
 - `--after-date YYYY-MM-DD`
 
-在方便时从标准输入读取：
+方便时从标准输入读取：
 
 ```bash
-echo "What is the latest funding for Anthropic?" | parallel-cli search - --json
-echo "Research question" | parallel-cli research run - --json
+echo "Anthropic 的最新融资是什么？" | parallel-cli search - --json
+echo "研究问题" | parallel-cli research run - --json
 ```
 
 ## 搜索
 
-用于带有结构化结果的当前网页查询。
+用于带有结构化结果的当前网络查询。
 
 ```bash
-parallel-cli search "What is Anthropic's latest AI model?" --json
-parallel-cli search "SEC filings for Apple" --include-domains sec.gov --json
-parallel-cli search "bitcoin price" --after-date 2026-01-01 --max-results 10 --json
-parallel-cli search "latest browser benchmarks" --mode one-shot --json
-parallel-cli search "AI coding agent enterprise reviews" --mode agentic --json
+parallel-cli search "Anthropic 的最新 AI 模型是什么？" --json
+parallel-cli search "苹果的 SEC 文件" --include-domains sec.gov --json
+parallel-cli search "比特币价格" --after-date 2026-01-01 --max-results 10 --json
+parallel-cli search "最新浏览器基准测试" --mode one-shot --json
+parallel-cli search "AI 编码智能体企业评测" --mode agentic --json
 ```
 
-有用的约束条件：
-- `--include-domains` 用于缩小可信来源范围
-- `--exclude-domains` 用于排除嘈杂域名
-- `--after-date` 用于按时间筛选
-- `--max-results` 当您希望获得更广泛覆盖时
+实用约束条件：
+- `--include-domains` 用于缩小可信赖来源范围
+- `--exclude-domains` 用于去除嘈杂域名
+- `--after-date` 用于时效性过滤
+- `--max-results` 当你需要更广泛的覆盖范围时使用
 
-如果您预计会有后续问题，请保存输出：
+如果您预期会有后续问题，请保存输出：
 
 ```bash
-parallel-cli search "latest React 19 changes" --json -o /tmp/react-19-search.json
+parallel-cli search "React 19 最新变更" --json -o /tmp/react-19-search.json
 ```
 
 总结结果时：
@@ -195,33 +194,33 @@ parallel-cli search "latest React 19 changes" --json -o /tmp/react-19-search.jso
 - 仅引用返回的来源
 - 避免编造 URL 或来源标题
 
-## 提取
+## 内容提取
 
 用于从 URL 拉取干净内容或 Markdown。
 
 ```bash
 parallel-cli extract https://example.com --json
-parallel-cli extract https://company.com --objective "Find pricing info" --json
+parallel-cli extract https://company.com --objective "查找定价信息" --json
 parallel-cli extract https://example.com --full-content --json
 parallel-cli fetch https://example.com --json
 ```
 
-当页面内容广泛且您只需要其中一部分信息时，请使用 `--objective`。
+当页面内容广泛而你只需要其中一部分信息时，使用 `--objective`。
 
 ## 深度研究
 
-用于可能需要较长时间的更深层次多步骤研究任务。
+用于可能需要时间的深度多步骤研究任务。
 
-常见的处理器层级：
-- `lite` / `base` 用于更快、更便宜的遍历
-- `core` / `pro` 用于更彻底的合成
+常用处理器级别：
+- `lite` / `base` 用于更快、更经济的快速处理
+- `core` / `pro` 用于更彻底的综合分析
 - `ultra` 用于最繁重的研究任务
 
 ### 同步
 
 ```bash
 parallel-cli research run \
-  "Compare the leading AI coding agents by pricing, model support, and enterprise controls" \
+  "比较领先 AI 编码智能体的定价、模型支持和企业控制功能" \
   --processor core \
   --json
 ```
@@ -230,7 +229,7 @@ parallel-cli research run \
 
 ```bash
 parallel-cli research run \
-  "Compare the leading AI coding agents by pricing, model support, and enterprise controls" \
+  "比较领先 AI 编码智能体的定价、模型支持和企业控制功能" \
   --processor ultra \
   --no-wait \
   --json
@@ -240,12 +239,12 @@ parallel-cli research poll trun_xxx --json
 parallel-cli research processors --json
 ```
 
-### 上下文链式调用 / 后续
+### 上下文链接 / 后续操作
 
 ```bash
-parallel-cli research run "What are the top AI coding agents?" --json
+parallel-cli research run "顶尖的 AI 编码智能体有哪些？" --json
 parallel-cli research run \
-  "What enterprise controls does the top-ranked one offer?" \
+  "排名第一的智能体提供哪些企业控制功能？" \
   --previous-interaction-id trun_xxx \
   --json
 ```
@@ -253,21 +252,21 @@ parallel-cli research run \
 推荐的 Hermes 工作流：
 1. 使用 `--no-wait --json` 启动
 2. 捕获返回的运行/任务 ID
-3. 如果用户希望继续其他工作，请继续处理
+3. 如果用户希望继续其他工作，可以继续进行
 4. 稍后调用 `status` 或 `poll`
-5. 使用返回来源中的引用总结最终报告
+5. 总结最终报告，并引用返回来源中的信息
 
-## 丰富化
+## 数据增强
 
-当用户拥有 CSV/JSON/表格输入并希望从网页研究中推断出附加列时，请使用此功能。
+当用户拥有 CSV/JSON/表格输入并希望通过网络研究推断出额外列时使用。
 
 ### 建议列
 
 ```bash
-parallel-cli enrich suggest "Find the CEO and annual revenue" --json
+parallel-cli enrich suggest "查找首席执行官和年收入" --json
 ```
 
-### 规划配置
+### 计划配置
 
 ```bash
 parallel-cli enrich plan -o config.yaml
@@ -278,7 +277,7 @@ parallel-cli enrich plan -o config.yaml
 ```bash
 parallel-cli enrich run \
   --data '[{"company": "Anthropic"}, {"company": "Mistral"}]' \
-  --intent "Find headquarters and employee count" \
+  --intent "查找总部和员工人数" \
   --json
 ```
 
@@ -289,8 +288,8 @@ parallel-cli enrich run \
   --source-type csv \
   --source companies.csv \
   --target enriched.csv \
-  --source-columns '[{"name": "company", "description": "Company name"}]' \
-  --intent "Find the CEO and annual revenue"
+  --source-columns '[{"name": "company", "description": "公司名称"}]' \
+  --intent "查找首席执行官和年收入"
 ```
 
 ### YAML 配置运行
@@ -306,27 +305,27 @@ parallel-cli enrich status <task_group_id> --json
 parallel-cli enrich poll <task_group_id> --json
 ```
 
-在非交互式操作时，请为列定义使用显式的 JSON 数组。
-在报告成功之前，请验证输出文件。
+在非交互式操作时，对列定义使用显式 JSON 数组。
+在报告成功之前，验证输出文件。
 
 ## FindAll
 
-当用户希望获得一个可被发现的数据集而非简短答案时，用于网页规模的实体发现。
+当用户希望获取一个可发现的数据集而非简短答案时，用于网络规模实体发现。
 
 ```bash
-parallel-cli findall run "Find AI coding agent startups with enterprise offerings" --json
-parallel-cli findall run "AI startups in healthcare" -n 25 --json
+parallel-cli findall run "查找提供企业级产品的 AI 编码智能体初创公司" --json
+parallel-cli findall run "医疗保健领域的 AI 初创公司" -n 25 --json
 parallel-cli findall status <run_id> --json
 parallel-cli findall poll <run_id> --json
 parallel-cli findall result <run_id> --json
 parallel-cli findall schema <run_id> --json
 ```
 
-当用户希望获得一组可被发现、筛选或后续丰富化的实体时，这比普通搜索更合适。
+当用户希望获得一个可后续审查、过滤或增强的实体发现集合时，这比普通搜索更合适。
 
 ## 监控
 
-用于随时间进行的持续变更检测。
+用于随时间推移进行持续的变化检测。
 
 ```bash
 parallel-cli monitor list --json
@@ -335,42 +334,42 @@ parallel-cli monitor events <monitor_id> --json
 parallel-cli monitor delete <monitor_id> --json
 ```
 
-创建通常是敏感部分，因为频率和交付很重要：
+创建通常是敏感部分，因为频率和交付方式很重要：
 
 ```bash
 parallel-cli monitor create --help
 ```
 
-当用户希望对某个页面或来源进行定期跟踪而非一次性获取时，请使用此功能。
+当用户希望对页面或来源进行定期跟踪，而非一次性抓取时，使用此功能。
 
 ## 推荐的 Hermes 使用模式
 
-### 带引用的快速答案
-1. 运行 `parallel-cli search ... --json`
-2. 解析标题、URL、日期、摘录
-3. 仅使用返回的 URL 进行内联引用总结
+### 带引用的快速回答
+1.  运行 `parallel-cli search ... --json`
+2.  解析标题、URL、日期、摘录
+3.  总结，并使用仅来自返回 URL 的内联引用
 
 ### URL 调查
-1. 运行 `parallel-cli extract URL --json`
-2. 如有需要，使用 `--objective` 或 `--full-content` 重新运行
-3. 引用或总结提取的 Markdown
+1.  运行 `parallel-cli extract URL --json`
+2.  如果需要，使用 `--objective` 或 `--full-content` 重新运行
+3.  引用或总结提取的 Markdown 内容
 
 ### 长期研究工作流
-1. 运行 `parallel-cli research run ... --no-wait --json`
-2. 存储返回的 ID
-3. 继续其他工作或定期轮询
-4. 使用引用总结最终报告
+1.  运行 `parallel-cli research run ... --no-wait --json`
+2.  存储返回的 ID
+3.  继续其他工作或定期轮询
+4.  总结最终报告并引用信息
 
-### 结构化丰富化工作流
-1. 检查输入文件和列
-2. 使用 `enrich suggest` 或提供显式的丰富化列
-3. 运行 `enrich run`
-4. 如需，轮询完成情况
-5. 在报告成功之前验证输出文件
+### 结构化数据增强工作流
+1.  检查输入文件和列
+2.  使用 `enrich suggest` 或提供显式的增强列
+3.  运行 `enrich run`
+4.  如果需要，轮询等待完成
+5.  在报告成功之前验证输出文件
 
-## 错误处理与退出代码
+## 错误处理与退出码
 
-CLI 文档中记录了以下退出代码：
+CLI 文档记录了以下退出码：
 - `0` 成功
 - `2` 输入错误
 - `3` 认证错误
@@ -379,8 +378,8 @@ CLI 文档中记录了以下退出代码：
 
 如果遇到认证错误：
 1. 检查 `parallel-cli auth`
-2. 确认 `PARALLEL_API_KEY` 是否设置，或运行 `parallel-cli login` / `parallel-cli login --device`
-3. 验证 `parallel-cli` 是否在 `PATH` 环境变量中
+2. 确认 `PARALLEL_API_KEY` 已设置，或运行 `parallel-cli login` / `parallel-cli login --device`
+3. 验证 `parallel-cli` 是否在系统 `PATH` 中
 
 ## 维护
 
@@ -399,12 +398,12 @@ pip install --upgrade parallel-web-tools
 parallel-cli config auto-update-check off
 ```
 
-## 注意事项
+## 常见陷阱
 
-- 除非用户明确要求人类可读格式输出，否则不要省略 `--json` 参数。
-- 不要引用 CLI 输出中未包含的来源。
-- `login` 可能需要 PTY/浏览器交互。
-- 短任务优先使用前台执行；不要过度使用后台进程。
-- 对于大型结果集，请将 JSON 保存到 `/tmp/*.json`，而不是将所有内容都塞入上下文。
-- 当 Hermes 原生工具已足够时，不要默认选择 Parallel。
-- 请记住这是一个供应商工作流，通常需要账户认证，并且在免费层级之外需要付费使用。
+- 除非用户明确需要格式化的人类可读输出，否则不要省略 `--json` 选项。
+- 不要引用 CLI 输出中未出现的来源。
+- `login` 命令可能需要 PTY 或浏览器交互。
+- 对于短时间任务，优先使用前台执行；避免过度使用后台进程。
+- 对于大型结果集，将 JSON 保存到 `/tmp/*.json` 中，而不是全部放入上下文。
+- 不要在 Hermes 原生工具已足够的情况下，默默选择 Parallel 工作流。
+- 请注意，这是一个通常需要账户认证、超出免费额度即需付费使用的第三方工作流。

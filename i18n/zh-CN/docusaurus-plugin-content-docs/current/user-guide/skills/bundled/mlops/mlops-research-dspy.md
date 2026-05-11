@@ -1,31 +1,30 @@
 ---
-title: "Dspy — DSPy：声明式 LM 程序，自动优化提示，RAG"
+title: "Dspy — DSPy: 声明式语言模型程序、自动优化提示词、RAG"
 sidebar_label: "Dspy"
-description: "DSPy：声明式 LM 程序，自动优化提示，RAG"
+description: "DSPy: 声明式语言模型程序、自动优化提示词、RAG"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 本页面由网站脚本 website/scripts/generate-skill-docs.py 根据技能的 SKILL.md 文件自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
 # Dspy
 
-DSPy：声明式 LM 程序，自动优化提示，RAG。
+DSPy：声明式语言模型程序、自动优化提示词、RAG。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 捆绑（默认安装） |
+| 来源 | 内置（默认安装） |
 | 路径 | `skills/mlops/research/dspy` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
-| 依赖项 | `dspy`, `openai`, `anthropic` |
-| 标签 | `提示工程`, `DSPy`, `声明式编程`, `RAG`, `智能体`, `提示优化`, `LM 编程`, `斯坦福 NLP`, `自动优化`, `模块化 AI` |
-
-## 参考：完整的 SKILL.md
+| 依赖 | `dspy`, `openai`, `anthropic` |
+| 平台 | linux, macos, windows |
+| 标签 | `提示词工程`, `DSPy`, `声明式编程`, `RAG`, `智能体`, `提示词优化`, `语言模型编程`, `斯坦福NLP`, `自动优化`, `模块化AI` |
 
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是当技能激活时智能体看到的指令。
+以下是 Hermes 在此技能触发时加载的完整技能定义。这是智能体在此技能激活时看到的指令。
 :::
 
 # DSPy：声明式语言模型编程
@@ -33,52 +32,52 @@ DSPy：声明式 LM 程序，自动优化提示，RAG。
 ## 何时使用此技能
 
 在以下情况下使用 DSPy：
-- **构建复杂的 AI 系统**，包含多个组件和工作流
-- **以声明方式编程语言模型**，而非手动提示工程
-- **使用数据驱动的方法自动优化提示**
-- **创建可维护且可移植的模块化 AI 管道**
-- **通过优化器系统地改进模型输出**
-- **构建 RAG 系统、智能体或分类器**，以获得更高的可靠性
+- **构建复杂的人工智能系统**，具有多个组件和工作流
+- **以声明方式编程语言模型**，而不是手动提示工程
+- **使用数据驱动方法自动优化提示**
+- **创建可维护和可移植的模块化 AI 管道**
+- **系统地改进模型输出** 使用优化器
+- **构建 RAG 系统、智能体或分类器** 并获得更好的可靠性
 
-**GitHub Stars**：22,000+ | **创建者**：Stanford NLP
+**GitHub 星标**：22,000+ | **创建者**：斯坦福 NLP
 
 ## 安装
 
 ```bash
-# 稳定版本
+# 稳定版
 pip install dspy
 
-# 最新开发版本
+# 最新开发版
 pip install git+https://github.com/stanfordnlp/dspy.git
 
-# 包含特定语言模型提供程序
+# 支持特定的语言模型提供商
 pip install dspy[openai]        # OpenAI
 pip install dspy[anthropic]     # Anthropic Claude
-pip install dspy[all]           # 所有提供程序
+pip install dspy[all]           # 所有提供商
 ```
 
 ## 快速入门
 
-### 基本示例：问答
+### 基础示例：问答
 
 ```python
 import dspy
 
-# 配置您的语言模型
+# 配置你的语言模型
 lm = dspy.Claude(model="claude-sonnet-4-5-20250929")
 dspy.settings.configure(lm=lm)
 
-# 定义一个签名（输入 → 输出）
+# 定义签名（输入 → 输出）
 class QA(dspy.Signature):
-    """使用简短的、基于事实的答案回答问题。"""
+    """用简短的事实性答案回答问题。"""
     question = dspy.InputField()
-    answer = dspy.OutputField(desc="通常在 1 到 5 个词之间")
+    answer = dspy.OutputField(desc="通常为 1 到 5 个词")
 
 # 创建一个模块
 qa = dspy.Predict(QA)
 
 # 使用它
-response = qa(question="法国的首都是什么？")
+response = qa(question="法国的首都是哪里？")
 print(response.answer)  # "巴黎"
 ```
 
@@ -90,25 +89,25 @@ import dspy
 lm = dspy.Claude(model="claude-sonnet-4-5-20250929")
 dspy.settings.configure(lm=lm)
 
-# 使用 ChainOfThought 进行更好的推理
+# 使用 ChainOfThought 以获得更好的推理能力
 class MathProblem(dspy.Signature):
-    """解决数学应用题。"""
+    """解答数学应用题。"""
     problem = dspy.InputField()
     answer = dspy.OutputField(desc="数值答案")
 
 # ChainOfThought 自动生成推理步骤
 cot = dspy.ChainOfThought(MathProblem)
 
-response = cot(problem="如果约翰有 5 个苹果，给了玛丽 2 个，他还剩下多少个？")
+response = cot(problem="如果约翰有 5 个苹果，给了玛丽 2 个，他还剩多少个？")
 print(response.rationale)  # 显示推理步骤
 print(response.answer)     # "3"
 ```
 
 ## 核心概念
 
-### 1. 签名（Signatures）
+### 1. 签名
 
-签名定义了您的 AI 任务的结构（输入 → 输出）：
+签名定义了你的 AI 任务的结构（输入 → 输出）：
 
 ```python
 # 内联签名（简单）
@@ -116,32 +115,32 @@ qa = dspy.Predict("question -> answer")
 
 # 类签名（详细）
 class Summarize(dspy.Signature):
-    """将文本总结为关键点。"""
+    """将文本总结为要点。"""
     text = dspy.InputField()
-    summary = dspy.OutputField(desc="要点，3-5 项")
+    summary = dspy.OutputField(desc="项目符号列表，3-5 项")
 
 summarizer = dspy.ChainOfThought(Summarize)
 ```
 
-**何时使用每种类型：**
-- **内联**：快速原型设计，简单任务
-- **类**：复杂任务，类型提示，更好的文档
+**何时使用哪种签名：**
+- **内联**：快速原型设计、简单任务
+- **类**：复杂任务、类型提示、更好的文档
 
-### 2. 模块（Modules）
+### 2. 模块
 
 模块是可重用的组件，用于将输入转换为输出：
 
 #### dspy.Predict
-基本预测模块：
+基本的预测模块：
 
 ```python
 predictor = dspy.Predict("context, question -> answer")
-result = predictor(context="巴黎是法国的首都",
-                   question="首都是什么？")
+result = predictor(context="巴黎是法国的首者",
+                   question="首都是哪里？")
 ```
 
 #### dspy.ChainOfThought
-在回答之前生成推理步骤：
+在回答前生成推理步骤：
 
 ```python
 cot = dspy.ChainOfThought("question -> answer")
@@ -151,7 +150,7 @@ print(result.answer)     # 最终答案
 ```
 
 #### dspy.ReAct
-类似智能体的推理，带有工具：
+带有工具的类智能体推理：
 
 ```python
 from dspy.predict import ReAct
@@ -163,7 +162,7 @@ class SearchQA(dspy.Signature):
 
 def search_tool(query: str) -> str:
     """搜索维基百科。"""
-    # 您的搜索实现
+    # 你的搜索实现
     return results
 
 react = ReAct(SearchQA, tools=[search_tool])
@@ -171,7 +170,7 @@ result = react(question="Python 是什么时候创建的？")
 ```
 
 #### dspy.ProgramOfThought
-生成并执行用于推理的代码：
+生成并执行代码进行推理：
 
 ```python
 pot = dspy.ProgramOfThought("question -> answer")
@@ -179,9 +178,9 @@ result = pot(question="240 的 15% 是多少？")
 # 生成：answer = 240 * 0.15
 ```
 
-### 3. 优化器（Optimizers）
+### 3. 优化器
 
-优化器使用训练数据自动改进您的模块：
+优化器使用训练数据自动改进你的模块：
 
 #### BootstrapFewShot
 从示例中学习：
@@ -191,8 +190,8 @@ from dspy.teleprompt import BootstrapFewShot
 
 # 训练数据
 trainset = [
-    dspy.Example(question="2+2 等于多少？", answer="4").with_inputs("question"),
-    dspy.Example(question="3+5 等于多少？", answer="8").with_inputs("question"),
+    dspy.Example(question="2 加 2 等于多少？", answer="4").with_inputs("question"),
+    dspy.Example(question="3 加 5 等于多少？", answer="8").with_inputs("question"),
 ]
 
 # 定义指标
@@ -203,11 +202,11 @@ def validate_answer(example, pred, trace=None):
 optimizer = BootstrapFewShot(metric=validate_answer, max_bootstrapped_demos=3)
 optimized_qa = optimizer.compile(qa, trainset=trainset)
 
-# 现在 optimized_qa 表现更好！
+# 现在 optimized_qa 性能更好了！
 ```
 
-#### MIPRO（最重要的提示优化）
-迭代地改进提示：
+#### MIPRO (最重要的提示优化)
+迭代改进提示：
 
 ```python
 from dspy.teleprompt import MIPRO
@@ -234,7 +233,7 @@ from dspy.teleprompt import BootstrapFinetune
 optimizer = BootstrapFinetune(metric=validate_answer)
 optimized_module = optimizer.compile(qa, trainset=trainset)
 
-# 导出用于微调的训练数据
+# 为微调导出训练数据
 ```
 
 ### 4. 构建复杂系统
@@ -265,7 +264,7 @@ class MultiHopQA(dspy.Module):
 
 # 使用管道
 qa_system = MultiHopQA()
-result = qa_system(question="哪本书启发了电影《银翼杀手》？")
+result = qa_system(question="是谁写的那本启发了电影《银翼杀手》的书？")
 ```
 
 #### 带优化的 RAG 系统
@@ -300,7 +299,7 @@ optimizer = BootstrapFewShot(metric=validate_answer)
 optimized_rag = optimizer.compile(rag, trainset=trainset)
 ```
 
-## 语言模型提供程序配置
+## 语言模型提供商配置
 
 ### Anthropic Claude
 
@@ -327,7 +326,7 @@ lm = dspy.OpenAI(
 dspy.settings.configure(lm=lm)
 ```
 
-### 本地模型（Ollama）
+### 本地模型 (Ollama)
 
 ```python
 lm = dspy.OllamaLocal(
@@ -337,14 +336,14 @@ lm = dspy.OllamaLocal(
 dspy.settings.configure(lm=lm)
 ```
 
-### 多个模型
+### 多模型
 
 ```python
-# 不同任务使用不同的模型
+# 不同任务使用不同模型
 cheap_lm = dspy.OpenAI(model="gpt-3.5-turbo")
 strong_lm = dspy.Claude(model="claude-sonnet-4-5-20250929")
 
-# 使用廉价模型进行检索，使用强大模型进行推理
+# 检索使用廉价模型，推理使用强模型
 with dspy.settings.context(lm=cheap_lm):
     context = retriever(question)
 
@@ -362,7 +361,7 @@ from pydantic import BaseModel, Field
 class PersonInfo(BaseModel):
     name: str = Field(description="全名")
     age: int = Field(description="年龄（岁）")
-    occupation: str = Field(description="当前工作")
+    occupation: str = Field(description="当前职业")
 
 class ExtractPerson(dspy.Signature):
     """从文本中提取人物信息。"""
@@ -375,7 +374,7 @@ print(result.person.name)  # "约翰·多伊"
 print(result.person.age)   # 35
 ```
 
-### 模式 2：断言驱动优化
+### 模式 2：断言驱动的优化
 
 ```python
 import dspy
@@ -434,10 +433,10 @@ class RerankedRAG(dspy.Module):
         self.answer = dspy.ChainOfThought("context, question -> answer")
 
     def forward(self, question):
-        # 检索候选
+        # 检索候选段落
         passages = self.retrieve(question).passages
 
-        # 重排序段落
+        # 对段落进行重排序
         scored = []
         for passage in passages:
             score = float(self.rerank(question=question, passage=passage).relevance_score)
@@ -461,7 +460,7 @@ def exact_match(example, pred, trace=None):
     return example.answer.lower() == pred.answer.lower()
 
 def f1_score(example, pred, trace=None):
-    """文本重叠的F1分数。"""
+    """文本重叠的 F1 分数。"""
     pred_tokens = set(pred.answer.lower().split())
     gold_tokens = set(example.answer.lower().split())
 
@@ -492,55 +491,55 @@ evaluator = Evaluate(
 
 # 评估模型
 score = evaluator(qa_system)
-print(f"准确率: {score}")
+print(f"准确率：{score}")
 
-# 比较优化前后
+# 比较优化前后的效果
 score_before = evaluator(qa)
 score_after = evaluator(optimized_qa)
-print(f"提升幅度: {score_after - score_before:.2%}")
+print(f"提升：{score_after - score_before:.2%}")
 ```
 
 ## 最佳实践
 
-### 1. 从简单开始，逐步迭代
+### 1. 从简单开始，迭代优化
 
 ```python
 # 从 Predict 开始
 qa = dspy.Predict("question -> answer")
 
-# 如果需要，添加推理
+# 需要时添加推理
 qa = dspy.ChainOfThought("question -> answer")
 
-# 有数据后添加优化
+# 有数据时添加优化
 optimized_qa = optimizer.compile(qa, trainset=data)
 ```
 
 ### 2. 使用描述性签名
 
 ```python
-# ❌ 错误：模糊不清
+# ❌ 不佳：模糊
 class Task(dspy.Signature):
     input = dspy.InputField()
     output = dspy.OutputField()
 
-# ✅ 正确：描述性强
+# ✅ 优良：描述性强
 class SummarizeArticle(dspy.Signature):
     """将新闻文章总结为3-5个关键点。"""
-    article = dspy.InputField(desc="完整文章文本")
-    summary = dspy.OutputField(desc="要点列表，3-5项")
+    article = dspy.InputField(desc="文章全文")
+    summary = dspy.OutputField(desc="项目符号要点，3-5项")
 ```
 
-### 3. 使用代表性数据进行优化
+### 3. 使用有代表性的数据进行优化
 
 ```python
 # 创建多样化的训练样本
 trainset = [
-    dspy.Example(question="事实性", answer="...").with_inputs("question"),
+    dspy.Example(question="事实性", answer="...).with_inputs("question"),
     dspy.Example(question="推理", answer="...").with_inputs("question"),
     dspy.Example(question="计算", answer="...").with_inputs("question"),
 ]
 
-# 使用验证集计算指标
+# 使用验证集进行指标计算
 def metric(example, pred, trace=None):
     return example.answer in pred.answer
 ```
@@ -565,44 +564,44 @@ dspy.settings.configure(lm=lm, trace=[])
 # 运行预测
 result = qa(question="...")
 
-# 检查追踪记录
+# 检查追踪信息
 for call in dspy.settings.trace:
-    print(f"提示词: {call['prompt']}")
-    print(f"响应: {call['response']}")
+    print(f"提示：{call['prompt']}")
+    print(f"响应：{call['response']}")
 ```
 
-## 与其他方法的比较
+## 与其他方法的对比
 
 | 特性 | 手动提示 | LangChain | DSPy |
 |---------|-----------------|-----------|------|
 | 提示工程 | 手动 | 手动 | 自动 |
 | 优化 | 试错 | 无 | 数据驱动 |
-| 模块化 | 低 | 中等 | 高 |
+| 模块化 | 低 | 中 | 高 |
 | 类型安全 | 否 | 有限 | 是（签名） |
-| 可移植性 | 低 | 中等 | 高 |
-| 学习曲线 | 低 | 中等 | 中等-高 |
+| 可移植性 | 低 | 中 | 高 |
+| 学习曲线 | 低 | 中 | 中高 |
 
 **何时选择 DSPy：**
-- 您拥有训练数据或可以生成训练数据
-- 您需要系统化地改进提示
+- 您拥有训练数据或可以生成它
+- 您需要系统性地改进提示
 - 您正在构建复杂的多阶段系统
-- 您希望在不同大语言模型之间进行优化
+- 您希望针对不同的语言模型进行优化
 
 **何时选择其他方案：**
-- 快速原型开发（手动提示）
-- 使用现有工具构建简单链（LangChain）
+- 快速原型设计（手动提示）
+- 使用现有工具的简单链（LangChain）
 - 需要自定义优化逻辑
 
 ## 资源
 
-- **文档**: https://dspy.ai
-- **GitHub**: https://github.com/stanfordnlp/dspy (2.2万+ 星标)
-- **Discord**: https://discord.gg/XCGy2WDCQB
-- **Twitter**: @DSPyOSS
-- **论文**: "DSPy: 将声明式语言模型调用编译为自改进流水线"
+- **文档**：https://dspy.ai
+- **GitHub**：https://github.com/stanfordnlp/dspy (22k+ 星标)
+- **Discord**：https://discord.gg/XCGy2WDCQB
+- **Twitter**：@DSPyOSS
+- **论文**："DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"
 
-## 另见
+## 另请参阅
 
-- `references/modules.md` - 模块详细指南（Predict、ChainOfThought、ReAct、ProgramOfThought）
-- `references/optimizers.md` - 优化算法（BootstrapFewShot、MIPRO、BootstrapFinetune）
-- `references/examples.md` - 实际示例（RAG、智能体、分类器）
+- `references/modules.md` - 详细模块指南 (Predict, ChainOfThought, ReAct, ProgramOfThought)
+- `references/optimizers.md` - 优化算法 (BootstrapFewShot, MIPRO, BootstrapFinetune)
+- `references/examples.md` - 实际应用示例 (RAG, 智能体, 分类器)

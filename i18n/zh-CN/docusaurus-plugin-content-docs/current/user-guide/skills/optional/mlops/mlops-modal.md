@@ -4,28 +4,29 @@ sidebar_label: "Modal 无服务器 GPU"
 description: "用于运行机器学习工作负载的无服务器 GPU 云平台"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
 # Modal 无服务器 GPU
 
-用于运行机器学习工作负载的无服务器 GPU 云平台。当您需要在无需管理基础设施的情况下按需访问 GPU、将机器学习模型部署为 API，或运行具有自动扩展功能的批处理作业时，可使用此技能。
+用于运行机器学习工作负载的无服务器 GPU 云平台。适用于需要按需访问 GPU 且无需管理基础设施、将机器学习模型部署为 API，或运行可自动扩缩容的批处理作业的场景。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/mlops/modal` 安装 |
-| 路径 | `optional-skills/mlops/modal` |
-| 版本 | `1.0.0` |
-| 作者 | Orchestra Research |
-| 许可证 | MIT |
-| 依赖项 | `modal>=0.64.0` |
-| 标签 | `基础设施`, `无服务器`, `GPU`, `云`, `部署`, `Modal` |
+| Source | Optional — install with `hermes skills install official/mlops/modal` |
+| Path | `optional-skills/mlops/modal` |
+| Version | `1.0.0` |
+| Author | Orchestra Research |
+| License | MIT |
+| Dependencies | `modal>=0.64.0` |
+| Platforms | linux, macos, windows |
+| Tags | `基础设施`, `无服务器`, `GPU`, `云`, `部署`, `Modal` |
 
-## 参考：完整 SKILL.md
+## 参考：完整的 SKILL.md
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是当技能处于活动状态时，智能体看到的指令。
+以下是当此技能被触发时，Hermes 加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
 # Modal 无服务器 GPU
@@ -34,27 +35,27 @@ description: "用于运行机器学习工作负载的无服务器 GPU 云平台"
 
 ## 何时使用 Modal
 
-**在以下情况使用 Modal：**
-- 运行无需管理基础设施的 GPU 密集型机器学习工作负载
-- 将机器学习模型部署为自动扩展的 API
+**在以下情况下使用 Modal：**
+- 运行 GPU 密集型机器学习工作负载而无需管理基础设施
+- 将机器学习模型部署为可自动扩缩容的 API
 - 运行批处理作业（训练、推理、数据处理）
-- 需要按秒计费的 GPU 定价，且无空闲成本
-- 快速原型化机器学习应用程序
-- 运行计划作业（类似 cron 的工作负载）
+- 需要按秒计费的 GPU 定价，无闲置成本
+- 快速原型化机器学习应用
+- 运行定时作业（类似 cron 的工作负载）
 
-**主要功能：**
-- **无服务器 GPU**：按需使用 T4、L4、A10G、L40S、A100、H100、H200、B200
-- **原生 Python 支持**：使用 Python 代码定义基础设施，无需 YAML
-- **自动扩展**：可缩容至零，或瞬间扩展至 100+ 个 GPU
-- **亚秒级冷启动**：基于 Rust 的基础设施，实现快速容器启动
-- **容器缓存**：镜像层缓存，便于快速迭代
-- **Web 端点**：将函数部署为 REST API，支持零停机更新
+**关键特性：**
+- **无服务器 GPU**: 按需提供 T4、L4、A10G、L40S、A100、H100、H200、B200
+- **原生 Python**: 在 Python 代码中定义基础设施，无需 YAML
+- **自动扩缩容**: 扩展到零，瞬间扩展到 100+ 个 GPU
+- **亚秒级冷启动**: 基于 Rust 的基础设施，容器启动迅速
+- **容器缓存**: 缓存镜像层以实现快速迭代
+- **Web 端点**: 将函数部署为 REST API，支持零停机更新
 
-**请改用其他替代方案：**
-- **RunPod**：适用于需要持久状态的长时运行 Pod
-- **Lambda Labs**：适用于预留 GPU 实例
-- **SkyPilot**：适用于多云编排和成本优化
-- **Kubernetes**：适用于复杂的多服务架构
+**请使用替代方案：**
+- **RunPod**: 适用于需要持久状态的长时间运行的 pod
+- **Lambda Labs**: 适用于预留的 GPU 实例
+- **SkyPilot**: 适用于多云编排和成本优化
+- **Kubernetes**: 适用于复杂的多服务架构
 
 ## 快速入门
 
@@ -62,10 +63,10 @@ description: "用于运行机器学习工作负载的无服务器 GPU 云平台"
 
 ```bash
 pip install modal
-modal setup  # 打开浏览器进行身份验证
+modal setup  # Opens browser for authentication
 ```
 
-### 使用 GPU 的 Hello World
+### 带 GPU 的 Hello World
 
 ```python
 import modal
@@ -82,9 +83,9 @@ def main():
     print(gpu_info.remote())
 ```
 
-运行：`modal run hello_gpu.py`
+运行: `modal run hello_gpu.py`
 
-### 基本推理端点
+### 基础推理端点
 
 ```python
 import modal
@@ -115,74 +116,74 @@ def main():
 | 组件 | 用途 |
 |-----------|---------|
 | `App` | 函数和资源的容器 |
-| `Function` | 具有计算规格的 Serverless 函数 |
-| `Cls` | 具有生命周期钩子的基于类的函数 |
+| `Function` | 带有计算规格的无服务器函数 |
+| `Cls` | 带有生命周期钩子的基于类的函数 |
 | `Image` | 容器镜像定义 |
-| `Volume` | 用于模型/数据的持久存储 |
-| `Secret` | 安全凭据存储 |
+| `Volume` | 用于模型/数据的持久化存储 |
+| `Secret` | 安全的凭证存储 |
 
 ### 执行模式
 
 | 命令 | 描述 |
 |---------|-------------|
 | `modal run script.py` | 执行并退出 |
-| `modal serve script.py` | 带热重载的开发模式 |
-| `modal deploy script.py` | 持久云部署 |
+| `modal serve script.py` | 开发模式，支持实时重载 |
+| `modal deploy script.py` | 持久化云部署 |
 
 ## GPU 配置
 
-### 可用 GPU
+### 可用的 GPU
 
-| GPU | 显存 | 最佳用途 |
+| GPU | 显存 | 最适合 |
 |-----|------|----------|
-| `T4` | 16GB | 预算推理，小型模型 |
+| `T4` | 16GB | 经济型推理，小型模型 |
 | `L4` | 24GB | 推理，Ada Lovelace 架构 |
 | `A10G` | 24GB | 训练/推理，比 T4 快 3.3 倍 |
-| `L40S` | 48GB | 推荐用于推理（最佳性价比） |
+| `L40S` | 48GB | 推荐用于推理（性价比最佳） |
 | `A100-40GB` | 40GB | 大型模型训练 |
 | `A100-80GB` | 80GB | 超大型模型 |
-| `H100` | 80GB | 最快，支持 FP8 + Transformer Engine |
-| `H200` | 141GB | 从 H100 自动升级，4.8TB/s 带宽 |
+| `H100` | 80GB | 最快，FP8 + Transformer Engine |
+| `H200` | 141GB | H100 自动升级版，4.8TB/s 带宽 |
 | `B200` | 最新 | Blackwell 架构 |
 
 ### GPU 规格模式
 
 ```python
-# 单个 GPU
+# Single GPU
 @app.function(gpu="A100")
 
-# 特定内存变体
+# Specific memory variant
 @app.function(gpu="A100-80GB")
 
-# 多个 GPU（最多 8 个）
+# Multiple GPUs (up to 8)
 @app.function(gpu="H100:4")
 
-# 带备选方案的 GPU
+# GPU with fallbacks
 @app.function(gpu=["H100", "A100", "L40S"])
 
-# 任意可用 GPU
+# Any available GPU
 @app.function(gpu="any")
 ```
 
 ## 容器镜像
 
 ```python
-# 带 pip 的基本镜像
+# Basic image with pip
 image = modal.Image.debian_slim(python_version="3.11").pip_install(
     "torch==2.1.0", "transformers==4.36.0", "accelerate"
 )
 
-# 从 CUDA 基础镜像
+# From CUDA base
 image = modal.Image.from_registry(
     "nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04",
     add_python="3.11"
 ).pip_install("torch", "transformers")
 
-# 带系统包
+# With system packages
 image = modal.Image.debian_slim().apt_install("git", "ffmpeg").pip_install("whisper")
 ```
 
-## 持久存储
+## 持久化存储
 
 ```python
 volume = modal.Volume.from_name("model-cache", create_if_missing=True)
@@ -194,7 +195,7 @@ def load_model():
     if not os.path.exists(model_path):
         model = download_model()
         model.save_pretrained(model_path)
-        volume.commit()  # 持久化更改
+        volume.commit()  # Persist changes
     return load_from_path(model_path)
 ```
 
@@ -209,7 +210,7 @@ def predict(text: str) -> dict:
     return {"result": model.predict(text)}
 ```
 
-### 完整 ASGI 应用
+### 完整的 ASGI 应用
 
 ```python
 from fastapi import FastAPI
@@ -227,10 +228,10 @@ def fastapi_app():
 
 ### Web 端点类型
 
-| 装饰器 | 使用场景 |
+| 装饰器 | 用例 |
 |-----------|----------|
 | `@modal.fastapi_endpoint()` | 简单函数 → API |
-| `@modal.asgi_app()` | 完整 FastAPI/Starlette 应用 |
+| `@modal.asgi_app()` | 完整的 FastAPI/Starlette 应用 |
 | `@modal.wsgi_app()` | Django/Flask 应用 |
 | `@modal.web_server(port)` | 任意 HTTP 服务器 |
 
@@ -240,14 +241,14 @@ def fastapi_app():
 @app.function()
 @modal.batched(max_batch_size=32, wait_ms=100)
 async def batch_predict(inputs: list[str]) -> list[dict]:
-    # 输入自动批处理
+    # Inputs automatically batched
     return model.batch_predict(inputs)
 ```
 
 ## 密钥管理
 
 ```bash
-# 创建密钥
+# Create secret
 modal secret create huggingface HF_TOKEN=hf_xxx
 ```
 
@@ -261,7 +262,7 @@ def download_model():
 ## 调度
 
 ```python
-@app.function(schedule=modal.Cron("0 0 * * *"))  # 每天午夜
+@app.function(schedule=modal.Cron("0 0 * * *"))  # Daily midnight
 def daily_job():
     pass
 
@@ -276,8 +277,8 @@ def hourly_job():
 
 ```python
 @app.function(
-    container_idle_timeout=300,  # 保持活跃 5 分钟
-    allow_concurrent_inputs=10,  # 处理并发请求
+    container_idle_timeout=300,  # Keep warm 5 min
+    allow_concurrent_inputs=10,  # Handle concurrent requests
 )
 def inference():
     pass
@@ -288,9 +289,9 @@ def inference():
 ```python
 @app.cls(gpu="A100")
 class Model:
-    @modal.enter()  # 容器启动时运行一次
+    @modal.enter()  # Run once at container start
     def load(self):
-        self.model = load_model()  # 在预热期间加载
+        self.model = load_model()  # Load during warm-up
 
     @modal.method()
     def predict(self, x):
@@ -307,7 +308,7 @@ def process_item(item):
 @app.function()
 def run_parallel():
     items = list(range(1000))
-    # 分发到并行容器
+    # Fan out to parallel containers
     results = list(process_item.map(items))
     return results
 ```
@@ -317,12 +318,12 @@ def run_parallel():
 ```python
 @app.function(
     gpu="A100",
-    memory=32768,              # 32GB 内存
-    cpu=4,                     # 4 个 CPU 核心
-    timeout=3600,              # 最长 1 小时
-    container_idle_timeout=120,# 保持活跃 2 分钟
-    retries=3,                 # 失败时重试
-    concurrency_limit=10,      # 最大并发容器数
+    memory=32768,              # 32GB RAM
+    cpu=4,                     # 4 CPU cores
+    timeout=3600,              # 1 hour max
+    container_idle_timeout=120,# Keep warm 2 min
+    retries=3,                 # Retry on failure
+    concurrency_limit=10,      # Max concurrent containers
 )
 def my_function():
     pass
@@ -331,11 +332,11 @@ def my_function():
 ## 调试
 
 ```python
-# 本地测试
+# Test locally
 if __name__ == "__main__":
     result = my_function.local()
 
-# 查看日志
+# View logs
 # modal app logs my-app
 ```
 
@@ -344,18 +345,18 @@ if __name__ == "__main__":
 | 问题 | 解决方案 |
 |-------|----------|
 | 冷启动延迟 | 增加 `container_idle_timeout`，使用 `@modal.enter()` |
-| GPU 内存不足 (OOM) | 使用更大的 GPU（`A100-80GB`），启用梯度检查点 |
+| GPU 内存不足 (OOM) | 使用更大的 GPU（如 `A100-80GB`），启用梯度检查点 |
 | 镜像构建失败 | 固定依赖版本，检查 CUDA 兼容性 |
 | 超时错误 | 增加 `timeout`，添加检查点 |
 
-## 参考
+## 参考资料
 
 - **[高级用法](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/modal/references/advanced-usage.md)** - 多 GPU、分布式训练、成本优化
-- **[故障排除](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/modal/references/troubleshooting.md)** - 常见问题及解决方案
+- **[故障排除](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/modal/references/troubleshooting.md)** - 常见问题与解决方案
 
 ## 资源
 
-- **文档**：https://modal.com/docs
-- **示例**：https://github.com/modal-labs/modal-examples
-- **定价**：https://modal.com/pricing
-- **Discord**：https://discord.gg/modal
+- **文档**: https://modal.com/docs
+- **示例**: https://github.com/modal-labs/modal-examples
+- **定价**: https://modal.com/pricing
+- **Discord**: https://discord.gg/modal

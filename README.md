@@ -1,6 +1,8 @@
-# Website
+# Hermes Agent 中文文档翻译项目
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+基于 `hermes/website` 文档目录内容同步更新和构建，以支持多语言翻译。当前仅翻译了中文文档。
+
+在线预览：[https://hermes-agent.lzw.me](https://hermes-agent.lzw.me)
 
 ## Installation
 
@@ -46,16 +48,42 @@ CI runs `ascii-guard` to lint docs for ASCII box diagrams. Use Mermaid (````merm
 
 ## Translations
 
+一键同步文档、翻译并构建：
+
 ```bash
+bun translate -c 10 -S -B
+```
+
+指定参数命令示例：
+
+```bash
+# 仅 build 构建
+bun b
+
 # 翻译整个 docs 目录（默认英文到中文）
-npm run translate -- -p docs/
+bun translate -p docs/
 
 # 翻译单个文件
-npm run translate -- -p docs/getting-started/quickstart.md
+bun translate -p docs/getting-started/quickstart.md
 
 # 指定源语言和目标语言
-npm run translate -- -p docs/ -s en -t zh-CN
+bun translate -p docs/ -s en -t zh-CN
 
 # 指定 LLM 参数
-npm run translate -- -p docs/ -u http://localhost:11434/v1 -m qwen3.5:27b -k your-api-key
+bun translate -p docs/ -u http://localhost:11434/v1 -m qwen3.5:27b -k your-api-key
 ```
+
+### 翻译常见问题及解决
+
+#### 将转义字符翻译为了转义后的符号，导致构建失败
+
+**现象：**
+
+- 将 html 标签 `&lt;` 的转义内容翻译为了 `<`
+- 将 `&#123;` 翻译为了 `{`
+
+**解决办法**:
+
+- 优化提示词，增加相关说明约束
+- 手动排查修改后，继续优化提示词
+

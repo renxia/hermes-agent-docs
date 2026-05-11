@@ -1,40 +1,39 @@
 ---
-title: "优化注意力 Flash"
-sidebar_label: "优化注意力 Flash"
-description: "使用 Flash Attention 优化 Transformer 注意力机制，实现 2-4 倍加速和 10-20 倍内存减少"
+title: "优化注意力机制"
+sidebar_label: "优化注意力机制"
+description: "通过 Flash Attention 优化 Transformer 注意力机制，实现 2-4 倍加速并减少 10-20 倍内存占用"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 本页面由网站脚本 scripts/generate-skill-docs.py 根据技能文件 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非本页面。 */}
 
-# 优化注意力 Flash
+# 优化注意力机制
 
-使用 Flash Attention 优化 Transformer 注意力机制，实现 2-4 倍加速和 10-20 倍内存减少。在训练/运行具有长序列（>512 个标记）的 Transformer 模型、遇到注意力机制的 GPU 内存问题或需要更快的推理速度时使用。支持 PyTorch 原生 SDPA、flash-attn 库、H100 FP8 和滑动窗口注意力。
+通过 Flash Attention 优化 Transformer 注意力机制，实现 2-4 倍加速并减少 10-20 倍内存占用。适用于处理长序列（>512 个词元）的 Transformer 训练/推理、遇到注意力机制导致的 GPU 内存问题，或需要更快推理速度的场景。支持 PyTorch 原生 SDPA、flash-attn 库、H100 FP8 和滑动窗口注意力。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/mlops/flash-attention` 安装 |
+| 来源 | 可选 — 通过 `hermes skills install official/mlops/flash-attention` 安装 |
 | 路径 | `optional-skills/mlops/flash-attention` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `flash-attn`, `torch`, `transformers` |
+| 支持平台 | linux, macos |
 | 标签 | `优化`, `Flash Attention`, `注意力优化`, `内存效率`, `速度优化`, `长上下文`, `PyTorch`, `SDPA`, `H100`, `FP8`, `Transformers` |
 
-## 参考：完整的 SKILL.md
-
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是当触发此技能时，Hermes 加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
-# Flash Attention - 快速且内存高效的注意力机制
+# Flash Attention - 快速且节省内存的注意力机制
 
 ## 快速入门
 
-Flash Attention 通过 IO 感知分块和重计算，为 Transformer 注意力机制提供 2-4 倍加速和 10-20 倍内存减少。
+Flash Attention 通过 IO 感知的分块和重计算技术，为 Transformer 注意力机制提供 2-4 倍的速度提升和 10-20 倍的内存节省。
 
-**PyTorch 原生（最简单，PyTorch 2.2+）**：
+**PyTorch 原生支持（最简单，PyTorch 2.2+）**：
 ```python
 import torch
 import torch.nn.functional as F
@@ -47,7 +46,7 @@ v = torch.randn(2, 8, 512, 64, device='cuda', dtype=torch.float16)
 out = F.scaled_dot_product_attention(q, k, v)
 ```
 
-**flash-attn 库（更多功能）**：
+**flash-attn 库（功能更丰富）**：
 ```bash
 pip install flash-attn --no-build-isolation
 ```
@@ -67,17 +66,17 @@ out = flash_attn_func(q, k, v, dropout_p=0.0, causal=True)
 
 ```
 Flash Attention 集成：
-- [ ] 步骤 1：检查 PyTorch 版本（≥2.2）
+- [ ] 步骤 1：检查 PyTorch 版本 (≥2.2)
 - [ ] 步骤 2：启用 Flash Attention 后端
 - [ ] 步骤 3：通过性能分析验证加速效果
-- [ ] 步骤 4：测试准确率是否与基线一致
+- [ ] 步骤 4：测试准确性是否与基准匹配
 ```
 
 **步骤 1：检查 PyTorch 版本**
 
 ```bash
 python -c "import torch; print(torch.__version__)"
-# 应为 ≥2.2.0
+# 应该 ≥2.2.0
 ```
 
 如果 &lt;2.2，请升级：
@@ -87,7 +86,7 @@ pip install --upgrade torch
 
 **步骤 2：启用 Flash Attention 后端**
 
-替换标准注意力：
+替换标准注意力机制：
 ```python
 # 之前（标准注意力）
 attn_weights = torch.softmax(q @ k.transpose(-2, -1) / math.sqrt(d_k), dim=-1)
@@ -131,9 +130,9 @@ print(f"Flash: {t_flash.timeit(100).mean:.3f}s")
 print(f"Standard: {t_standard.timeit(100).mean:.3f}s")
 ```
 
-预期：对于 >512 个 token 的序列，加速 2-4 倍。
+预期效果：对于长度 >512 个 token 的序列，可获得 2-4 倍加速。
 
-**步骤 4：测试准确率是否与基线一致**
+**步骤 4：测试准确性是否与基准匹配**
 
 ```python
 # 比较输出
@@ -169,7 +168,7 @@ flash-attn 库设置：
 **步骤 1：安装 flash-attn 库**
 
 ```bash
-# NVIDIA GPU（CUDA 12.0+）
+# NVIDIA GPU (CUDA 12.0+)
 pip install flash-attn --no-build-isolation
 
 # 验证安装
@@ -181,7 +180,7 @@ python -c "from flash_attn import flash_attn_func; print('Success')"
 ```python
 from flash_attn import flash_attn_func
 
-# 输入：[batch_size, seq_len, num_heads, head_dim]
+# 输入: [batch_size, seq_len, num_heads, head_dim]
 # 如果需要，从 [batch, heads, seq, dim] 转置
 q = q.transpose(1, 2)  # [batch, seq, heads, dim]
 k = k.transpose(1, 2)
@@ -195,23 +194,23 @@ out = flash_attn_func(
     softmax_scale=None  # 自动缩放
 )
 
-out = out.transpose(1, 2)  # 回到 [batch, heads, seq, dim]
+out = out.transpose(1, 2)  # 返回 [batch, heads, seq, dim]
 ```
 
 **步骤 3：启用高级功能**
 
-多查询注意力（跨头共享 K/V）：
+多查询注意力 (MQA)（在头部间共享 K/V）：
 ```python
 from flash_attn import flash_attn_func
 
 # q: [batch, seq, num_q_heads, dim]
-# k, v: [batch, seq, num_kv_heads, dim]  # 更少的 KV 头
+# k, v: [batch, seq, num_kv_heads, dim]  # KV 头更少
 out = flash_attn_func(q, k, v)  # 自动处理 MQA
 ```
 
 滑动窗口注意力（局部注意力）：
 ```python
-# 仅关注前后 256 个 token 的窗口
+# 只关注前后 256 个 token 的窗口
 out = flash_attn_func(
     q, k, v,
     window_size=(256, 256),  # (左, 右) 窗口
@@ -241,12 +240,12 @@ for _ in range(100):
 end = time.time()
 
 print(f"每次迭代时间: {(end-start)/100*1000:.2f}ms")
-print(f"分配内存: {torch.cuda.max_memory_allocated()/1e9:.2f}GB")
+print(f"分配的内存: {torch.cuda.max_memory_allocated()/1e9:.2f}GB")
 ```
 
-### 工作流 3：H100 FP8 优化（FlashAttention-3）
+### 工作流 3：H100 FP8 优化 (FlashAttention-3)
 
-在 H100 GPU 上获得最大性能。
+在 H100 GPU 上实现最大性能。
 
 ```
 FP8 设置：
@@ -267,7 +266,7 @@ nvidia-smi --query-gpu=name --format=csv
 
 ```bash
 pip install flash-attn --no-build-isolation
-# H100 包含 FP8 支持
+# H100 已包含 FP8 支持
 ```
 
 **步骤 3：将输入转换为 FP8**
@@ -279,7 +278,7 @@ q = torch.randn(2, 4096, 32, 64, device='cuda', dtype=torch.float16)
 k = torch.randn(2, 4096, 32, 64, device='cuda', dtype=torch.float16)
 v = torch.randn(2, 4096, 32, 64, device='cuda', dtype=torch.float16)
 
-# 转换为 float8_e4m3（FP8）
+# 转换为 float8_e4m3 (FP8)
 q_fp8 = q.to(torch.float8_e4m3fn)
 k_fp8 = k.to(torch.float8_e4m3fn)
 v_fp8 = v.to(torch.float8_e4m3fn)
@@ -292,20 +291,20 @@ from flash_attn import flash_attn_func
 
 # FlashAttention-3 在 H100 上自动使用 FP8 内核
 out = flash_attn_func(q_fp8, k_fp8, v_fp8)
-# 结果：约 1.2 PFLOPS，比 FP16 快 1.5-2 倍
+# 结果: ~1.2 PFLOPS，比 FP16 快 1.5-2 倍
 ```
 
-## 何时使用 vs 替代方案
+## 何时使用与替代方案的对比
 
-**使用 Flash Attention 当：**
-- 训练序列 >512 个 token 的 Transformer
-- 使用长上下文（>2K 个 token）进行推理
-- GPU 内存受限（标准注意力导致 OOM）
-- 需要 2-4 倍加速且无准确率损失
+**在以下情况下使用 Flash Attention：**
+- 训练序列长度 >512 个 token 的 Transformer
+- 使用长上下文 (>2K 个 token) 运行推理
+- GPU 内存受限（标准注意力出现 OOM）
+- 需要 2-4 倍加速且不损失准确性
 - 使用 PyTorch 2.2+ 或可以安装 flash-attn
 
-**使用替代方案：**
-- **标准注意力**：序列 &lt;256 个 token（开销不值得）
+**改用替代方案：**
+- **标准注意力**：序列长度 &lt;256 个 token（开销不值得）
 - **xFormers**：需要更多注意力变体（不仅仅是速度）
 - **内存高效注意力**：CPU 推理（Flash Attention 需要 GPU）
 
@@ -318,16 +317,16 @@ out = flash_attn_func(q_fp8, k_fp8, v_fp8)
 pip install flash-attn --no-build-isolation
 ```
 
-或先安装 CUDA 工具包：
+或者先安装 CUDA 工具包：
 ```bash
 conda install cuda -c nvidia
 pip install flash-attn --no-build-isolation
 ```
 
-**问题：比预期慢（无加速）**
+**问题：速度低于预期（无加速）**
 
-Flash Attention 的收益随序列长度增加而增加：
-- &lt;512 个 token：最小加速（10-20%）
+Flash Attention 的优势随序列长度增加而增加：
+- &lt;512 个 token：最小加速 (10-20%)
 - 512-2K 个 token：2-3 倍加速
 - >2K 个 token：3-4 倍加速
 
@@ -339,22 +338,22 @@ Flash Attention 的收益随序列长度增加而增加：
 ```python
 import torch
 print(torch.cuda.get_device_capability())
-# 应为 ≥(7, 5)（Turing+）
+# 对于 Turing+，应 ≥(7, 5)
 ```
 
-Flash Attention 要求：
-- Ampere (A100, A10)：✅ 完全支持
-- Turing (T4)：✅ 支持
-- Volta (V100)：❌ 不支持
+Flash Attention 需要：
+- Ampere (A100, A10): ✅ 完全支持
+- Turing (T4): ✅ 支持
+- Volta (V100): ❌ 不支持
 
-**问题：准确率下降**
+**问题：准确性下降**
 
-检查数据类型是否为 float16 或 bfloat16（而非 float32）：
+检查 dtype 是否为 float16 或 bfloat16（而不是 float32）：
 ```python
 q = q.to(torch.float16)  # 或 torch.bfloat16
 ```
 
-Flash Attention 使用 float16/bfloat16 以提高速度。不支持 float32。
+Flash Attention 使用 float16/bfloat16 以获得速度。不支持 Float32。
 
 ## 高级主题
 
@@ -362,23 +361,19 @@ Flash Attention 使用 float16/bfloat16 以提高速度。不支持 float32。
 
 **性能基准测试**：请参阅 [references/benchmarks.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/flash-attention/references/benchmarks.md) 以获取跨 GPU 和序列长度的详细速度和内存比较。
 
-**算法细节**：请参阅 [references/algorithm.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/flash-attention/references/algorithm.md) 以了解分块策略、重计算和 IO 复杂度分析。
-
-**高级功能**：请参阅 [references/advanced-features.md](https://github.com/NousResearch/hermes-agent/blob/main/optional-skills/mlops/flash-attention/references/advanced-features.md) 以了解旋转嵌入、ALiBi、分页 KV 缓存和自定义注意力掩码。
-
 ## 硬件要求
 
-- **GPU**：NVIDIA Ampere+（A100、A10、A30）或 AMD MI200+
-- **显存**：与标准注意力机制相同（Flash Attention 不会增加内存占用）
-- **CUDA**：12.0+（最低 11.8）
-- **PyTorch**：2.2+（以获得原生支持）
+- **GPU**：NVIDIA Ampere+ (A100, A10, A30) 或 AMD MI200+
+- **显存**：与标准注意力相同（Flash Attention 不会增加内存）
+- **CUDA**：12.0+ (最低 11.8)
+- **PyTorch**：2.2+ 以获得原生支持
 
-**不支持**：V100（Volta）、CPU 推理
+**不支持**：V100 (Volta)、CPU 推理
 
 ## 资源
 
-- 论文："FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness"（NeurIPS 2022）
-- 论文："FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning"（ICLR 2024）
+- 论文："FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness" (NeurIPS 2022)
+- 论文："FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning" (ICLR 2024)
 - 博客：https://tridao.me/blog/2024/flash3/
 - GitHub：https://github.com/Dao-AILab/flash-attention
 - PyTorch 文档：https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html

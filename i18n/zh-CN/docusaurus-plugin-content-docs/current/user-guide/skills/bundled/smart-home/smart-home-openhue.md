@@ -1,53 +1,54 @@
 ---
-title: "Openhue — 通过 OpenHue CLI 控制飞利浦 Hue 灯光、场景和房间"
+title: "Openhue — 通过 OpenHue CLI 控制飞利浦 Hue 灯光、场景、房间"
 sidebar_label: "Openhue"
-description: "通过 OpenHue CLI 控制飞利浦 Hue 灯光、场景和房间"
+description: "通过 OpenHue CLI 控制飞利浦 Hue 灯光、场景、房间"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
 # Openhue
 
-通过 OpenHue CLI 控制飞利浦 Hue 灯光、场景和房间。
+通过 OpenHue CLI 控制飞利浦 Hue 灯光、场景、房间。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 捆绑（默认安装） |
+| 来源 | 内置 (默认安装) |
 | 路径 | `skills/smart-home/openhue` |
 | 版本 | `1.0.0` |
 | 作者 | 社区 |
 | 许可证 | MIT |
+| 平台 | linux, macos, windows |
 | 标签 | `智能家居`, `Hue`, `灯光`, `物联网`, `自动化` |
 
 ## 参考：完整的 SKILL.md
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是当此技能被触发时，Hermes 加载的完整技能定义。这是技能激活时智能体所看到的指令。
 :::
 
 # OpenHue CLI
 
-通过终端从 Hue Bridge 控制飞利浦 Hue 灯光和场景。
+通过终端，经由 Hue 桥接器控制飞利浦 Hue 灯光和场景。
 
 ## 先决条件
 
 ```bash
-# Linux（预编译二进制文件）
+# Linux (预编译二进制文件)
 curl -sL https://github.com/openhue/openhue-cli/releases/latest/download/openhue-linux-amd64 -o ~/.local/bin/openhue && chmod +x ~/.local/bin/openhue
 
 # macOS
 brew install openhue/cli/openhue-cli
 ```
 
-首次运行需要按下 Hue Bridge 上的按钮进行配对。Bridge 必须与运行 Hermes 的机器处于同一本地网络。
+首次运行需要按下 Hue 桥接器上的按钮进行配对。桥接器必须位于同一本地网络。
 
-## 使用场景
+## 适用场景
 
-- “打开/关闭灯光”
-- “调暗客厅灯光”
-- “设置场景”或“电影模式”
+- "打开/关闭灯"
+- "调暗客厅的灯"
+- "设置一个场景" 或 "影院模式"
 - 控制特定的 Hue 房间、区域或单个灯泡
 - 调整亮度、颜色或色温
 
@@ -74,7 +75,7 @@ openhue set light "Bedroom Lamp" --on --brightness 50
 # 色温 (暖到冷: 153-500 mirek)
 openhue set light "Bedroom Lamp" --on --temperature 300
 
-# 颜色 (按名称或十六进制)
+# 颜色 (通过名称或十六进制)
 openhue set light "Bedroom Lamp" --on --color red
 openhue set light "Bedroom Lamp" --on --rgb "#FF5500"
 ```
@@ -96,28 +97,28 @@ openhue set scene "Relax" --room "Bedroom"
 openhue set scene "Concentrate" --room "Office"
 ```
 
-## 快速预设
+## 快捷预设
 
 ```bash
-# 就寝时间（昏暗温暖）
+# 睡前模式 (调暗，暖色)
 openhue set room "Bedroom" --on --brightness 20 --temperature 450
 
-# 工作模式（明亮凉爽）
+# 工作模式 (明亮，冷色)
 openhue set room "Office" --on --brightness 100 --temperature 250
 
-# 电影模式（昏暗）
+# 影院模式 (调暗)
 openhue set room "Living Room" --on --brightness 10
 
-# 全部关闭
+# 关闭所有
 openhue set room "Bedroom" --off
 openhue set room "Office" --off
 openhue set room "Living Room" --off
 ```
 
-## 注意事项
+## 备注
 
-- Bridge 必须与运行 Hermes 的机器处于同一本地网络
-- 首次运行需要物理按下 Hue Bridge 上的按钮进行授权
-- 颜色功能仅适用于支持颜色的灯泡（不适用于仅支持白色的型号）
-- 灯光和房间名称区分大小写 — 使用 `openhue get light` 检查确切名称
-- 非常适合与 cron 作业结合使用以实现定时照明（例如，就寝时调暗，起床时调亮）
+- 桥接器必须与运行 Hermes 的机器位于同一本地网络
+- 首次运行需要物理按下 Hue 桥接器上的按钮进行授权
+- 颜色功能仅适用于支持色彩的灯泡（不适用于纯白色型号）
+- 灯光和房间名称区分大小写 — 请使用 `openhue get light` 来查看准确名称
+- 非常适合与定时任务配合使用，实现定时照明（例如，睡前调暗，醒来时调亮）

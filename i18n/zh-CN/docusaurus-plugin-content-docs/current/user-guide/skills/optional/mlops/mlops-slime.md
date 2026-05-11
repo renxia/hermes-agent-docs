@@ -1,55 +1,54 @@
 ---
-title: "Slime Rl Training — 提供使用 Slime（一个 Megatron+SGLang 框架）进行 LLM 强化学习后训练的指南"
+title: "Slime Rl Training — 使用 slime（一个 Megatron+SGLang 框架）进行 LLM 强化学习后训练的指南"
 sidebar_label: "Slime Rl Training"
-description: "提供使用 Slime（一个 Megatron+SGLang 框架）进行 LLM 强化学习后训练的指南"
+description: "使用 slime（一个 Megatron+SGLang 框架）进行 LLM 强化学习后训练的指南"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成的。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 根据技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
 # Slime Rl Training
 
-提供使用 Slime（一个 Megatron+SGLang 框架）进行 LLM 强化学习后训练的指南。在训练 GLM 模型、实现自定义数据生成工作流或需要 Megatron-LM 紧密集成以进行 RL 扩展时使用。
+提供使用 slime（一个 Megatron+SGLang 框架）进行 LLM 强化学习后训练的指南。当训练 GLM 模型、实现自定义数据生成工作流，或需要与 Megatron-LM 紧密集成以实现强化学习扩展时使用。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/mlops/slime` 安装 |
+| 来源 | 可选 — 通过 `hermes skills install official/mlops/slime` 安装 |
 | 路径 | `optional-skills/mlops/slime` |
 | 版本 | `1.0.0` |
 | 作者 | Orchestra Research |
 | 许可证 | MIT |
 | 依赖项 | `sglang-router>=0.2.3`, `ray`, `torch>=2.0.0`, `transformers>=4.40.0` |
+| 平台 | linux, macos |
 | 标签 | `强化学习`, `Megatron-LM`, `SGLang`, `GRPO`, `后训练`, `GLM` |
 
-## 参考：完整的 SKILL.md
-
 :::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是 Hermes 在触发此技能时加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
-# slime：用于强化学习扩展的大模型后训练框架
+# slime：用于 RL 扩展的 LLM 后训练框架
 
-slime 是清华大学 THUDM 团队开发的大模型后训练框架，为 GLM-4.5、GLM-4.6 和 GLM-4.7 提供支持。它将 Megatron-LM 用于训练，SGLang 用于高吞吐量的推演生成。
+slime 是清华大学 THUDM 团队开发的 LLM 后训练框架，为 GLM-4.5、GLM-4.6 和 GLM-4.7 提供支持。它将用于训练的 Megatron-LM 与用于高通量采样生成的 SGLang 连接起来。
 
 ## 何时使用 slime
 
-**在以下情况选择 slime：**
-- 需要 Megatron-LM 原生训练与 SGLang 推理
-- 需要灵活的数据缓冲区的自定义数据生成工作流
+**当您需要以下情况时选择 slime：**
+- 具有 SGLang 推理的 Megatron-LM 原生训练
+- 具有灵活数据缓冲区的自定义数据生成工作流
 - 训练 GLM、Qwen3、DeepSeek V3 或 Llama 3 模型
-- 需要研究级框架与生产支持（Z.ai）
+- 具有生产级支持（Z.ai）的研究级框架
 
-**在以下情况考虑替代方案：**
-- 需要企业级稳定性功能 → 使用 **miles**
-- 需要灵活的后台交换 → 使用 **verl**
-- 需要 PyTorch 原生抽象 → 使用 **torchforge**
+**当您需要以下情况时考虑替代方案：**
+- 您需要企业级稳定性功能 → 使用 **miles**
+- 您需要灵活的后端切换 → 使用 **verl**
+- 您需要 PyTorch 原生抽象 → 使用 **torchforge**
 
 ## 主要特性
 
-- **训练**：Megatron-LM，支持全并行（TP、PP、DP、SP）
-- **推演**：基于 SGLang 的高吞吐量生成与路由器
-- **数据缓冲区**：灵活的提示管理和样本存储
+- **训练**：Megatron-LM，支持完整的并行策略（TP、PP、DP、SP）
+- **采样**：基于 SGLang 的高通量生成，带路由器
+- **数据缓冲区**：灵活的 prompt 管理和样本存储
 - **模型**：GLM-4.x、Qwen3、DeepSeek V3/R1、Llama 3
 
 ## 架构概览
@@ -57,17 +56,17 @@ slime 是清华大学 THUDM 团队开发的大模型后训练框架，为 GLM-4.
 <!-- ascii-guard-ignore -->
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    数据缓冲区                          │
-│ - 提示初始化和管理                                     │
-│ - 自定义数据生成和过滤                                 │
-│ - 推演样本存储                                         │
+│                    数据缓冲区                           │
+│ - prompt 初始化和管理                                   │
+│ - 自定义数据生成和过滤                                  │
+│ - 采样样本存储                                          │
 └─────────────┬───────────────────────────┬───────────────┘
               │                           │
 ┌─────────────▼───────────┐ ┌─────────────▼───────────────┐
-│ 训练 (Megatron-LM)      │ │ 推演 (SGLang + 路由器)       │
-│ - 执行器模型训练        │ │ - 响应生成                   │
-│ - 评价器（可选）        │ │ - 奖励/验证器输出           │
-│ - 权重同步到推演        │ │ - 多轮支持                   │
+│ 训练 (Megatron-LM)      │ │ 采样 (SGLang + 路由器)      │
+│ - Actor 模型训练         │ │ - 响应生成                  │
+│ - Critic（可选）         │ │ - 奖励/验证器输出           │
+│ - 权重同步到采样端       │ │ - 多轮支持                  │
 └─────────────────────────┘ └─────────────────────────────┘
 ```
 <!-- ascii-guard-ignore-end -->
@@ -80,7 +79,7 @@ docker pull slimerl/slime:latest
 docker run --rm --gpus all --ipc=host --shm-size=16g \
   -it slimerl/slime:latest /bin/bash
 
-# 在容器内
+# 容器内
 cd /root/slime && pip install -e . --no-deps
 ```
 
@@ -118,7 +117,7 @@ python train.py \
 
 ## 工作流 1：标准 GRPO 训练
 
-使用此工作流训练具有组相对优势推理模型。
+使用此工作流通过组相对优势来训练推理模型。
 
 ### 先决条件清单
 - [ ] Docker 环境或已安装 Megatron-LM + SGLang
@@ -130,14 +129,14 @@ python train.py \
 ```python
 # data.jsonl 格式
 {"prompt": "2 + 2 等于多少？", "label": "4"}
-{"prompt": "解：3x = 12", "label": "x = 4"}
+{"prompt": "求解：3x = 12", "label": "x = 4"}
 ```
 
 或使用聊天格式：
 ```python
 {
     "prompt": [
-        {"role": "system", "content": "你是一位数学老师。"},
+        {"role": "system", "content": "你是一个数学辅导老师。"},
         {"role": "user", "content": "15 + 27 等于多少？"}
     ],
     "label": "42"
@@ -153,7 +152,7 @@ python train.py \
 ls scripts/models/
 # glm4-9B.sh, qwen3-4B.sh, qwen3-30B-A3B.sh, deepseek-v3.sh, llama3-8B.sh, ...
 
-# 源你的模型
+# 加载您的模型
 source scripts/models/qwen3-4B.sh
 ```
 
@@ -182,19 +181,19 @@ python train.py \
 
 ### 步骤 4：监控训练
 - [ ] 检查 TensorBoard：`tensorboard --logdir outputs/`
-- [ ] 验证奖励曲线是否上升
+- [ ] 验证奖励曲线是否在上升
 - [ ] 监控各节点的 GPU 利用率
 
 ---
 
 ## 工作流 2：异步训练
 
-使用异步模式通过重叠推演和训练来提高吞吐量。
+通过重叠采样和训练来使用异步模式以获得更高的吞吐量。
 
-### 何时使用异步
-- 长生成时间的大模型
-- 同步模式下 GPU 空闲时间高
-- 足够的缓冲内存
+### 何时使用异步模式
+- 生成时间长的大型模型
+- 同步模式下 GPU 空闲时间长
+- 有足够的内存进行缓冲
 
 ### 启动异步训练
 
@@ -212,15 +211,15 @@ python train_async.py \
 ### 异步特定参数
 
 ```bash
---async-buffer-size 4        # 要缓冲的推演数量
---update-weights-interval 2  # 每 N 个推演同步一次权重
+--async-buffer-size 4        # 要缓冲的采样次数
+--update-weights-interval 2  # 每 N 次采样同步一次权重
 ```
 
 ---
 
 ## 工作流 3：多轮智能体训练
 
-使用此工作流训练具有工具使用或多步推理能力的智能体。
+此工作流用于训练具有工具使用或多步推理能力的智能体。
 
 ### 先决条件
 - [ ] 用于多轮逻辑的自定义生成函数
@@ -231,7 +230,7 @@ python train_async.py \
 ```python
 # custom_generate.py
 async def custom_generate(args, samples, evaluation=False):
-    """具有工具调用的多轮生成。"""
+    """带有工具调用的多轮生成。"""
     for sample in samples:
         conversation = sample.prompt
 
@@ -264,13 +263,13 @@ python train.py \
     ${MODEL_ARGS[@]}
 ```
 
-请参阅 `examples/search-r1/` 以获取完整的多轮搜索示例。
+完整的多轮搜索示例请参见 `examples/search-r1/`。
 
 ---
 
 ## 配置参考
 
-### 三类参数
+### 三种参数类别
 
 slime 使用三种类型的参数：
 
@@ -309,7 +308,7 @@ slime 使用三种类型的参数：
 --global-batch-size 256
 
 # 算法
---advantage-estimator grpo  # 或: gspo, ppo, reinforce_plus_plus
+--advantage-estimator grpo  # 或：gspo, ppo, reinforce_plus_plus
 --use-kl-loss
 --kl-loss-coef 0.001
 ```
@@ -324,7 +323,7 @@ rollout_batch_size × n_samples_per_prompt = global_batch_size × num_steps_per_
 
 ---
 
-## 数据缓冲区系统
+## 数据缓冲系统
 
 slime 的数据缓冲区支持灵活的数据管理：
 
@@ -333,11 +332,11 @@ slime 的数据缓冲区支持灵活的数据管理：
 ```python
 class RolloutDataSource:
     def get_samples(self, num_samples):
-        """从数据集获取提示。"""
+        """从数据集中获取 prompt。"""
         return self.dataset.sample(num_samples)
 
     def add_samples(self, samples):
-        """生成后调用（默认无操作）。"""
+        """在生成后调用（默认为空操作）。"""
         pass
 ```
 
@@ -349,21 +348,21 @@ class RolloutDataSourceWithBuffer(RolloutDataSource):
         self.buffer = []
 
     def add_samples(self, samples):
-        """存储生成的样本以供重用。"""
+        """存储生成的样本以便重用。"""
         self.buffer.extend(samples)
 
     def buffer_filter(self, args, buffer, num_samples):
-        """自定义选择逻辑（优先、分层等）。"""
+        """自定义选择逻辑（优先级、分层等）。"""
         return select_best(buffer, num_samples)
 ```
 
 ---
 
-## 常见问题与解决方案
+## 常见问题及解决方案
 
 ### 问题：SGLang 引擎崩溃
 
-**症状**：推理引擎在训练中途死亡
+**症状**：推理引擎在训练过程中停止工作
 
 **解决方案**：
 ```bash
@@ -373,13 +372,13 @@ class RolloutDataSourceWithBuffer(RolloutDataSource):
 # 增加内存分配
 --sglang-mem-fraction-static 0.85
 
-# 减少批处理大小
+# 减小批大小
 --rollout-batch-size 16
 ```
 
 ### 问题：权重同步超时
 
-**症状**：推演后训练挂起
+**症状**：采样后训练挂起
 
 **解决方案**：
 ```bash
@@ -390,46 +389,48 @@ class RolloutDataSourceWithBuffer(RolloutDataSource):
 --colocate
 ```
 
-### 问题：训练期间内存不足（OOM）
+### 问题：训练中出现 OOM
 
-**症状**：反向传播期间 CUDA OOM
+**症状**：反向传播时出现 CUDA OOM
 
 **解决方案**：
 ```bash
 # 启用梯度检查点
 --recompute-activations
 
-# 减少微批处理大小
+# 减小微批大小
 --micro-batch-size 1
 
 # 启用序列并行
 --sequence-parallel
 ```
 
-### 问题：数据加载缓慢
+### 问题：数据加载慢
 
-**症状**：获取数据期间 GPU 空闲
+**症状**：数据获取期间 GPU 空闲
 
 **解决方案**：
 ```bash
-# 增加数据工作线程
+# 增加数据工作进程数
 --num-data-workers 4
 
 # 使用流式数据集
 --streaming-data
 ```
 
+---
+
 ## 支持的模型
 
 | 模型系列 | 配置 |
 |--------------|----------------|
-| GLM | GLM-4.5、GLM-4.6、GLM-4.7、GLM-Z1-9B |
-| Qwen | Qwen3 (4B, 8B, 30B-A3B)、Qwen3-MoE、Qwen2.5 |
-| DeepSeek | V3、V3.1、R1 |
+| GLM | GLM-4.5, GLM-4.6, GLM-4.7, GLM-Z1-9B |
+| Qwen | Qwen3 (4B, 8B, 30B-A3B), Qwen3-MoE, Qwen2.5 |
+| DeepSeek | V3, V3.1, R1 |
 | Llama | Llama 3 (8B, 70B) |
-| 其他 | Kimi K2、Moonlight-16B |
+| 其他 | Kimi K2, Moonlight-16B |
 
-每个模型在 `scripts/models/` 中都有预配置的脚本。
+每个模型在 `scripts/models/` 目录下都有预配置的脚本。
 
 ---
 
@@ -465,7 +466,7 @@ class CustomRewardModel:
 --custom-rm-path custom_rm.py
 ```
 
-### 评估多任务
+### 多任务评估
 
 ```bash
 --eval-prompt-data aime /path/to/aime.jsonl \
@@ -480,4 +481,4 @@ class CustomRewardModel:
 - **文档**：https://thudm.github.io/slime/
 - **GitHub**：https://github.com/THUDM/slime
 - **博客**：https://lmsys.org/blog/2025-07-09-slime/
-- **示例**：请参阅 `examples/` 目录中的 14 多个工作示例
+- **示例**：详见 `examples/` 目录，内含 14+ 个完整示例

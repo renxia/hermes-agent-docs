@@ -1,30 +1,53 @@
 ---
 title: "Gitnexus Explorer"
 sidebar_label: "Gitnexus Explorer"
-description: "使用 GitNexus 对代码库建立索引，并通过 Web UI + Cloudflare 隧道提供交互式知识图谱"
+description: "使用 GitNexus 索引代码库，并通过 Web UI + Cloudflare 隧道提供交互式知识图谱服务"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
+{/* 本页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非本页面。*/}
 
 # Gitnexus Explorer
 
-使用 GitNexus 对任意代码库建立索引，并通过 Web UI + Cloudflare 隧道提供交互式知识图谱，用于探索符号、调用链、聚类和执行流程。
+使用 GitNexus 索引代码库，并通过 Web UI + Cloudflare 隧道提供交互式知识图谱服务。
 
-## 何时使用
+## 技能元数据
 
-- 用户希望可视化探索代码库的架构
-- 用户请求仓库的知识图谱/依赖关系图
-- 用户希望与他人共享交互式代码库浏览器
+| | |
+|---|---|
+| 来源 | 可选 — 使用 `hermes skills install official/research/gitnexus-explorer` 安装 |
+| 路径 | `optional-skills/research/gitnexus-explorer` |
+| 版本 | `1.0.0` |
+| 作者 | Hermes Agent + Teknium |
+| 许可证 | MIT |
+| 平台 | linux, macos, windows |
+| 标签 | `gitnexus`, `code-intelligence`, `knowledge-graph`, `visualization` |
+| 相关技能 | [`native-mcp`](/docs/user-guide/skills/bundled/mcp/mcp-native-mcp), [`codebase-inspection`](/docs/user-guide/skills/bundled/github/github-codebase-inspection) |
 
-## 先决条件
+## 参考：完整 SKILL.md
 
-- **Node.js** (v18+) — GitNexus 和代理所必需
-- **git** — 仓库必须包含 `.git` 目录
-- **cloudflared** — 用于隧道（如果缺失，将自动安装到 ~/.local/bin）
+:::info
+以下是触发此技能时 Hermes 加载的完整技能定义。这是智能体在技能激活时看到的指令。
+:::
+
+# GitNexus Explorer
+
+将任何代码库索引到知识图谱中，并提供交互式 Web UI 用于探索符号、调用链、聚类和执行流。通过 Cloudflare 隧道实现远程访问。
+
+## 使用场景
+
+- 用户想要可视化探索代码库的架构
+- 用户请求代码仓库的知识图谱/依赖图
+- 用户想要与他人共享交互式代码库浏览器
+
+## 前提条件
+
+- **Node.js** (v18+) — GitNexus 和代理服务器必需
+- **git** — 代码仓库必须有 `.git` 目录
+- **cloudflared** — 用于隧道连接（如果缺失，会自动安装到 ~/.local/bin）
 
 ## 大小警告
 
-Web UI 会在浏览器中渲染所有节点。约 5,000 个文件以下的仓库运行良好。大型仓库（30k+ 节点）可能会导致浏览器标签页卡顿或崩溃。CLI/MCP 工具可在任何规模下工作 — 仅 Web 可视化存在此限制。
+Web UI 在浏览器中渲染所有节点。少于约 5,000 个文件的代码仓库运行良好。大型代码仓库（30k+ 节点）会变得卡顿或导致浏览器标签崩溃。CLI/MCP 工具可处理任意规模——只有 Web 可视化存在此限制。
 
 ## 步骤
 
@@ -40,22 +63,22 @@ if [ ! -d "$GITNEXUS_DIR/gitnexus-web/dist" ]; then
 fi
 ```
 
-### 2. 修补 Web UI 以支持远程访问
+### 2. 为远程访问修补 Web UI
 
-Web UI 默认对 API 调用使用 `localhost:4747`。请将其修改为使用同源策略，以便通过隧道/代理正常工作：
+Web UI 默认使用 `localhost:4747` 进行 API 调用。修补它以使用同源方式，使其可通过隧道/代理正常工作：
 
 **文件：`$GITNEXUS_DIR/gitnexus-web/src/config/ui-constants.ts`**
-将：
+修改：
 ```typescript
 export const DEFAULT_BACKEND_URL = 'http://localhost:4747';
 ```
-改为：
+为：
 ```typescript
 export const DEFAULT_BACKEND_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? window.location.origin : 'http://localhost:4747';
 ```
 
 **文件：`$GITNEXUS_DIR/gitnexus-web/vite.config.ts`**
-在 `server: { }` 块内添加 `allowedHosts: true`（仅在运行开发模式而非生产构建时需要）：
+在 `server: { }` 块内添加 `allowedHosts: true`（仅在使用开发模式而非生产构建时需要）：
 ```typescript
 server: {
     allowedHosts: true,
@@ -63,26 +86,26 @@ server: {
 },
 ```
 
-然后构建生产包：
+然后构建生产版本：
 ```bash
 cd "$GITNEXUS_DIR/gitnexus-web" && npx vite build
 ```
 
-### 3. 为目标仓库建立索引
+### 3. 索引目标代码仓库
 
 ```bash
 cd /path/to/target-repo
 npx gitnexus analyze --skip-agents-md
-rm -rf .claude/    # 移除 Claude Code 特定的产物
+rm -rf .claude/    # 删除 Claude Code 特定的产物
 ```
 
-添加 `--embeddings` 以启用语义搜索（较慢 — 需要几分钟而非几秒钟）。
+添加 `--embeddings` 以启用语义搜索（较慢——需要几分钟而不是几秒）。
 
-索引位于仓库内的 `.gitnexus/` 目录中（自动被 git 忽略）。
+索引保存在代码仓库内的 `.gitnexus/` 中（自动添加到 gitignore）。
 
 ### 4. 创建代理脚本
 
-将此内容写入一个文件（例如 `$GITNEXUS_DIR/proxy.mjs`）。它提供生产 Web UI 并将 `/api/*` 代理到 GitNexus 后端 — 同源，无 CORS 问题，无需 sudo，无需 nginx。
+将以下内容写入文件（例如 `$GITNEXUS_DIR/proxy.mjs`）。它提供生产版 Web UI 服务，并将 `/api/*` 代理到 GitNexus 后端——同源，无 CORS 问题，无需 sudo，无需 nginx。
 
 ```javascript
 import http from 'node:http';
@@ -137,13 +160,13 @@ http.createServer((req, res) => {
 # 终端 1：GitNexus 后端 API
 npx gitnexus serve &
 
-# 终端 2：代理（Web UI + API 共用一个端口）
+# 终端 2：代理（Web UI + API 在同一端口）
 node "$GITNEXUS_DIR/proxy.mjs" "$GITNEXUS_DIR/gitnexus-web/dist" 8888 &
 ```
 
-验证：`curl -s http://localhost:8888/api/repos` 应返回已建立索引的仓库。
+验证：`curl -s http://localhost:8888/api/repos` 应返回已索引的代码仓库。
 
-### 6. 使用 Cloudflare 隧道（可选 — 用于远程访问）
+### 6. 使用 Cloudflare 隧道（可选——用于远程访问）
 
 ```bash
 # 如果需要，安装 cloudflared（无需 sudo）
@@ -155,11 +178,11 @@ if ! command -v cloudflared &>/dev/null; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
-# 启动隧道（--config /dev/null 可避免与现有的命名隧道配置冲突）
+# 启动隧道（--config /dev/null 避免与现有命名隧道冲突）
 cloudflared tunnel --config /dev/null --url http://localhost:8888 --no-autoupdate --protocol http2
 ```
 
-隧道 URL（例如 `https://random-words.trycloudflare.com`）将打印到 stderr。分享它 — 任何拥有链接的人都可以探索图谱。
+隧道 URL（例如 `https://random-words.trycloudflare.com`）会打印到 stderr。分享它——任何拥有链接的人都可以探索图谱。
 
 ### 7. 清理
 
@@ -169,22 +192,22 @@ pkill -f "gitnexus serve"
 pkill -f "proxy.mjs"
 pkill -f cloudflared
 
-# 从目标仓库移除索引
+# 从目标代码仓库删除索引
 cd /path/to/target-repo
 npx gitnexus clean
 rm -rf .claude/
 ```
 
-## 陷阱
+## 注意事项
 
-- **如果用户已在 `~/.cloudflared/config.yml` 拥有现有的命名隧道配置，则 cloudflared 必须使用 `--config /dev/null`。** 否则，配置中的通配符入口规则将为所有快速隧道请求返回 404。
+- **`--config /dev/null` 对 cloudflared 是必需的**，如果用户在 `~/.cloudflared/config.yml` 有现有的命名隧道配置。没有它，配置中的全捕获入口规则会对所有快速隧道请求返回 404。
 
-- **隧道必须使用生产构建。** Vite 开发服务器默认阻止非 localhost 主机（`allowedHosts`）。生产构建 + Node 代理可完全避免此问题。
+- **隧道必须使用生产构建。** Vite 开发服务器默认阻止非 localhost 主机（`allowedHosts`）。生产构建 + Node 代理完全避免了这个问题。
 
-- **Web UI 不会创建 `.claude/` 或 `CLAUDE.md`。** 这些是由 `npx gitnexus analyze` 创建的。使用 `--skip-agents-md` 抑制 markdown 文件，然后使用 `rm -rf .claude/` 删除其余内容。这些是 Claude Code 集成，hermes-agent 用户不需要。
+- **Web UI 不会创建 `.claude/` 或 `CLAUDE.md`。** 这些是由 `npx gitnexus analyze` 创建的。使用 `--skip-agents-md` 来抑制 markdown 文件，然后用 `rm -rf .claude/` 清理其余部分。这些是 Claude Code 集成，hermes-agent 用户不需要。
 
-- **浏览器内存限制。** Web UI 会将整个图谱加载到浏览器内存中。拥有 5k+ 文件的仓库可能会卡顿。30k+ 文件很可能会导致标签页崩溃。
+- **浏览器内存限制。** Web UI 将整个图谱加载到浏览器内存中。超过 5k+ 文件的代码仓库可能会卡顿。30k+ 文件可能会导致标签崩溃。
 
-- **嵌入是可选的。** `--embeddings` 启用语义搜索，但在大型仓库上需要几分钟。快速探索时可跳过；如果希望通过 AI 聊天面板进行自然语言查询，则可添加它。
+- **嵌入是可选的。** `--embeddings` 启用语义搜索，但在大型代码仓库上需要几分钟。快速探索时跳过它；如果想通过 AI 聊天面板进行自然语言查询，则添加它。
 
-- **多个仓库。** `gitnexus serve` 会提供所有已建立索引的仓库。建立多个仓库的索引，启动一次 serve，Web UI 即可让你在它们之间切换。
+- **多个代码仓库。** `gitnexus serve` 为所有已索引的代码仓库提供服务。索引多个代码仓库，启动一次 serve，Web UI 允许你在它们之间切换。
