@@ -9,7 +9,7 @@
 # Generated files
 .docusaurus
 .cache-loader
-src/data/skills.json
+# src/data/skills.json
 
 # Misc
 .DS_Store

@@ -37,6 +37,7 @@
     "@lzwme/fe-utils": "^1.9.2",
     "commander": "^14.0.3",
     "dotenv": "^17.4.2",
+    "fast-glob": "^3.3.3",
     "js-yaml": "^4.1.1",
     "typescript": "~6.0.3"
   },

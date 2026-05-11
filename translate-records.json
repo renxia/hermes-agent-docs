@@ -287,10 +287,6 @@
     "srcMd5": "2ab2d82abe6f18531eb522b22c8285e0",
     "zh-CN": "3b7550b842b2e46ad7e1f260d33c4e49"
   },
-  "docs/user-guide/features/dashboard-plugins.md": {
-    "srcMd5": "d13e89cecc247d9dea68843a7f47a14f",
-    "zh-CN": "d22ce32282a078949f9d9c97f7b8512d"
-  },
   "docs/user-guide/features/delegation.md": {
     "srcMd5": "c4b9d1269f6d0ac348a923a4f60bf2ef",
     "zh-CN": "4c00e9f62fa9f0df8363e74305aaf157"
@@ -691,10 +687,6 @@
     "srcMd5": "1c4a1287ef6086b2ccce1efe10e4d005",
     "zh-CN": "1e3cc10bdb88fe182bc5b7cf6edb98a3"
   },
-  "docs/user-guide/skills/bundled/mlops/mlops-inference-outlines.md": {
-    "srcMd5": "cd54392163294fa3a3ec4751f52066d6",
-    "zh-CN": "82a8d7e462642bf12e426558939cfcdb"
-  },
   "docs/user-guide/skills/bundled/mlops/mlops-inference-vllm.md": {
     "srcMd5": "d63bff609ab654d1d508f2f8e6ba48ab",
     "zh-CN": "059f13c320be2b4ee78ee08b9290c1d5"
@@ -710,18 +702,6 @@
   "docs/user-guide/skills/bundled/mlops/mlops-research-dspy.md": {
     "srcMd5": "a52e79fb65b3b8d8874fd751f994b1cc",
     "zh-CN": "eb3a34a7a2a88a01b4da69e3738eff49"
-  },
-  "docs/user-guide/skills/bundled/mlops/mlops-training-axolotl.md": {
-    "srcMd5": "5b9bb8acd54f6d438b741f6974565e48",
-    "zh-CN": "6b23320460f71f8d68bfbe75c1f232dc"
-  },
-  "docs/user-guide/skills/bundled/mlops/mlops-training-trl-fine-tuning.md": {
-    "srcMd5": "a6f47f7fdbade78c284d39e0f056f0c1",
-    "zh-CN": "718f83a20e5b74c7b4b2948356758e45"
-  },
-  "docs/user-guide/skills/bundled/mlops/mlops-training-unsloth.md": {
-    "srcMd5": "4ebffce494ff850147122f31a3e40740",
-    "zh-CN": "a41769483980c05b3eb333800298a5c2"
   },
   "docs/user-guide/skills/bundled/note-taking/note-taking-obsidian.md": {
     "srcMd5": "dacec4478d4ee5a8d06dd3e25517dcb8",
@@ -842,10 +822,6 @@
   "docs/user-guide/skills/optional/creative/creative-meme-generation.md": {
     "srcMd5": "14cab902fbdbb41af2b829e6fcb8c2a4",
     "zh-CN": "815855c1e417e445ca9930209e498ec4"
-  },
-  "docs/user-guide/skills/optional/creative/creative-touchdesigner-mcp.md": {
-    "srcMd5": "dbc5d446276d3f516805ec6567bb7f85",
-    "zh-CN": "01f7f62356cf6d68c542a752a3cca8da"
   },
   "docs/user-guide/skills/optional/devops/devops-cli.md": {
     "srcMd5": "6a01654b0247c7ceb27c78068fde388f",

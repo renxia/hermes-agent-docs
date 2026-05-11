@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import OpenAI from 'openai';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, cpSync, rmSync } from 'node:fs';
+import fg from 'fast-glob';
 import { join, dirname, relative, extname } from 'node:path';
 import { execSync } from 'node:child_process';
 import env from 'dotenv';
@@ -262,6 +263,59 @@ async function syncHermesAgentDocs(): Promise<void> {
     }
   });
   logger.log(color.green('Docs sync completed!'));
+
+  // 同步完成后，清理已废弃的源文档对应的翻译文件
+  await cleanupStaleTranslations();
+}
+
+async function cleanupStaleTranslations(): Promise<void> {
+  const docsDir = join(process.cwd(), 'docs');
+  const i18nDir = join(process.cwd(), 'i18n');
+
+  if (!existsSync(docsDir) || !existsSync(i18nDir)) return;
+
+  logger.log('Cleaning up stale translations...');
+
+  // 使用 fast-glob 获取 docs 目录下的所有文件（相对路径，使用正斜杠）
+  const sourceFiles = await fg('**/*.{md,json}', { cwd: docsDir, onlyFiles: true }) as string[];
+  const sourceFilesSet = new Set(sourceFiles.map(f => `docs/${f.replace(/\\/g, '/')}`));
+
+  const keysToDelete: string[] = [];
+
+  for (const [recordKey, record] of Object.entries(translateRecords)) {
+    // 源文件仍存在则跳过
+    if (sourceFilesSet.has(recordKey)) continue;
+
+    console.log(`  Source file "${color.yellow(recordKey)}" no longer exists, cleaning up translations...`);
+
+    // 计算相对路径（去除 docs/ 前缀）
+    const relativePath = recordKey.startsWith('docs/') ? recordKey.slice(5) : recordKey;
+
+    // 删除所有语言翻译文件（保留 srcMd5 对应的 key）
+    for (const [lang] of Object.entries(record)) {
+      if (lang === 'srcMd5') continue;
+
+      const translatedFile = join(i18nDir, lang, 'docusaurus-plugin-content-docs', 'current', relativePath);
+      if (existsSync(translatedFile)) {
+        rmSync(translatedFile, { force: true });
+        console.log(`   - Deleted: ${color.red(translatedFile)}`);
+      }
+    }
+
+    keysToDelete.push(recordKey);
+  }
+
+  // 删除 translateRecords 中对应的记录
+  for (const key of keysToDelete) {
+    delete translateRecords[key];
+  }
+
+  if (keysToDelete.length > 0) {
+    writeFileSync(RECORD_FILE, JSON.stringify(translateRecords, null, 2), 'utf-8');
+    logger.log(`  Removed ${keysToDelete.length} stale translation records`);
+  }
+
+  logger.log('Stale translations cleanup completed!');
 }
 
 async function translateFile(srcFile: string, sourceLang: string, targetLang: string, idx: number, total: number) {

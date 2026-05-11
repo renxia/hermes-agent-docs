@@ -6,7 +6,7 @@
  * 4. 进入 dist 目录，使用 zip 命令压缩 hermes-agent-docs 为 hermes-agent-docs.zip
  */
 
-import { mkdirSync, existsSync, rmSync, cpSync, renameSync } from 'node:fs';
+import { mkdirSync, existsSync, rmSync, cpSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 
@@ -32,7 +32,7 @@ function build() {
 
   // Step 3: 复制 static/_index.html 到 dist/hermes-agent-docs 目录
   console.log('[3/4] 复制 _index.html → dist/hermes-agent-docs/...');
-  renameSync(staticIndexHtml, join(targetDir, 'index.html'));
+  cpSync(staticIndexHtml, join(targetDir, 'index.html'));
 
   // Step 4: 进入 dist 目录，压缩 hermes-agent-docs 为 hermes-agent-docs.zip
   console.log('[4/4] 压缩为 hermes-agent-docs.zip...');
