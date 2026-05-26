@@ -253,7 +253,7 @@ async function syncHermesAgentDocs(): Promise<void> {
     process.exit(1);
   }
 
-  ['docs', 'src', 'scripts', 'static', 'sidebar.ts'].forEach(dir => {
+  ['docs', 'src', 'scripts', 'static', 'sidebars.ts'].forEach(dir => {
     const sourceDir = join(sourceDocsDir, dir);
     const targetDir = join(targetDocsDir, dir);
     if (existsSync(sourceDir)) {

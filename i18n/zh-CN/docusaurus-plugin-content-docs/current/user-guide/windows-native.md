@@ -65,7 +65,7 @@ iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/script
 | **ripgrep** | 快速文件搜索 — 如果不可用，则回退到 `grep`。 |
 | **npm 包** | `agent-browser`、Playwright Chromium 以及任何特定工具集的 Node 依赖项，会在首次使用浏览器工具时一次性安装。 |
 
-每个依赖项都有一个类似 `shutil.which(...)` 的检查；如果某个二进制文件缺失且运行是交互式的，`dep_ensure` 会提供安装选项（实际安装逻辑委托给 `scripts\install.ps1 -ensure <dep>`）。非交互式运行（网关、计划任务、无头桌面启动）会跳过提示，并直接显示一个清晰的“此功能需要 <dep>”错误。
+每个依赖项都有一个类似 `shutil.which(...)` 的检查；如果某个二进制文件缺失且运行是交互式的，`dep_ensure` 会提供安装选项（实际安装逻辑委托给 `scripts\install.ps1 -ensure <dep>`）。非交互式运行（网关、计划任务、无头桌面启动）会跳过提示，并直接显示一个清晰的`此功能需要 <dep>`错误。
 
 ## 安装程序实际执行的操作
 

@@ -1366,5 +1366,13 @@
   "docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md": {
     "srcMd5": "101269b982e4f61138a6a98acaedc113",
     "zh-CN": "c23d0775d64061afdb8579786d46afde"
+  },
+  "docs/index.mdx": {
+    "srcMd5": "cb27198bcdb1c97114b9df454d63c9da",
+    "zh-CN": "4fa7efd735f472ade4d64c196ee5929c"
+  },
+  "docs/user-stories.mdx": {
+    "srcMd5": "505f06f534956a4feac861b7827ea77d",
+    "zh-CN": "9ef0e14072a87692c3ac4427320e2f44"
   }
 }

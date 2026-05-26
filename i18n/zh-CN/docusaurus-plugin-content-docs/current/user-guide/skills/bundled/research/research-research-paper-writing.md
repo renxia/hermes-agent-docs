@@ -24,6 +24,8 @@ description: "为NeurIPS/ICML/ICLR撰写机器学习论文：从设计到提交"
 | 标签 | `研究`, `论文写作`, `实验`, `机器学习`, `人工智能`, `NeurIPS`, `ICML`, `ICLR`, `ACL`, `AAAI`, `COLM`, `LaTeX`, `引用`, `统计分析` |
 | 相关技能 | [`arxiv`](/user-guide/skills/bundled/research/research-arxiv), `ml-paper-writing`, [`subagent-driven-development`](/user-guide/skills/bundled/software-development/software-development-subagent-driven-development), [`plan`](/user-guide/skills/bundled/software-development/software-development-plan) |
 
+## Reference: full SKILL.md
+
 :::info
 以下是 Hermes 加载此技能时的完整技能定义。这是智能体在技能激活时看到的指令。
 :::
@@ -677,7 +679,6 @@ for strategy, tasks in results.items():
 
 ```markdown
 # 实验日志
-```
 
 ## 贡献（一句话）
 [论文的核心主张]
@@ -1415,7 +1416,7 @@ TikZ 是机器学习论文中方法示意图的标准。常见模式：
 \centering
 \begin{tikzpicture}[
   node distance=1.8cm,
-  box/.style={rectangle, draw, rounded corners, minimum height=1cm, 
+  box/.style={rectangle, draw, rounded corners, minimum height=1cm,
               minimum width=2cm, align=center, font=\small},
   arrow/.style={-{Stealth[length=3mm]}, thick},
 ]
@@ -1424,7 +1425,7 @@ TikZ 是机器学习论文中方法示意图的标准。常见模式：
   \node[box, fill=okgreen!20, right of=encoder] (latent) {潜空间\\$z$};
   \node[box, fill=okorange!20, right of=latent] (decoder) {解码器\\$g_\phi$};
   \node[box, fill=okred!20, right of=decoder] (output) {输出\\$\hat{x}$};
-  
+
   \draw[arrow] (input) -- (encoder);
   \draw[arrow] (encoder) -- (latent);
   \draw[arrow] (latent) -- (decoder);
@@ -1439,7 +1440,7 @@ TikZ 是机器学习论文中方法示意图的标准。常见模式：
 
 ```latex
 \begin{tikzpicture}[
-  cell/.style={rectangle, draw, minimum width=2.5cm, minimum height=1cm, 
+  cell/.style={rectangle, draw, minimum width=2.5cm, minimum height=1cm,
                align=center, font=\small},
   header/.style={cell, fill=gray!20, font=\small\bfseries},
 ]
@@ -1465,7 +1466,7 @@ TikZ 是机器学习论文中方法示意图的标准。常见模式：
 ```latex
 \begin{tikzpicture}[
   node distance=2cm,
-  box/.style={rectangle, draw, rounded corners, minimum height=0.8cm, 
+  box/.style={rectangle, draw, rounded corners, minimum height=0.8cm,
               minimum width=1.8cm, align=center, font=\small},
   arrow/.style={-{Stealth[length=3mm]}, thick},
   label/.style={font=\scriptsize, midway, above},
@@ -1473,7 +1474,7 @@ TikZ 是机器学习论文中方法示意图的标准。常见模式：
   \node[box, fill=okblue!20] (gen) {Generator};
   \node[box, fill=okred!20, right=2.5cm of gen] (critic) {Critic};
   \node[box, fill=okgreen!20, below=1.5cm of $(gen)!0.5!(critic)$] (judge) {Judge Panel};
-  
+
   \draw[arrow] (gen) -- node[label] {output $A$} (critic);
   \draw[arrow] (critic) -- node[label, right] {critique $C$} (judge);
   \draw[arrow] (judge) -| node[label, left, pos=0.3] {winner} (gen);
@@ -2183,7 +2184,7 @@ results = sch.search_paper("attention mechanism transformers", limit=5)
 for paper in results:
     doi = paper.externalIds.get('DOI', 'N/A')
     if doi != 'N/A':
-        bibtex = requests.get(f"https://doi.org/{doi}", 
+        bibtex = requests.get(f"https://doi.org/{doi}",
                               headers={"Accept": "application/x-bibtex"}).text
         print(bibtex)
 ```
@@ -2228,7 +2229,7 @@ cronjob("create", {
     1. ps aux | grep run_experiment
     2. tail -30 logs/experiment_haiku.log
     3. ls results/haiku_baselines/
-    4. 如果完成：读取结果，计算Borda分数， 
+    4. 如果完成：读取结果，计算Borda分数，
        git add -A && git commit -m '添加Haiku结果' && git push
     5. 报告：结果表格、关键发现、下一步
     6. 如果没有变化：回复 [SILENT]"
@@ -2241,9 +2242,9 @@ cronjob("create", {
 ```
 cronjob("create", {
   "schedule": "0 9 * * *",  # 每天上午9点
-  "prompt": "NeurIPS 2025截止日期：5月22日。今天是{date}。 
-    剩余天数：{compute}。 
-    检查待办事项列表——我们进度正常吗？ 
+  "prompt": "NeurIPS 2025截止日期：5月22日。今天是{date}。
+    剩余天数：{compute}。
+    检查待办事项列表——我们进度正常吗？
     如果<7天：警告用户剩余任务。"
 })
 ```
@@ -2263,7 +2264,6 @@ cronjob("create", {
 
 **报告格式** —— 始终包含结构化数据：
 ```
-
 ## 实验：<name>
 状态：完成 / 运行中 / 失败
 
@@ -2273,6 +2273,7 @@ cronjob("create", {
 
 关键发现：<一句话>
 下一步：<接下来做什么>
+```
 
 ### 需要人类输入的决策点
 

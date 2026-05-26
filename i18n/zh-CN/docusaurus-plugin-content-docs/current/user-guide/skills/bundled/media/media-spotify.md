@@ -4,7 +4,7 @@ sidebar_label: "Spotify"
 description: "Spotify: 播放、搜索、排队、管理播放列表和设备"
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源 SKILL.md，而非此页面。 */}
+{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
 # Spotify
 
@@ -51,7 +51,7 @@ Spotify: 播放、搜索、排队、管理播放列表和设备。
 
 ## 规范模式 (尽量减少工具调用)
 
-### “播放 <艺术家/曲目/专辑>”
+### “播放 &lt;艺术家/曲目/专辑>”
 一次搜索，然后通过 URI 播放。除非用户要求选择，否则不要循环浏览搜索结果并描述它们。
 
 ```
@@ -60,7 +60,7 @@ spotify_search({"query": "miles davis kind of blue", "types": ["album"], "limit"
 spotify_playback({"action": "play", "context_uri": "spotify:album:1weenld61qoidwYuZ1GESA"})
 ```
 
-对于“播放一些 <艺术家>”（无特定歌曲），优先使用 `types: ["artist"]` 并播放艺术家上下文 URI — Spotify 会智能处理随机播放。如果用户说“那首歌”或“那首曲子”，搜索 `types: ["track"]` 并将 `uris: [track_uri]` 传给播放操作。
+对于“播放一些 &lt;艺术家>”（无特定歌曲），优先使用 `types: ["artist"]` 并播放艺术家上下文 URI — Spotify 会智能处理随机播放。如果用户说“那首歌”或“那首曲子”，搜索 `types: ["track"]` 并将 `uris: [track_uri]` 传给播放操作。
 
 ### “正在播放什么？” / “我在听什么？”
 单次调用 — 不要在 `get_currently_playing` 之后链接 `get_state`。
@@ -80,7 +80,7 @@ spotify_playback({"action": "next"})
 spotify_playback({"action": "set_volume", "volume_percent": 50})
 ```
 
-### “添加到我的 <播放列表名称> 播放列表”
+### “添加到我的 &lt;播放列表名称> 播放列表”
 1. `spotify_playlists list` 按名称查找播放列表 ID
 2. 获取曲目 URI (来自当前播放或搜索)
 3. `spotify_playlists add_items` 使用 playlist_id 和 URI 列表
@@ -111,7 +111,7 @@ spotify_library({"kind": "tracks", "action": "save", "uris": ["spotify:track:...
 spotify_library({"kind": "albums", "action": "list", "limit": 50})
 ```
 
-### “将播放转移到我的 <设备>”
+### “将播放转移到我的 &lt;设备>”
 ```
 spotify_devices({"action": "list"})
 → 根据名称/类型匹配选择 device_id
