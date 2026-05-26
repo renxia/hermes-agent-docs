@@ -1,52 +1,52 @@
 ---
-title: "思源"
-sidebar_label: "思源"
-description: "通过 curl 调用思源笔记 API，搜索、读取、创建和管理自托管知识库中的块和文档"
+title: "思源笔记"
+sidebar_label: "思源笔记"
+description: "思源笔记 API，用于通过 curl 在自托管知识库中搜索、读取、创建和管理内容块与文档"
 ---
 
-{/* 本页面由 website/scripts/generate-skill-docs.py 根据技能的 SKILL.md 文件自动生成。请编辑源 SKILL.md 文件，而非本页面。 */}
+{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
-# 思源
+# 思源笔记
 
-思源笔记 API，通过 curl 在自托管知识库中搜索、读取、创建和管理块与文档。
+思源笔记 API，用于通过 curl 在自托管知识库中搜索、读取、创建和管理内容块与文档。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 可选 — 通过 `hermes skills install official/productivity/siyuan` 安装 |
-| 路径 | `optional-skills/productivity/siyuan` |
-| 版本 | `1.0.0` |
-| 作者 | FEUAZUR |
-| 许可证 | MIT |
-| 平台 | linux, macos, windows |
-| 标签 | `思源`, `笔记`, `知识库`, `PKM`, `API` |
-| 相关技能 | [`obsidian`](/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian), [`notion`](/docs/user-guide/skills/bundled/productivity/productivity-notion) |
+| Source | 可选 — 通过 `hermes skills install official/productivity/siyuan` 安装 |
+| Path | `optional-skills/productivity/siyuan` |
+| Version | `1.0.0` |
+| Author | FEUAZUR |
+| License | MIT |
+| Platforms | linux, macos, windows |
+| Tags | `SiYuan`, `笔记`, `知识库`, `PKM`, `API` |
+| Related skills | [`obsidian`](/user-guide/skills/bundled/note-taking/note-taking-obsidian), [`notion`](/user-guide/skills/bundled/productivity/productivity-notion) |
 
-## 参考：完整 SKILL.md
+## 参考：完整的 SKILL.md 文件
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是智能体在技能激活时看到的指令。
+以下是当触发此技能时，Hermes 加载的完整技能定义。这是技能处于活动状态时智能体看到的指令。
 :::
 
 # 思源笔记 API
 
-通过 curl 使用 [思源](https://github.com/siyuan-note/siyuan) 内核 API，在自托管知识库中搜索、读取、创建、更新和删除块与文档。无需额外工具——只需 curl 和一个 API 令牌。
+通过 curl 使用 [思源笔记](https://github.com/siyuan-note/siyuan) 的内核 API，来在自托管知识库中搜索、读取、创建、更新和删除内容块与文档。无需额外工具——只需 curl 和 API 令牌即可。
 
-## 前提条件
+## 前置条件
 
-1.  安装并运行思源（桌面版或 Docker）
-2.  获取你的 API 令牌：**设置 > 关于 > API 令牌**
-3.  将其存储在 `~/.hermes/.env` 中：
-    ```
-    SIYUAN_TOKEN=your_token_here
-    SIYUAN_URL=http://127.0.0.1:6806
-    ```
-    如果未设置，`SIYUAN_URL` 默认为 `http://127.0.0.1:6806`。
+1. 安装并运行思源笔记（桌面版或 Docker 版）
+2. 获取您的 API 令牌：**设置 > 关于 > API 令牌**
+3. 将其存储到 `~/.hermes/.env` 文件中：
+   ```
+   SIYUAN_TOKEN=your_token_here
+   SIYUAN_URL=http://127.0.0.1:6806
+   ```
+   `SIYUAN_URL` 默认值为 `http://127.0.0.1:6806`（如果未设置）。
 
 ## API 基础
 
-所有思源 API 调用均为**带有 JSON 请求体的 POST 请求**。每个请求都遵循以下模式：
+所有思源笔记 API 调用都是 **带有 JSON 请求体的 POST 请求**。每个请求都遵循此模式：
 
 ```bash
 curl -s -X POST "${SIYUAN_URL:-http://127.0.0.1:6806}/api/..." \
@@ -55,18 +55,18 @@ curl -s -X POST "${SIYUAN_URL:-http://127.0.0.1:6806}/api/..." \
   -d '{"param": "value"}'
 ```
 
-响应是具有以下结构的 JSON：
+响应为 JSON 格式，结构如下：
 ```json
 {"code": 0, "msg": "", "data": { ... }}
 ```
-`code: 0` 表示成功。任何其他值都表示错误——请检查 `msg` 获取详情。
+`code: 0` 表示成功。任何其他值均表示错误——请检查 `msg` 以获取详细信息。
 
-**ID 格式：** 思源 ID 形如 `20210808180117-6v0mkxr`（14 位时间戳 + 7 位字母数字字符）。
+**ID 格式：** 思源笔记的 ID 形如 `20210808180117-6v0mkxr`（14 位时间戳 + 7 位字母数字字符）。
 
 ## 快速参考
 
 | 操作 | 端点 |
-|------|------|
+|-----------|----------|
 | 全文搜索 | `/api/search/fullTextSearchBlock` |
 | SQL 查询 | `/api/query/sql` |
 | 读取块 | `/api/block/getBlockKramdown` |
@@ -194,13 +194,13 @@ curl -s -X POST "${SIYUAN_URL:-http://127.0.0.1:6806}/api/block/appendBlock" \
   -H "Authorization: Token $SIYUAN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "parentID": "文档或块ID",
-    "data": "在末尾追加的新段落。",
+    "parentID": "文档或块的ID",
+    "data": "在末尾添加的新段落。",
     "dataType": "markdown"
   }' | jq '.data'
 ```
 
-也可使用：`/api/block/prependBlock`（参数相同，在开头插入）和 `/api/block/insertBlock`（使用 `previousID` 代替 `parentID` 以在特定块之后插入）。
+同样可用：`/api/block/prependBlock`（参数相同，在开头插入）和 `/api/block/insertBlock`（使用 `previousID` 而不是 `parentID`，以在特定块之后插入）。
 
 ### 更新块内容
 
@@ -210,7 +210,7 @@ curl -s -X POST "${SIYUAN_URL:-http://127.0.0.1:6806}/api/block/updateBlock" \
   -H "Content-Type: application/json" \
   -d '{
     "id": "块ID",
-    "data": "这里是更新后的内容。",
+    "data": "此处为更新后的内容。",
     "dataType": "markdown"
   }' | jq '.data'
 ```
@@ -250,8 +250,8 @@ curl -s -X POST "${SIYUAN_URL:-http://127.0.0.1:6806}/api/block/deleteBlock" \
   -d '{"id": "块ID"}'
 ```
 
-要删除整个文档：使用 `/api/filetree/removeDocByID` 和 `{"id": "文档ID"}`。
-要删除笔记本：使用 `/api/notebook/removeNotebook` 和 `{"notebook": "笔记本ID"}`。
+删除整个文档：使用 `/api/filetree/removeDocByID`，参数为 `{"id": "文档ID"}`。
+删除笔记本：使用 `/api/notebook/removeNotebook`，参数为 `{"notebook": "笔记本ID"}`。
 
 ### 将文档导出为 Markdown
 
@@ -267,7 +267,7 @@ curl -s -X POST "${SIYUAN_URL:-http://127.0.0.1:6806}/api/export/exportMdContent
 SQL 查询中常见的 `type` 值：
 
 | 类型 | 描述 |
-|------|------|
+|------|-------------|
 | `d` | 文档（根块） |
 | `p` | 段落 |
 | `h` | 标题 |
@@ -282,19 +282,19 @@ SQL 查询中常见的 `type` 值：
 
 ## 注意事项
 
--   **所有端点都是 POST**——即使是只读操作。不要使用 GET。
--   **SQL 安全**：仅使用 SELECT 查询。INSERT/UPDATE/DELETE/DROP 是危险的，绝不应该发送。
--   **ID 验证**：ID 匹配模式 `YYYYMMDDHHmmss-xxxxxxx`。拒绝任何其他格式。
--   **错误响应**：在处理 `data` 之前，始终检查响应中的 `code != 0`。
--   **大型文档**：块内容和导出结果可能非常大。在 SQL 中使用 `LIMIT` 并通过 `jq` 管道传递以只提取所需内容。
--   **笔记本 ID**：在处理特定笔记本时，请先通过 `lsNotebooks` 获取其 ID。
+- **所有端点都是 POST 请求** ——即使是只读操作。请勿使用 GET。
+- **SQL 安全**：仅使用 SELECT 查询。INSERT/UPDATE/DELETE/DROP 是危险的，绝不应发送。
+- **ID 验证**：ID 符合模式 `YYYYMMDDHHmmss-xxxxxxx`。拒绝任何其他格式。
+- **错误响应**：在处理 `data` 之前，始终检查响应中的 `code != 0`。
+- **大型文档**：块内容和导出结果可能非常大。在 SQL 中使用 `LIMIT`，并通过 `jq` 管道提取所需内容。
+- **笔记本 ID**：操作特定笔记本时，请先通过 `lsNotebooks` 获取其 ID。
 
 ## 替代方案：MCP 服务器
 
-如果你更喜欢原生集成而不是 curl，可以安装思源 MCP 服务器：
+如果您更喜欢原生集成而不是 curl，可以安装思源笔记 MCP 服务器：
 
 ```yaml
-# 在 ~/.hermes/config.yaml 的 mcp_servers 下：
+# 在 ~/.hermes/config.yaml 的 mcp_servers 部分下：
 mcp_servers:
   siyuan:
     command: npx

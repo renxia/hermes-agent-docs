@@ -1,71 +1,67 @@
 {
   "docs/developer-guide/acp-internals.md": {
-    "srcMd5": "c02d3dcd877fd21a56a18d37428bb881",
-    "zh-CN": "a1db220b8651a8124c7a2906d136d6ed"
+    "srcMd5": "1e95c11c6a56524d225ce1c72037633a",
+    "zh-CN": "b84ba5cc814c61504467d255f497987d"
   },
   "docs/developer-guide/adding-platform-adapters.md": {
-    "srcMd5": "d082f12c87265676f6ffb1fb0c047d68",
-    "zh-CN": "b6af204e52fd83277fdebac4463afdb4"
+    "srcMd5": "14dd60af785c1a0c61f14d2336494670",
+    "zh-CN": "efacf716a0c07dc0f801a5b7dfde0b28"
   },
   "docs/developer-guide/adding-providers.md": {
-    "srcMd5": "21d77187b89610fd175720f0b19ac34d",
-    "zh-CN": "805b20c5a13c3e77ee79c2bd88474c5b"
+    "srcMd5": "d8d1d94c11e21027b94e0925296029b2",
+    "zh-CN": "9cc6ef69b21bdf474bfdf91609fd7d2a"
   },
   "docs/developer-guide/adding-tools.md": {
-    "srcMd5": "8b7f43442e66e396a23b8add5af5b2a0",
-    "zh-CN": "7c7d3b2e479096f1c9915b852654418c"
+    "srcMd5": "30600e7cff6c53661d4aa5c90a63c4ca",
+    "zh-CN": "ff8394317361e7348141e74597019b60"
   },
   "docs/developer-guide/agent-loop.md": {
-    "srcMd5": "cfdbd12fc94d0c8e841ef6bc54977467",
-    "zh-CN": "d6554cee80b0dd403f85030ecfe22705"
+    "srcMd5": "6e0c44c2d0dcd45645a1c540f0f61a67",
+    "zh-CN": "6cad338bff95bc388736a4e3f4de5943"
   },
   "docs/developer-guide/architecture.md": {
-    "srcMd5": "08b717b6fedd075f14f6eca74f6b3df3",
-    "zh-CN": "3bdb4e691cba8d582c1db8e75fb2c3a2"
+    "srcMd5": "271aa4c20421c44cae28bf952bc64815",
+    "zh-CN": "27be93515f138ebd9f096e969acf1d71"
   },
   "docs/developer-guide/context-compression-and-caching.md": {
-    "srcMd5": "241e37eace1bc5ae984a315df574f09c",
-    "zh-CN": "b688a7de679c95eed92f8fe18d1271cc"
+    "srcMd5": "5e8084b3a7c6d08c531bee78f1f0c19a",
+    "zh-CN": "80a96a38d53b5c760c9dea9981a26015"
   },
   "docs/developer-guide/context-engine-plugin.md": {
-    "srcMd5": "09942120d4dac85524e40d484ce67caf",
-    "zh-CN": "df16a653b66e170f89c653e12fdd9ae6"
+    "srcMd5": "3c619f68c2793f97e57f120ede4cdf53",
+    "zh-CN": "ac8a60196533d949a5d564a7ba34d297"
   },
   "docs/developer-guide/contributing.md": {
-    "srcMd5": "ee054f3d1319e21d12cab3b5282cf072",
-    "zh-CN": "078efb2bbe5a68cba11b746be389abca"
+    "srcMd5": "416262c22d99beb1af3076bdb6a863d6",
+    "zh-CN": "81f5759028704851990a86566f27d346"
   },
   "docs/developer-guide/creating-skills.md": {
-    "srcMd5": "53aaf4412694946adf8357ade15475be",
-    "zh-CN": "a01ad84fac8df3b2db98e83c92295816"
+    "srcMd5": "670665aa425e28109f38f7e6568ec6d1",
+    "zh-CN": "210e10f65f4efc95c2b61a5b7a6cb384"
   },
   "docs/developer-guide/cron-internals.md": {
-    "srcMd5": "846318d138ce57e0f86a769a41ab3002",
-    "zh-CN": "bf69ecbbb8d7839cfa45bfdf69944025"
-  },
-  "docs/developer-guide/environments.md": {
-    "srcMd5": "4a87c9aab6e8eb1fb99e6dbf27c0f218",
-    "zh-CN": "926827e8fcccbe3c4f005465dddc3be5"
+    "srcMd5": "e96e28c72bfc0f98da69b64d588dd06e",
+    "zh-CN": "11abfc89eab6e6c12c5f1f29a63e8a3d"
   },
   "docs/developer-guide/extending-the-cli.md": {
     "srcMd5": "6d30dc883010abbb63c95ca7f19a34ae",
     "zh-CN": "3ff014bfd34502a979c41c44ef7b0f32"
   },
   "docs/developer-guide/gateway-internals.md": {
-    "srcMd5": "f768ebf05d9070217a822e1e6f95d032",
-    "zh-CN": "84ae73e7ca5b65b0bc6b9c81ccbfbb52"
+    "srcMd5": "ef6bf2a6859934bc96ad01c0e30a6d19",
+    "zh-CN": "28f739d93e15024f592cf2f07d57097f"
   },
   "docs/developer-guide/memory-provider-plugin.md": {
-    "srcMd5": "ce5ea27b7caf5a085a61f9e91750f2ae",
-    "zh-CN": "9b370ca926cace275c11e54d0c8d7379"
+    "srcMd5": "5d8a8c72315ab3869aa27b10e7f13893",
+    "zh-CN": "d50192b81e2f720bfeed8601b4aef3b8"
   },
   "docs/developer-guide/prompt-assembly.md": {
     "srcMd5": "be513aa0dea7c079c131db92522d9718",
     "zh-CN": "b9ab272828e69b87663446d9fce810b7"
   },
   "docs/developer-guide/provider-runtime.md": {
-    "srcMd5": "203dd3d55b86622a6d268e0d540326c6",
-    "zh-CN": "a2cd8c70543b88efb4b4669575900d59"
+    "srcMd5": "9875b66a910de1e556be59af93a0e6a6",
+    "zh-CN": "3ba25651abd705f2a6d7bde349e1a0b0"
   },
   "docs/developer-guide/session-storage.md": {
     "srcMd5": "263814a4b9eda9b9694d7975f9c95e0d",
@@ -84,152 +80,148 @@
     "zh-CN": "1f31dea3b10b552c8218637e8508aec1"
   },
   "docs/getting-started/installation.md": {
-    "srcMd5": "97f546b5d657a692a70005ecd522f0ee",
-    "zh-CN": "882dd091a4b2407e4a203160194f1629"
+    "srcMd5": "3e7d060ea93f2a4d7752403692d5a734",
+    "zh-CN": "4b36744cb8c65fdff1fa23657f2890de"
   },
   "docs/getting-started/learning-path.md": {
-    "srcMd5": "3dde758c7188b27e4898e05cfb9e5c07",
-    "zh-CN": "a89299d4a64c9327d41e3e8a7009c09d"
+    "srcMd5": "5832178ecc4a32adc04ed824f973785a",
+    "zh-CN": "26d23468473ff2dcea03e656e7da4786"
   },
   "docs/getting-started/nix-setup.md": {
     "srcMd5": "2c34080ce2b25bdc1ba1256fb5346bbf",
     "zh-CN": "2b0825a8699cff511a01a3521a00a3c2"
   },
   "docs/getting-started/quickstart.md": {
-    "srcMd5": "a2faccf6b13fb07e250110d7d9e695cb",
-    "zh-CN": "f4a34d084fa65dca23c8165627455984"
+    "srcMd5": "ed6cd744f428d7dea3b1e9240b0866dc",
+    "zh-CN": "d76e5c4ddefcf2f44e4c25a03796c9ef"
   },
   "docs/getting-started/termux.md": {
     "srcMd5": "a445c978f6cb249985e7942ab9b07859",
     "zh-CN": "82c089b9534bbfd7f49935d69d00a8d4"
   },
   "docs/getting-started/updating.md": {
-    "srcMd5": "d9acbf0ee0bd4a6c23e92a8c5c6fe7da",
-    "zh-CN": "e9e1fe4b59068101da1c1a210716c534"
+    "srcMd5": "6f60634f7d428ad10d4779afa56673fd",
+    "zh-CN": "5ac71e0380a415939f500018aa33bc72"
   },
   "docs/getting-started/_category_.json": {
     "srcMd5": "f717ff52e0686f953bf9f35f6b8a7bc9",
     "zh-CN": "34a0621397718fd6ed2d8a4e5cecd5e6"
   },
   "docs/guides/automate-with-cron.md": {
-    "srcMd5": "a7d9c7b8ab21cc4f59fa50979120e248",
-    "zh-CN": "f9e1de17de1dd4c0f873576584af8c6d"
+    "srcMd5": "f3a4a84e5193c7cf7bacc898e1253c91",
+    "zh-CN": "87e02f07f44ecf3fa9346a3f8038ff73"
   },
   "docs/guides/automation-templates.md": {
-    "srcMd5": "a35fd55d00b4d09cf1e597748e6f4912",
-    "zh-CN": "9f7949e010e49634afd8c2e7310d1f8f"
+    "srcMd5": "6f9014e0cf95c8f9905b4ed040ce2e31",
+    "zh-CN": "27cbfbc8e00d39bfbf8ced26a1f907a9"
   },
   "docs/guides/aws-bedrock.md": {
     "srcMd5": "fb7a43cfd0232511048531496e1d601c",
     "zh-CN": "9a599946eccc715918b34e1753bda81c"
   },
   "docs/guides/build-a-hermes-plugin.md": {
-    "srcMd5": "f81d5b10f4dec7160c1826b8ec0b885f",
-    "zh-CN": "423fbad0245478cbeeb289ad8c3d6204"
+    "srcMd5": "5901997a0bda542f8331db20584d7fd2",
+    "zh-CN": "d755271fcbf58791a59ad4e8449571bc"
   },
   "docs/guides/cron-troubleshooting.md": {
-    "srcMd5": "cb0a1f0d027e61b13b7c9db71143b577",
-    "zh-CN": "78e61fe3a862fdeac852196c7e5fa303"
+    "srcMd5": "bba0ce6933db9de212cc7db6ea4c90ae",
+    "zh-CN": "8b070a6a6a618f401efdb6f302ccbb97"
   },
   "docs/guides/daily-briefing-bot.md": {
-    "srcMd5": "20c84bbc3835b3185c8d9b8f98efc6c4",
-    "zh-CN": "fc546d499b4ed82ec43b82808c99a10f"
+    "srcMd5": "570545700e9dc64a5326d7eab848e44c",
+    "zh-CN": "90efa9d6dab6b81f34671f76ba8ecdf1"
   },
   "docs/guides/delegation-patterns.md": {
-    "srcMd5": "239e51cc638eddc4cd537be5cfee839f",
-    "zh-CN": "de9b7ddc11f08c5021bea8f7a2315153"
+    "srcMd5": "be4a7727d1c7596fd0f70a5f87eeb974",
+    "zh-CN": "88450dc1a55a40ac912698e5e338d9bf"
   },
   "docs/guides/local-llm-on-mac.md": {
-    "srcMd5": "f109998016299790de805b6836bfde85",
-    "zh-CN": "c201aa4fa6233e33e9b835a80db8a563"
+    "srcMd5": "ecd56491f022d7971ed181f7dfcff0d4",
+    "zh-CN": "201a7836e1fa28e9b31358628d77701e"
   },
   "docs/guides/migrate-from-openclaw.md": {
-    "srcMd5": "ae51304f507dacdcd1d6bdfea041f987",
-    "zh-CN": "3309ad1b43c92de60c64519adc85634d"
+    "srcMd5": "56103649753c81451873f999c3e0eb0e",
+    "zh-CN": "4b9f65d90d730327e1eb2285c3d2ac8b"
   },
   "docs/guides/python-library.md": {
     "srcMd5": "06ac98f5a611746b4ccdbaef8a225cd9",
     "zh-CN": "7baef5c53a37117fe131ce9174543ca6"
   },
   "docs/guides/team-telegram-assistant.md": {
-    "srcMd5": "76758fcce62ccc0bfce61bdce42b3646",
-    "zh-CN": "ceb31dc59f461d129eea0113212ef68f"
+    "srcMd5": "068f7ef73b7da9a47b1a695696590b8a",
+    "zh-CN": "429c3672995b07fe64043b37eacc8c8e"
   },
   "docs/guides/tips.md": {
-    "srcMd5": "a3b78039bc6feea5979a6dfd1f84127e",
-    "zh-CN": "152d2b8cc1708a402a0131b6d951ff83"
+    "srcMd5": "f605b4ce1209dbb3d115df799c1e2690",
+    "zh-CN": "c054af54ebc19c8ae7e30b5bf57490ce"
   },
   "docs/guides/use-mcp-with-hermes.md": {
-    "srcMd5": "809b8f19a38237353061dd6ce8d22b0a",
-    "zh-CN": "09f564f6971cf440f7a99b9fa39d3288"
+    "srcMd5": "303114e326f2704d33fbdd847d5aad5a",
+    "zh-CN": "24678208742b5aff9850ac5e51a1418c"
   },
   "docs/guides/use-soul-with-hermes.md": {
-    "srcMd5": "e42300e6dff15f74926b7845eb8344b4",
-    "zh-CN": "52e2d65c06ffb2366651c07b28fc1cc4"
+    "srcMd5": "6bea062eee4f0c652a19a46e320e7861",
+    "zh-CN": "5f8f7a512b6f720e53b51e870b17a4db"
   },
   "docs/guides/use-voice-mode-with-hermes.md": {
-    "srcMd5": "451a41b49babc0ff1ab1b2a15ccf8713",
-    "zh-CN": "98203e2fd4473c478d312cd9b82f26e1"
+    "srcMd5": "6e29f5e75a9b786d1fab0436b50e3257",
+    "zh-CN": "47ca5ffd09ea0ca5cf15d486cf52990c"
   },
   "docs/guides/work-with-skills.md": {
-    "srcMd5": "2e0a69b72da70f56a940815c2323d544",
-    "zh-CN": "c726ed6c8066238d11e6335afe5c01e5"
+    "srcMd5": "a9c7ae930b6fda194043408e2137d1ec",
+    "zh-CN": "10f93700c85868e51e8abe6bc37f4bec"
   },
   "docs/guides/_category_.json": {
     "srcMd5": "784e830b426a919e5b5e586a82cccc7b",
     "zh-CN": "f1f8429f1a55859c4107cccd1884f7dd"
   },
-  "docs/index.md": {
-    "srcMd5": "72c61e166af57f54260c706205e70463",
-    "zh-CN": "8ec837c3ece85ee53b1fb76824dff898"
-  },
   "docs/integrations/index.md": {
-    "srcMd5": "ba93f6cb2964e3e27b2ec5ef5e456d57",
-    "zh-CN": "57dac6937414fa8fa9d62001340ac6c4"
+    "srcMd5": "2198e824ce741a7a7b620732e93ba027",
+    "zh-CN": "29eeaed6dd3a078d8a368e100c63eea3"
   },
   "docs/integrations/providers.md": {
-    "srcMd5": "6a8229d437d6b7496d8f4c2f62150857",
-    "zh-CN": "4eccf6f0e696fabdf2766f7e523f7fdf"
+    "srcMd5": "80f054fae39eb41f0291edd671f789b9",
+    "zh-CN": "1ace890a75b73529aec3de416f059b56"
   },
   "docs/reference/cli-commands.md": {
-    "srcMd5": "c4bf56ca56684941ff71ab1d51616474",
-    "zh-CN": "324502465b5302cd27217c829551fc37"
+    "srcMd5": "81db26b32176cda9116a3c6c39418c87",
+    "zh-CN": "76afa7c8b7227aa45959ee83293a4370"
   },
   "docs/reference/environment-variables.md": {
-    "srcMd5": "c66c2e10b06ac93e19516b8bfcb66222",
-    "zh-CN": "893d8111ee7e31574612a0dcbbc0304c"
+    "srcMd5": "12d53dd57c4c84e1527a254a3de324c7",
+    "zh-CN": "5a92e3778400a270006cde0e12f12c0e"
   },
   "docs/reference/faq.md": {
-    "srcMd5": "5f0a054cdd84759b38693f84d38a0f37",
-    "zh-CN": "013c5f97a0521395d90c7eb10743e7dc"
+    "srcMd5": "14e757d49d4dae7e2d56401d8d6c9b87",
+    "zh-CN": "d0a2f4786d213e19d6e5fa720246bd17"
   },
   "docs/reference/mcp-config-reference.md": {
-    "srcMd5": "4928a95fe6b1ae109cc516cbb7c20d38",
-    "zh-CN": "764bb1326beae81a15272b4c332f9890"
+    "srcMd5": "a8980bf2bba2beb5a4e71454b4e21699",
+    "zh-CN": "6019abd90a9be61258819c8f11c84da0"
   },
   "docs/reference/optional-skills-catalog.md": {
-    "srcMd5": "0f29596792a55c643bc7414a6ac06c59",
-    "zh-CN": "56706c20ba9d7420abc211e53c92f22d"
+    "srcMd5": "15497e310e7ed2da39e5b08e2a8f709e",
+    "zh-CN": "9a6635e4ba81176c29b6c46f0e155f23"
   },
   "docs/reference/profile-commands.md": {
-    "srcMd5": "dba851b560883259c8a49482153d58a4",
-    "zh-CN": "bc20ca630af08031faae80ad32099cee"
+    "srcMd5": "0eb976109c32bf0520f0c9578f205dd4",
+    "zh-CN": "9c0c4f6b38dca14ce3e0ab96b1114f4f"
   },
   "docs/reference/skills-catalog.md": {
-    "srcMd5": "137db530bfd52f41f376bf91df71cd76",
-    "zh-CN": "fae30e1540b38396c8f787fd29d99193"
+    "srcMd5": "593e7e5cfe6dd7e2b72b5aaa58f573f1",
+    "zh-CN": "eb682d03bfd3a0787093b91dd0c1c666"
   },
   "docs/reference/slash-commands.md": {
-    "srcMd5": "b32544724b47c27d851528b49d20fe10",
-    "zh-CN": "bffa920cebbae83ddd41b50c3d24894b"
+    "srcMd5": "8aa0b9995173328e581da82f5c19efae",
+    "zh-CN": "982c9019f0115bd33c048885c1ef5877"
   },
   "docs/reference/tools-reference.md": {
-    "srcMd5": "3f04c3236d8ac86a7ba71f7b4ea54791",
-    "zh-CN": "be831dc1abf985577b71767982816630"
+    "srcMd5": "435075155eed1d83c5a1dfc2336c411e",
+    "zh-CN": "bffbd348b10a4eb841056b8fa12de7ba"
   },
   "docs/reference/toolsets-reference.md": {
-    "srcMd5": "5c554965255d9eb4f55de8841290f298",
-    "zh-CN": "f9a4a70be32de4cb5d94fb00cf4b4b86"
+    "srcMd5": "0ff56bfe5fa24c453c7346b4b460a14e",
+    "zh-CN": "c79de903394778b9218474816909a235"
   },
   "docs/reference/_category_.json": {
     "srcMd5": "ca29582523a76604d1d412f821043d0f",
@@ -240,136 +232,132 @@
     "zh-CN": "b2c3aca52c7e8ca33e4fce26d6a1ce20"
   },
   "docs/user-guide/cli.md": {
-    "srcMd5": "0a4619d167ce618a268179cf820ea7c2",
-    "zh-CN": "352a90c10f6b80b6b8af04371056ed38"
+    "srcMd5": "732617cda40dd43d0c764fe38a85c0da",
+    "zh-CN": "0ff21327b0baf690c9930f03cab5e39e"
   },
   "docs/user-guide/configuration.md": {
-    "srcMd5": "ecae5cd07f0de2abf95c1ec654c068b2",
-    "zh-CN": "4a315297c41057a5ba26eb672a2f0844"
+    "srcMd5": "784b79fb102e7a58407b78fa96da8769",
+    "zh-CN": "46927f30812957588bea1bae0154dbe7"
   },
   "docs/user-guide/docker.md": {
-    "srcMd5": "7f630089878132bdcdac5f96467ce6b3",
-    "zh-CN": "a371b61f89bbc0d6c85b503e5ae04e76"
+    "srcMd5": "6d9366e94530fd5369bff6b7b58d8870",
+    "zh-CN": "c4c37d2542ec47a8aa61efce2d6fdfe0"
   },
   "docs/user-guide/features/acp.md": {
-    "srcMd5": "ff7885f46ff447ca19806b4adc493620",
-    "zh-CN": "22c20b318517faae39f09cc45e192ad6"
+    "srcMd5": "224df23b07e2c02d14142c9ab8b37cdb",
+    "zh-CN": "c5c09a1423c3b199373b8c16ecd64eb9"
   },
   "docs/user-guide/features/api-server.md": {
-    "srcMd5": "b85c152aea0df00aded431804c9fc9fd",
-    "zh-CN": "4119d3258288f8181161f336086165a1"
+    "srcMd5": "fd398a932d020957d33e2fd96f72225d",
+    "zh-CN": "25c23db4a0182f72b8701f5eb632a06f"
   },
   "docs/user-guide/features/batch-processing.md": {
-    "srcMd5": "ab95611b577d79caf41e6c2b8c43a261",
-    "zh-CN": "cd47c5246ec2e5a35bc3f315fae8c78f"
+    "srcMd5": "c37c6425725c1b657e0da3dc749ca6f8",
+    "zh-CN": "f36321b415ecfa469369b2378b3cc484"
   },
   "docs/user-guide/features/browser.md": {
-    "srcMd5": "dc95b573fc7868954b0c18f9d42e57d8",
-    "zh-CN": "def445c1ce1bbac07b63215148b5cec6"
+    "srcMd5": "1a62e24ee492b9d61163c1d521fbbf49",
+    "zh-CN": "6ba4aa57fce164b79d1ce7777ffdbc9c"
   },
   "docs/user-guide/features/code-execution.md": {
-    "srcMd5": "877d6a50f3ff65371776107e70101ec2",
-    "zh-CN": "3c00994a2fa1c52cc2baeb8bb53f67f7"
+    "srcMd5": "d4814cb9bb7aec7265351ca33cb6c24e",
+    "zh-CN": "08782977b2f194a7c7f9983aafde2ccb"
   },
   "docs/user-guide/features/context-files.md": {
-    "srcMd5": "de3bbb9c92810c178e51f9fe9afc7543",
-    "zh-CN": "ea72b7954bf1ddc7824664e155882b0e"
+    "srcMd5": "4dbc7bd90e2edb307c3cdc1609d1be5d",
+    "zh-CN": "c1ecacb3fb4a7db2e174e103cce071ce"
   },
   "docs/user-guide/features/context-references.md": {
     "srcMd5": "1f62474ff0e91817a397ae7ca1e550ad",
     "zh-CN": "7f5c9f3faf14961fd11b2adffe9240ae"
   },
   "docs/user-guide/features/credential-pools.md": {
-    "srcMd5": "455973ff679e8fa60799bb2a2208c5ad",
-    "zh-CN": "fdca4d8a9a0a847ff09162a9dd11b721"
+    "srcMd5": "f052309c9b2a21068e401cf319030466",
+    "zh-CN": "b2e2ea65b1266e7355209b085f32ded8"
   },
   "docs/user-guide/features/cron.md": {
-    "srcMd5": "2ab2d82abe6f18531eb522b22c8285e0",
-    "zh-CN": "3b7550b842b2e46ad7e1f260d33c4e49"
+    "srcMd5": "6a6028376af347c7b0a29753b64a3296",
+    "zh-CN": "92897006890a4b080e047a75e65e3587"
   },
   "docs/user-guide/features/delegation.md": {
-    "srcMd5": "c4b9d1269f6d0ac348a923a4f60bf2ef",
-    "zh-CN": "4c00e9f62fa9f0df8363e74305aaf157"
+    "srcMd5": "bf551a01eb88a1b530f9a4e2f53093c1",
+    "zh-CN": "58211e9259f2bd229f73b87669b8651e"
   },
   "docs/user-guide/features/fallback-providers.md": {
-    "srcMd5": "02b285ff87748502b315f6bff8253f8d",
-    "zh-CN": "ca578d9c91f5468f5d0a334dbd011331"
+    "srcMd5": "c231729b8a8728c31e16aff9969aa24c",
+    "zh-CN": "aabfec80a17fe4cf23fb2bb56d3ec4f6"
   },
   "docs/user-guide/features/honcho.md": {
     "srcMd5": "583c1a7a441a2d0de307cacd6b349718",
     "zh-CN": "fe7c6cc6393f3f657ad49b9efe907cb5"
   },
   "docs/user-guide/features/hooks.md": {
-    "srcMd5": "fc8ea77d363e78b39aa88a118204bab2",
-    "zh-CN": "ff28ec0df4446dece2bb9792461d764c"
+    "srcMd5": "47e242c931f7fb48e87f78a9a393f26d",
+    "zh-CN": "367e227293cbf779c7b220d1750c23c8"
   },
   "docs/user-guide/features/image-generation.md": {
-    "srcMd5": "3bb2e0d4481af8c1efa1fa2554e47d61",
-    "zh-CN": "95a46ed031a3f226f3e8815bfec2db21"
+    "srcMd5": "47de7b5cafbf6f3ed054684040990b22",
+    "zh-CN": "160de8bbf256e2656f9c9b168a8abfa0"
   },
   "docs/user-guide/features/mcp.md": {
-    "srcMd5": "21495ce9c0dd1f71751f16337f23b2c2",
-    "zh-CN": "6a56b1350851b6de2319c3be1f88ae7d"
+    "srcMd5": "2e7593cd47ec22ad2a0f0fe1a028a2ca",
+    "zh-CN": "214e8dcfc2124372d59c958acf7b4172"
   },
   "docs/user-guide/features/memory-providers.md": {
-    "srcMd5": "a995aebb6b1bb1a7c6c792cf169a6a4e",
-    "zh-CN": "d38197831370b0187938a4bab43d1522"
+    "srcMd5": "3e1376735fb904d53954f03ab80538ae",
+    "zh-CN": "011d4892ffb1c1ce2c3c0563d685ee60"
   },
   "docs/user-guide/features/memory.md": {
-    "srcMd5": "01152a76724d18668357d34d8da75055",
-    "zh-CN": "1c7ea46e4fd880647b893754aa02f780"
+    "srcMd5": "5a64bfd6333eec02b5b11fc59d1b3cb3",
+    "zh-CN": "20b4f86f65b27e051310437697b4096e"
   },
   "docs/user-guide/features/overview.md": {
-    "srcMd5": "e3c72a2be2eeef274e6051f601016da9",
-    "zh-CN": "e96b71ca23e8d15f6e41a5056d9899c7"
+    "srcMd5": "ee6fba246dc0ff62bc308bbed523aea1",
+    "zh-CN": "56160a78bb45336caa976ef0b029f7f2"
   },
   "docs/user-guide/features/personality.md": {
-    "srcMd5": "9aeb6950907c8e2008293622e0ccee38",
-    "zh-CN": "3dc393fb1e6b18a04f24c3f597c3c15f"
+    "srcMd5": "7fd2cb9c9b4f9c5b4fe50bc00c2891d1",
+    "zh-CN": "f2873290fe21aa2dce797d6be0e0d2ab"
   },
   "docs/user-guide/features/plugins.md": {
-    "srcMd5": "918c438606a8d9ee38cbab34d0df54bb",
-    "zh-CN": "e4dd59ffb8d0520f06fd16341ac633ff"
+    "srcMd5": "04322ce642abf9aa3bf0f76a462037f0",
+    "zh-CN": "2cacfda7e208f2aaa490903a6106eff8"
   },
   "docs/user-guide/features/provider-routing.md": {
-    "srcMd5": "24b1326bf612aed3b342022bdb89a918",
-    "zh-CN": "5fa0817638970c451cfbef9c6ec56c53"
-  },
-  "docs/user-guide/features/rl-training.md": {
-    "srcMd5": "1088685a71bc58716f5ca777f4f278db",
-    "zh-CN": "d1ed148320f573de7b862b2ce05afd77"
+    "srcMd5": "dde4996319b97be710b924163ea11a44",
+    "zh-CN": "47e8d05eb3a0d3df73d87e583198bd64"
   },
   "docs/user-guide/features/skills.md": {
-    "srcMd5": "7cb6d473e36d59c354acd519bcc778b9",
-    "zh-CN": "ab1ca06ed1a9ad0a2ae29ed4a4de7546"
+    "srcMd5": "ac6da248837d925822c1d069f9dc2736",
+    "zh-CN": "b975eb42ec79dae747d37a03abce660b"
   },
   "docs/user-guide/features/skins.md": {
-    "srcMd5": "952de537ecbb1e7e9f49e18efa73f470",
-    "zh-CN": "7233b8d18f807e820cf450368362fc0f"
+    "srcMd5": "91d9ddfdfef6700b4bd83340ab7b2f41",
+    "zh-CN": "495a7fb354eff9ee3dd7bac96e83ff6f"
   },
   "docs/user-guide/features/tool-gateway.md": {
-    "srcMd5": "0b876d516171d573c8ff641aabbda839",
-    "zh-CN": "a82800eff682a29283c7473acffb4310"
+    "srcMd5": "388a8f33df6bad303d2600b52aff9c00",
+    "zh-CN": "c77c5c1713bfe17e691412eac8a0547c"
   },
   "docs/user-guide/features/tools.md": {
-    "srcMd5": "3741bb1b9b268472210888a452b1fbe9",
-    "zh-CN": "2fd774da57430f3321028ab09f42ef02"
+    "srcMd5": "5f27f6d235041e85ed5afa5c54ff12fc",
+    "zh-CN": "252f15065e1b996c93f9e09f90375254"
   },
   "docs/user-guide/features/tts.md": {
-    "srcMd5": "8f94f50b56e2b3bf9bfe26023a63c85f",
-    "zh-CN": "058bb9757ab99ceb8a3f2187ba6886f5"
+    "srcMd5": "4f0441344655c0427bb2ec4698b022b2",
+    "zh-CN": "88d452ea8bbd5592c10643b24cb01fd7"
   },
   "docs/user-guide/features/vision.md": {
-    "srcMd5": "f6f64470ea404e7f2c47188d6d2ea91d",
-    "zh-CN": "0b4dbdd1f66e8afa8a48f9e5859d1e9f"
+    "srcMd5": "e2122d472bd14a4a2b4d62385247715a",
+    "zh-CN": "042523285042a8ec8ecefa78ef4cea0f"
   },
   "docs/user-guide/features/voice-mode.md": {
-    "srcMd5": "e25b1a49681412167d0a23e406736996",
-    "zh-CN": "d154b39397cc2d888ff8a4b98cc66fb8"
+    "srcMd5": "16a11a87a4ec4a461d80f996d59e7445",
+    "zh-CN": "cc92b9cc1151f3ae0b9e5c1301be3a84"
   },
   "docs/user-guide/features/web-dashboard.md": {
-    "srcMd5": "883530a2f5ce92598ccbd5ff364694ea",
-    "zh-CN": "5c8236e1a1d8050d642e82bd5bfb2ed1"
+    "srcMd5": "bfa0161e10105dc623af7c189caf10ec",
+    "zh-CN": "04e1ce189890511585541fa6558695c0"
   },
   "docs/user-guide/features/_category_.json": {
     "srcMd5": "49b463ee07e0883a2bf77b2776d458b3",
@@ -388,36 +376,36 @@
     "zh-CN": "7fe026e3beb1f74e996e17ffd8d9ad5b"
   },
   "docs/user-guide/messaging/discord.md": {
-    "srcMd5": "de666a3ad7a1665816dd0a392fc5fc73",
-    "zh-CN": "9c135c96bab1fe12fa77f175835f8601"
+    "srcMd5": "cc2a35d323340f82d282306f16de4a7f",
+    "zh-CN": "1a3eea988fc3613cdbb799bb885dcd08"
   },
   "docs/user-guide/messaging/email.md": {
     "srcMd5": "05d364bf5118f37787bcfdb4a5c40eb1",
     "zh-CN": "b85e7e82471220e049a969b1f62a21b4"
   },
   "docs/user-guide/messaging/feishu.md": {
-    "srcMd5": "55475fd559c35e49388032dc8d08e971",
-    "zh-CN": "eae4938e10c6c026f18497786be7336f"
+    "srcMd5": "da51b8b2c5bd87f46f53018e34e7e831",
+    "zh-CN": "b5c5ba4cff9c178221400ca9c5f0468f"
   },
   "docs/user-guide/messaging/homeassistant.md": {
     "srcMd5": "3e84cadf558de7ec5948184500f839fa",
     "zh-CN": "3cd615c5ab116acdaacb7131edeef2b2"
   },
   "docs/user-guide/messaging/index.md": {
-    "srcMd5": "d48595997179b65cd4b7c5f525053a2c",
-    "zh-CN": "b5396f511922ffcd7abaadbef4eaf825"
+    "srcMd5": "b5f84a5c5d0b5ac201e72001438c8f06",
+    "zh-CN": "768112d8ab1cb32cb12642984c921b6e"
   },
   "docs/user-guide/messaging/matrix.md": {
-    "srcMd5": "b29290fda381215fb3f612b172bb1b1b",
-    "zh-CN": "ec2636afbc305de4bff11eeecfb51451"
+    "srcMd5": "00fcad3267af01b923a46a86d718af06",
+    "zh-CN": "2b071d3cc5b70365f9f022d97e5fefd3"
   },
   "docs/user-guide/messaging/mattermost.md": {
-    "srcMd5": "5dd4cfc3fe100e78a8a0bad0ce0296ca",
-    "zh-CN": "8182af41152a44ea8e6dad2dcbb41ca3"
+    "srcMd5": "b7d8ef852605577d4ffa4bf330b08343",
+    "zh-CN": "8ee7302d26b565ecf656bc6cb56656f2"
   },
   "docs/user-guide/messaging/open-webui.md": {
-    "srcMd5": "b08a3cfe60b50bfcb847a123a2093dbb",
-    "zh-CN": "24ec8dfd298b4d48498ee6fbc7632f91"
+    "srcMd5": "3af3744ea359715229f3ad9e4727b41c",
+    "zh-CN": "41362d7888da59cb0f1de8530e7600df"
   },
   "docs/user-guide/messaging/qqbot.md": {
     "srcMd5": "e06904ee6d015a72e27b340639289493",
@@ -428,16 +416,16 @@
     "zh-CN": "f63b06101f66e9a96abf08d78af9222b"
   },
   "docs/user-guide/messaging/slack.md": {
-    "srcMd5": "4fcb0c67324045f9862ea01f0e46ebe0",
-    "zh-CN": "80084bf489b7fa81d720eeadbae76ac3"
+    "srcMd5": "8b3f4bfb26cf88c7e8e8378d30fc682e",
+    "zh-CN": "fd95990a12da9775291e67f53544decc"
   },
   "docs/user-guide/messaging/sms.md": {
-    "srcMd5": "b2d0f98456c629676cdbc34da79ba85f",
-    "zh-CN": "a69d903ba2cf7bff4bc2ac3799009daa"
+    "srcMd5": "698b3eef4d21a7ad85eb38c5120e3e10",
+    "zh-CN": "ac86431324e3bef72f474ed37f5897b0"
   },
   "docs/user-guide/messaging/telegram.md": {
-    "srcMd5": "61d80270bef55628b3d0c92c775a8e21",
-    "zh-CN": "1a528612608296f7c80ab22c39b3e657"
+    "srcMd5": "688639abf08b42f591dda1179aa2a560",
+    "zh-CN": "52006c4830a6e632a2123dd4588447be"
   },
   "docs/user-guide/messaging/webhooks.md": {
     "srcMd5": "158c65e395c3192eddd86e6774568bed",
@@ -456,28 +444,28 @@
     "zh-CN": "084573dfe239df543b41f2a2d4409178"
   },
   "docs/user-guide/messaging/whatsapp.md": {
-    "srcMd5": "0f9365355c208a609d869e6ffdff683a",
-    "zh-CN": "38e36ca456076d7156ee09121e00b115"
+    "srcMd5": "10d2d49f8b12d22404b47a28253d3cbd",
+    "zh-CN": "302618ce470f5d18bfbfcb83f2d0b727"
   },
   "docs/user-guide/messaging/_category_.json": {
     "srcMd5": "65fd7f8eb9b30cb9c271e92902fba719",
     "zh-CN": "8e5a6ac20bc3238ba7c34f0a77fc0669"
   },
   "docs/user-guide/profiles.md": {
-    "srcMd5": "3441a78ec787422ac770a27fdc517f25",
-    "zh-CN": "5a72dbd0e66fd4ee46a9b84097dcb031"
+    "srcMd5": "5f06a9f3b0dc4cb4572b251a9edc246c",
+    "zh-CN": "31e15e822ba037a32cf2a8afa20c24fe"
   },
   "docs/user-guide/security.md": {
-    "srcMd5": "fbdb1a425f58c1190e267a4c41f8751c",
-    "zh-CN": "3643ff25a0aad0f38e3fbceaf725f5dd"
+    "srcMd5": "1e8548bc57aff59bcf25ad83558bcc0e",
+    "zh-CN": "c1389cbf8731e7e5a7f690059d4ff26c"
   },
   "docs/user-guide/sessions.md": {
-    "srcMd5": "e9ec4c052f1f2c516e22ab9ee50e413d",
-    "zh-CN": "8e4f2017e3e2524ae393640c548ca71c"
+    "srcMd5": "6d6b95f11a2f8ae519d220e479970d25",
+    "zh-CN": "39ff1ab6c2a49670d30f88193d2fe0c0"
   },
   "docs/user-guide/skills/godmode.md": {
-    "srcMd5": "aa4448ac1a1469438d3568b50d963062",
-    "zh-CN": "a7c488ec318d1c897a4a36a657d55872"
+    "srcMd5": "a3e16c3d4218ebc61cfe34d8cd8b794f",
+    "zh-CN": "9da11d99da3bdd95fe749ecca9b8aa5e"
   },
   "docs/user-guide/skills/google-workspace.md": {
     "srcMd5": "8d5b0c66f7f2da1e0e621fb94272fb4d",
@@ -488,32 +476,32 @@
     "zh-CN": "048ff237ec7adc56581ec4033c584dc3"
   },
   "docs/guides/github-pr-review-agent.md": {
-    "srcMd5": "6ecc9d7f52970bfb40c1636c88c24e6e",
-    "zh-CN": "0564cf1db82e0273207060e9d80974bf"
+    "srcMd5": "17acb650e6d3473d793cb4a3f4c4b186",
+    "zh-CN": "2e16f4121d5b18e48becb42f9ba8043a"
   },
   "docs/guides/webhook-github-pr-review.md": {
-    "srcMd5": "9829a4ddca944f964bdb702b35535560",
-    "zh-CN": "6acbd065fcdf4f72763aad671b1a8fba"
+    "srcMd5": "3647bf5ca9d83f8f04ab9a80f4c1a6c8",
+    "zh-CN": "a84abde71273669fc54e4a5d51c93610"
   },
   "docs/user-guide/tui.md": {
-    "srcMd5": "395db932031acad6e433deae3f5e9dc7",
-    "zh-CN": "83fb65fff15d31052710fb5f94c73429"
+    "srcMd5": "212ebdbc4abc9b6329d0662e22d67185",
+    "zh-CN": "66eeec99e8baae7fdfb40aa4fe9b9efa"
   },
   "docs/user-guide/features/built-in-plugins.md": {
-    "srcMd5": "184228ecf3db2edd37869a8d26c04e09",
-    "zh-CN": "457d35557e5ba1a04fdc25fda901a863"
+    "srcMd5": "319cef2761e3331d30612f37198fc4b3",
+    "zh-CN": "082d4e26cc073834b6ad43f6143e4ceb"
   },
   "docs/developer-guide/browser-supervisor.md": {
-    "srcMd5": "a1f8ac3196db5fe1e961f05bd09848a1",
-    "zh-CN": "b9c3945d43df0ea35ba6730ab02faa64"
+    "srcMd5": "e79f9d5adb1901b08229682cd4a29530",
+    "zh-CN": "db274182dcae7ea52ca7989ce4c7026c"
   },
   "docs/user-guide/features/spotify.md": {
-    "srcMd5": "78c8e8d7859e5c0d796919d45586b72f",
-    "zh-CN": "47d2b5d7c3dcc728e06e296eb8b6f250"
+    "srcMd5": "264c550104a2c4500ee703a10550e6a9",
+    "zh-CN": "335d6a0e8a8aa0f229b0dff836ce2777"
   },
   "docs/user-guide/skills/bundled/apple/apple-apple-notes.md": {
-    "srcMd5": "0e329e8a27b9814935cdec0a3e9c3b76",
-    "zh-CN": "e73b46bce6e4e6962031e8074b53d0b0"
+    "srcMd5": "cac407adc68447fdd72541a24ed63b1a",
+    "zh-CN": "130fc5b85edb3ac4f2593d0ba3f616ab"
   },
   "docs/user-guide/skills/bundled/apple/apple-apple-reminders.md": {
     "srcMd5": "a1d4c03415d03f2067a8839e3ff01cc6",
@@ -528,28 +516,28 @@
     "zh-CN": "5792b00468c7ff249d19dc94c1cbfa51"
   },
   "docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md": {
-    "srcMd5": "3b903a5c6a430851f65395e3dd5712ef",
-    "zh-CN": "65adf31fe15ddfabcd0e7c2ba0883cdc"
+    "srcMd5": "2076f24680ad7f538205566de8c6b467",
+    "zh-CN": "2ad9ec213467be3ee89f706e182e45b1"
   },
   "docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex.md": {
-    "srcMd5": "88d9db52c53809fa0f821f86c8053ba8",
-    "zh-CN": "65cfc04e5a51bb91bb9e38d2ee807341"
+    "srcMd5": "ef50b0ee2d4a89405a53c4baca9bb642",
+    "zh-CN": "83c98e275d55890861a3a48ccc304070"
   },
   "docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md": {
-    "srcMd5": "ea44c9d291437607c0dcb10ced7a7364",
-    "zh-CN": "fe7a0f173f5a61859bc337af0b3f636e"
+    "srcMd5": "bae731811026e7dfc0d2573f68342dfe",
+    "zh-CN": "df6fa8ef603f1e00788849c90999066d"
   },
   "docs/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
-    "srcMd5": "091f10ec8a385b6125e40feb81c3f6e4",
-    "zh-CN": "567733ea736e6a01acab2e61c2d177a1"
+    "srcMd5": "23a9d10bc5d75520aa16e68b4253102b",
+    "zh-CN": "995c91e4c01ac6682762a1d16d0968c2"
   },
   "docs/user-guide/skills/bundled/creative/creative-architecture-diagram.md": {
-    "srcMd5": "0111dec0b50c2810053a4615282f507f",
-    "zh-CN": "3a9dc34a1ef0ec512ab155c962d81121"
+    "srcMd5": "a12be20c1b37f6d3960df02747066f7b",
+    "zh-CN": "83ed1ae55b6dbb08752147ee711201bd"
   },
   "docs/user-guide/skills/bundled/creative/creative-ascii-art.md": {
-    "srcMd5": "e17977590f5e6c022cdc073a0ee454b2",
-    "zh-CN": "c8043c086fb677f84bc911ecb8ef8bb1"
+    "srcMd5": "6a6c50c8fb1390336398353355c0e736",
+    "zh-CN": "96845a4cc5ec00f4fb46e43d83bb4d75"
   },
   "docs/user-guide/skills/bundled/creative/creative-ascii-video.md": {
     "srcMd5": "6722f0957de92a7707143cf574858fcc",
@@ -568,8 +556,8 @@
     "zh-CN": "0d5393568ba28a6c67ea61270b405f64"
   },
   "docs/user-guide/skills/bundled/creative/creative-design-md.md": {
-    "srcMd5": "6f60e3450bc795ec611d4d698fcb90fd",
-    "zh-CN": "4ad63029eaea8444facf0cea9b43b618"
+    "srcMd5": "3e223d44ec1f92dd85e78cff5ab0e726",
+    "zh-CN": "c064cc123411b011e440dcd186495c5b"
   },
   "docs/user-guide/skills/bundled/creative/creative-excalidraw.md": {
     "srcMd5": "26f3d8c489ce38f44dccb5789d210765",
@@ -580,8 +568,8 @@
     "zh-CN": "0ad95d3aaf8adc989443c6c3d5fefc93"
   },
   "docs/user-guide/skills/bundled/creative/creative-p5js.md": {
-    "srcMd5": "f9f8bfcf4d29fc0526646f4044e06d1d",
-    "zh-CN": "035197a97dffd8ab163f88fa741fc506"
+    "srcMd5": "a5d1133bb2cea76905728b2134cafe23",
+    "zh-CN": "99fccf4295aa01e5e2525f099cf00d7a"
   },
   "docs/user-guide/skills/bundled/creative/creative-pixel-art.md": {
     "srcMd5": "ef7feef2c7609afc8d11ab6c2bd7fbe8",
@@ -620,32 +608,32 @@
     "zh-CN": "0de1523f9658b309b0e02aa7f8b33bc3"
   },
   "docs/user-guide/skills/bundled/github/github-codebase-inspection.md": {
-    "srcMd5": "4adba42927bfa80652fc4516fdf0ba0f",
-    "zh-CN": "a7c1ef0d231130efa9f939f516f35b8e"
+    "srcMd5": "b693f8d14f855bac147df607fa47885a",
+    "zh-CN": "f49e2e502e9fb4fe6cf030fc37d1d60a"
   },
   "docs/user-guide/skills/bundled/github/github-github-auth.md": {
-    "srcMd5": "c4f12c7ec836f40c6d8ec687b5a330f5",
-    "zh-CN": "5e9520bd747d00641a7813011e72980b"
+    "srcMd5": "d1c831264f157e709f1cd92f0599fd8c",
+    "zh-CN": "e634a7d3107687b28a04b705e86398cf"
   },
   "docs/user-guide/skills/bundled/github/github-github-code-review.md": {
-    "srcMd5": "b353764765e262c8f593417c93dd2d3a",
-    "zh-CN": "1c6ed81ea1eb228f60993877d469cb70"
+    "srcMd5": "1eb93e419d378802f9de6258b3e21e69",
+    "zh-CN": "7a2cc534dc5c885c7687ddf1ef30ab5c"
   },
   "docs/user-guide/skills/bundled/github/github-github-issues.md": {
-    "srcMd5": "2ec8a7eedb94330163f26a4fe0fb399f",
-    "zh-CN": "a92c4967076c01280a604943cc16742f"
+    "srcMd5": "846afdacc4f43e14d998286a88eba99b",
+    "zh-CN": "abbec399bccc735018a16bd87c594f1e"
   },
   "docs/user-guide/skills/bundled/github/github-github-pr-workflow.md": {
-    "srcMd5": "3d333712249ffad166a42ee5a18eeec7",
-    "zh-CN": "98bb6620ece419db4061405d7220bae2"
+    "srcMd5": "56fb87ed9636c6c9fa47ed56eda6a620",
+    "zh-CN": "0d4aa1cad823c4e2fcd41dcac4635d17"
   },
   "docs/user-guide/skills/bundled/github/github-github-repo-management.md": {
-    "srcMd5": "2e7af9a4d895eb43cca75378fc42b85a",
-    "zh-CN": "088687d02ee351d4629e88b3c6e9d068"
+    "srcMd5": "b7a08ab765e194e2168b327196731dcd",
+    "zh-CN": "a794d2d52ff40397fffcc5d3775e6137"
   },
   "docs/user-guide/skills/bundled/mcp/mcp-native-mcp.md": {
-    "srcMd5": "b7ea5c94427762ec2472cbe514aa22f8",
-    "zh-CN": "968f9c68b259bc98b04ea3226e8957c3"
+    "srcMd5": "74e8a615d897b15af4a22c2ed8a96b77",
+    "zh-CN": "65d5b10f2f9321fccd4192d789d6dc4e"
   },
   "docs/user-guide/skills/bundled/media/media-gif-search.md": {
     "srcMd5": "0ef1dd254bfc20058bd4de04515b468d",
@@ -660,8 +648,8 @@
     "zh-CN": "f54684afdbe0f14938fa39a7d746f7e5"
   },
   "docs/user-guide/skills/bundled/media/media-spotify.md": {
-    "srcMd5": "a37ae969119d5e61785bc8284ab6d145",
-    "zh-CN": "b063923a213b11356ea267d8336bd4eb"
+    "srcMd5": "f7a49a1724c25b6e2c53284856187c7d",
+    "zh-CN": "9140f5cd199c6ba9773ed1c34fc4c5b7"
   },
   "docs/user-guide/skills/bundled/media/media-youtube-content.md": {
     "srcMd5": "d88c73f6048b04881c56be979d6fdb32",
@@ -684,8 +672,8 @@
     "zh-CN": "0c49a6cd4f8ed18157e9ab4ee0aab55d"
   },
   "docs/user-guide/skills/bundled/mlops/mlops-inference-obliteratus.md": {
-    "srcMd5": "1c4a1287ef6086b2ccce1efe10e4d005",
-    "zh-CN": "1e3cc10bdb88fe182bc5b7cf6edb98a3"
+    "srcMd5": "25b5ff0dac6ca15b65b59c5385087fb2",
+    "zh-CN": "14dd77a1bde350ed6a002f12b6b09c90"
   },
   "docs/user-guide/skills/bundled/mlops/mlops-inference-vllm.md": {
     "srcMd5": "d63bff609ab654d1d508f2f8e6ba48ab",
@@ -708,8 +696,8 @@
     "zh-CN": "79157b2e0d12bb96bf81faae3c05d1b4"
   },
   "docs/user-guide/skills/bundled/productivity/productivity-google-workspace.md": {
-    "srcMd5": "b2c15477ed231c1fc96e9b64a61aaa20",
-    "zh-CN": "7b3e20434d5ae364b739277b2691e92e"
+    "srcMd5": "7218e04942909b7b920b8f91c677c1b9",
+    "zh-CN": "462d0bad022a72a8e0727d11aa3a4a81"
   },
   "docs/user-guide/skills/bundled/productivity/productivity-linear.md": {
     "srcMd5": "f2f510783a88002b67a8a168206e0f6a",
@@ -724,40 +712,40 @@
     "zh-CN": "5205506591c622efd97dc52369851229"
   },
   "docs/user-guide/skills/bundled/productivity/productivity-notion.md": {
-    "srcMd5": "49f3b986fa6533f7e1a1d3cfa10271cd",
-    "zh-CN": "1ecced117dbd150e6b609f70e51071cf"
+    "srcMd5": "19d446126510cb15dd087364f94f495a",
+    "zh-CN": "c99e84a34c2844a2150d89af16b6ef82"
   },
   "docs/user-guide/skills/bundled/productivity/productivity-ocr-and-documents.md": {
-    "srcMd5": "a9dfd446fe8b0c6395d877eb53e0a8b4",
-    "zh-CN": "124cc876ceaee16c7ec99d6a5a38bec1"
+    "srcMd5": "5ac2181f990ffbcba1fe851a77b9ce75",
+    "zh-CN": "52e8e3b10871df06705c07a967660506"
   },
   "docs/user-guide/skills/bundled/productivity/productivity-powerpoint.md": {
     "srcMd5": "39bbd57a9c65f77af7406834b57ecf88",
     "zh-CN": "23beaa25f5d35671c02f0e501a680ccd"
   },
   "docs/user-guide/skills/bundled/red-teaming/red-teaming-godmode.md": {
-    "srcMd5": "13b3f17ca6e5282086b8b0cb5bd20c41",
-    "zh-CN": "b1438d902413f5e835444cbd11576a1b"
+    "srcMd5": "8f9106f72d4ec081ddfdf4f35218a33a",
+    "zh-CN": "b2e32dd75cd192d3e9d980687281c24e"
   },
   "docs/user-guide/skills/bundled/research/research-arxiv.md": {
-    "srcMd5": "aa6b7a3f2408c77c1e9969ac960d1a63",
-    "zh-CN": "1a1c618aa42323be2096bf41172847c5"
+    "srcMd5": "80f864466d95246a83fa3fb81633c8eb",
+    "zh-CN": "826bf3cb47584dacbc1ab0dfaa587443"
   },
   "docs/user-guide/skills/bundled/research/research-blogwatcher.md": {
     "srcMd5": "23dcdf1c420f8f93e8ebd06d27f4ca30",
     "zh-CN": "4725dbc99bc7c3bc38ec9f185beee251"
   },
   "docs/user-guide/skills/bundled/research/research-llm-wiki.md": {
-    "srcMd5": "6c139bca0a3b0a02d5a90c3fc6e0a7d2",
-    "zh-CN": "029d3fb6658efe5ab6bad794e265b8b8"
+    "srcMd5": "2ba6ce64c85f99d1092892dcd619e2c9",
+    "zh-CN": "1e6e0277db2b4c3c98783278b8bbc940"
   },
   "docs/user-guide/skills/bundled/research/research-polymarket.md": {
     "srcMd5": "a9b095c9a464ed9f99c5d00ac08acb48",
     "zh-CN": "792164643d2ff6a344e3a085e5a80901"
   },
   "docs/user-guide/skills/bundled/research/research-research-paper-writing.md": {
-    "srcMd5": "c74b1cdb4c037583244a32e62d8de3de",
-    "zh-CN": "fe12e79e7761f859576aa646f3e429a7"
+    "srcMd5": "d9ec0ead7f410140a1ef6352ff3ccf47",
+    "zh-CN": "7f547d75b255cc5f9e4aef371ab9b563"
   },
   "docs/user-guide/skills/bundled/smart-home/smart-home-openhue.md": {
     "srcMd5": "cdc970a0053bda71692fe9342229ae9d",
@@ -768,40 +756,36 @@
     "zh-CN": "dcfd778671328e768ca5836bb6f84237"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-plan.md": {
-    "srcMd5": "8cd90c56aa45e256b94c536b4c045fc9",
-    "zh-CN": "d790a91653a66a5dbf772f71928d114c"
+    "srcMd5": "d1ce4bc9d9a6c3641bac296b64b17772",
+    "zh-CN": "511e22e0ea9a239b287fbe1f513e782f"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-requesting-code-review.md": {
-    "srcMd5": "e934f104eb08ecc2f995e2332af3465e",
-    "zh-CN": "966e69f7a7cad440c34fc13f45b25f9a"
+    "srcMd5": "a22b510ef587b63513bf445e24bd238b",
+    "zh-CN": "266fa2e1676c6a045a4a87029d4ecf7d"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-subagent-driven-development.md": {
-    "srcMd5": "6ce350529ad5fcd49c99a8fad2aa8895",
-    "zh-CN": "b8dbfc1b59cd94ad737b9a8bc7f30658"
+    "srcMd5": "f66cdc432ce6f011ae7a68a188e74530",
+    "zh-CN": "299ae617f40c542bb1855eba611cc4ec"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-systematic-debugging.md": {
-    "srcMd5": "d5a54d5dddec672b763ebf58e28dcd15",
-    "zh-CN": "c91f5b24ced68fe772de5f4fbafb32f2"
+    "srcMd5": "4d7f8286946f5aecae611d6e1bcbef3d",
+    "zh-CN": "3f371f4bdb7ed6ffb1926bec6fcea3a5"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-test-driven-development.md": {
-    "srcMd5": "d24c9a85fe51b260ba075954e27f1699",
-    "zh-CN": "d1b9b02bcc2596a720749940e7a70abf"
+    "srcMd5": "e7ddcfd6c7b4a6c5fdec48d2b44c534b",
+    "zh-CN": "410424b2f87e0d553780fb3d04353002"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-writing-plans.md": {
-    "srcMd5": "ee7d2fd48ca2511d6453cce91460fdd1",
-    "zh-CN": "ddc07efc82e5eb20eab91504e17a3010"
+    "srcMd5": "9feba4de01e504fb8769d09230f6842f",
+    "zh-CN": "e775b459741851468d208022998345f2"
   },
   "docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md": {
-    "srcMd5": "49a310f757eb0a54be00b490a52785c7",
-    "zh-CN": "29d6dab08b8b08bab5740d721d83bbb8"
+    "srcMd5": "d2bd467b6b9a436bb0559598bfbadf3d",
+    "zh-CN": "1cdd59d4cae249113e0d639389e4fb31"
   },
   "docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md": {
-    "srcMd5": "6455f4cc1607477ca625120410e7afd9",
-    "zh-CN": "9790f71700b6510c38e4e119d21f07f4"
-  },
-  "docs/user-guide/skills/optional/blockchain/blockchain-base.md": {
-    "srcMd5": "5d3e85c6ec6df578aa192705037b0c54",
-    "zh-CN": "9eea126d1d1c48e1cfe81fd767a9e272"
+    "srcMd5": "ae9c31bf63305e7156824aa69fd397d9",
+    "zh-CN": "3e818caff9cce526d3cbd798bc8fcf1e"
   },
   "docs/user-guide/skills/optional/blockchain/blockchain-solana.md": {
     "srcMd5": "d73e6be7f554cb886a14fd518b556c2e",
@@ -816,12 +800,12 @@
     "zh-CN": "f943c015b16e7bf50449ce0d3b167393"
   },
   "docs/user-guide/skills/optional/creative/creative-concept-diagrams.md": {
-    "srcMd5": "0a0e12e7ee8a31eb89ff5880250d1d2a",
-    "zh-CN": "d9266096e124a3c7502191d5a5949cc8"
+    "srcMd5": "6bff44c4a0085011cab2fef8ece453af",
+    "zh-CN": "c62f7169dab3d48b60019f7c8aaf1fad"
   },
   "docs/user-guide/skills/optional/creative/creative-meme-generation.md": {
-    "srcMd5": "14cab902fbdbb41af2b829e6fcb8c2a4",
-    "zh-CN": "815855c1e417e445ca9930209e498ec4"
+    "srcMd5": "743aa84f4d819b7847368604a4262a82",
+    "zh-CN": "3c74cf1c359328198967b651751b44bc"
   },
   "docs/user-guide/skills/optional/devops/devops-cli.md": {
     "srcMd5": "6a01654b0247c7ceb27c78068fde388f",
@@ -832,8 +816,8 @@
     "zh-CN": "6972b3841cb5619db420372c48cd5f3b"
   },
   "docs/user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md": {
-    "srcMd5": "cc07f4b0cb38d02db37ca77be7e62607",
-    "zh-CN": "b90a13365a47ee5016ebc360800d1df7"
+    "srcMd5": "810c7c45b36f1755494372408f8e8c61",
+    "zh-CN": "1974ba8ea2188fac7630e244a112204e"
   },
   "docs/user-guide/skills/optional/email/email-agentmail.md": {
     "srcMd5": "305de9e7b0d78ab33accd71c46022a79",
@@ -848,16 +832,16 @@
     "zh-CN": "8b8b8e65e6a83c1012f5cc9bd2667939"
   },
   "docs/user-guide/skills/optional/mcp/mcp-fastmcp.md": {
-    "srcMd5": "339060c23e7ed7b257add649397159c6",
-    "zh-CN": "b7b80fc86e05cf1bc36d8c67bfbe732a"
+    "srcMd5": "503b0c7b2dde07466361bd403899f773",
+    "zh-CN": "92ccca77b826ec6c375835c198cea3af"
   },
   "docs/user-guide/skills/optional/mcp/mcp-mcporter.md": {
     "srcMd5": "593d4b100cc452c95fea3ce690516fc1",
     "zh-CN": "0b994f3f54dba6d694f11d24197ede10"
   },
   "docs/user-guide/skills/optional/migration/migration-openclaw-migration.md": {
-    "srcMd5": "88741d9705425b729ca36f5e0a89ef3e",
-    "zh-CN": "21e281a0309b00bbf034843cdd92db94"
+    "srcMd5": "465de15ad6ca6ca1164d526821b5e15c",
+    "zh-CN": "b60a247968baf24305541bc8c293090d"
   },
   "docs/user-guide/skills/optional/mlops/mlops-accelerate.md": {
     "srcMd5": "07ff9ec7a98fad7fe5804309a49531af",
@@ -882,10 +866,6 @@
   "docs/user-guide/skills/optional/mlops/mlops-guidance.md": {
     "srcMd5": "3f4f3e3050372bcd0bfbe839eadc61d1",
     "zh-CN": "53e9ae5519411c4ec53f6869c062eee4"
-  },
-  "docs/user-guide/skills/optional/mlops/mlops-hermes-atropos-environments.md": {
-    "srcMd5": "a0777e2f94a71fb4adc6d7f498fb5300",
-    "zh-CN": "1842323e678d2fe8f6a008ba6dcad804"
   },
   "docs/user-guide/skills/optional/mlops/mlops-huggingface-tokenizers.md": {
     "srcMd5": "05a75ae6049d024f63c4f08dc69facc7",
@@ -920,7 +900,8 @@
     "zh-CN": "d8670088afd6566d00be426cca823fee"
   },
   "docs/user-guide/skills/optional/mlops/mlops-pytorch-fsdp.md": {
-    "srcMd5": "52160bad9dd827f25c1f5d68a103d157"
+    "srcMd5": "52160bad9dd827f25c1f5d68a103d157",
+    "zh-CN": "07a07f8d0d0aa4e1eeac55cc14a9eb7a"
   },
   "docs/user-guide/skills/optional/mlops/mlops-pytorch-lightning.md": {
     "srcMd5": "7c0c3ff048d9b1c952bafaeaead51005",
@@ -967,12 +948,12 @@
     "zh-CN": "9018e5d9a9fed885fbb3cc448ffee35e"
   },
   "docs/user-guide/skills/optional/productivity/productivity-siyuan.md": {
-    "srcMd5": "32b4d12575fd660c6fc7f058bf12d72d",
-    "zh-CN": "d67a6f83d589e41bbee227a940ba1eca"
+    "srcMd5": "15317c3eb5318c2ded9ff4f6901f9323",
+    "zh-CN": "07f8751071d25f6aa4e049032d88b55b"
   },
   "docs/user-guide/skills/optional/productivity/productivity-telephony.md": {
-    "srcMd5": "0782c552f2c8f14b386f52cedde42ffd",
-    "zh-CN": "66e078f80bf5f7c3396a8badf4fcf2a3"
+    "srcMd5": "3e1255a05bb1dba54dfbcf80b91c116f",
+    "zh-CN": "acdc5a9d26ec0d10a2a57aa6e8f76e8b"
   },
   "docs/user-guide/skills/optional/research/research-bioinformatics.md": {
     "srcMd5": "1d2124a2b68b0240d2f7cbbef2bcee9f",
@@ -987,24 +968,24 @@
     "zh-CN": "c5f026944886fa2df08e688cb13c1c7a"
   },
   "docs/user-guide/skills/optional/research/research-duckduckgo-search.md": {
-    "srcMd5": "4eaaed19291335fab23d0486e209e129",
-    "zh-CN": "c3ff5ab327b5a5a1a5e12c285581219a"
+    "srcMd5": "c721b7dbeb08e0517646e6650d2cbfa2",
+    "zh-CN": "20a0e4be32dee790cea93b56902b2b10"
   },
   "docs/user-guide/skills/optional/research/research-gitnexus-explorer.md": {
-    "srcMd5": "52a633f16ca4dc2a58565ff1e65eb8d3",
-    "zh-CN": "c785d5ddaf1138ed5f136d569daaa10d"
+    "srcMd5": "b1bd85886257866adcc7aa4136bde806",
+    "zh-CN": "c49c01835d5ae6a9a77839d8b0834ba4"
   },
   "docs/user-guide/skills/optional/research/research-parallel-cli.md": {
-    "srcMd5": "f71fb196d0e42eb2ec75c3e6c8bb084e",
-    "zh-CN": "f22d2da9f422c0339a294734744c4f3c"
+    "srcMd5": "36b2b6d7a2487fdebcb6ef8390f9423e",
+    "zh-CN": "6c5dc5912c50ac51d98bcec1164a8f19"
   },
   "docs/user-guide/skills/optional/research/research-qmd.md": {
-    "srcMd5": "8d257b7d69b9c6213c564fac272c09a5",
-    "zh-CN": "7e14c82c8fed95d3d5f5cdb461621988"
+    "srcMd5": "acb1a231daf24c017f65ffe1e5f7fdda",
+    "zh-CN": "cfb57aaa7addc9a382c414e316127074"
   },
   "docs/user-guide/skills/optional/research/research-scrapling.md": {
-    "srcMd5": "3c5c8b5f1df1de6e2a1986c9476fd58c",
-    "zh-CN": "af80c3305ea604fce0963d1cf7c880ad"
+    "srcMd5": "da1efbf4e84635d4c648801e86548599",
+    "zh-CN": "0c3c4ee8974d404b2a386117789b5461"
   },
   "docs/user-guide/skills/optional/security/security-1password.md": {
     "srcMd5": "9c929fbef3934f7e1c7425edd1f305a3",
@@ -1027,152 +1008,152 @@
     "zh-CN": "2b7e9cc0a5467f385a9805a5cdf5362f"
   },
   "docs/guides/azure-foundry.md": {
-    "srcMd5": "f949da288add33b48ac6013d69099740",
-    "zh-CN": "13eabbf5e1d1a6194540a86d2364962c"
+    "srcMd5": "cec7f4e99ea1e4a1b276f8eabf2ee736",
+    "zh-CN": "8a150f70732a3cc8387728d7e3dde8fb"
   },
   "docs/reference/model-catalog.md": {
     "srcMd5": "6197ed3fb14ead3a07016ca586ad8972",
     "zh-CN": "cbc7f9fe0ae4cbec9e8c023aa37dad4e"
   },
   "docs/user-guide/messaging/yuanbao.md": {
-    "srcMd5": "0f89c61cb3611ddf1b30ae02e9ab86a2",
-    "zh-CN": "c0193382f80fc555ef8a15040824c393"
+    "srcMd5": "37b105eb351f7b022d468e9d9b0fdb3e",
+    "zh-CN": "13cdd91e891bd4c1460938c71b7d1250"
   },
   "docs/user-guide/skills/bundled/creative/creative-touchdesigner-mcp.md": {
-    "srcMd5": "5d28d66af3c1007ea091b8019fe07b73",
-    "zh-CN": "40fb375f1613d5873d8144b026408b9b"
+    "srcMd5": "7de763fe2d6e01645730bb9a77088bf8",
+    "zh-CN": "a2faab295a225bbbc7c7dd32b8138386"
   },
   "docs/developer-guide/image-gen-provider-plugin.md": {
-    "srcMd5": "7a3b78de2fb0922e779eb1812abf7fec",
-    "zh-CN": "72e5bcc9a5c36d19b407e5d6ab30a529"
+    "srcMd5": "a20188f250cea66337dc0991e65df778",
+    "zh-CN": "3b3f1eb210242bcaa76ec2c755361ff4"
   },
   "docs/developer-guide/model-provider-plugin.md": {
-    "srcMd5": "a4f342dc5b30751fc2d57ccad146b9e0",
-    "zh-CN": "197fffc0345dd54ddcca7f91f1825fd1"
+    "srcMd5": "e23ec6f66737b410f803ad8b346861f8",
+    "zh-CN": "9dc6e78aee9ec71cdcaff6856a78a356"
   },
   "docs/guides/cron-script-only.md": {
-    "srcMd5": "dd7b0b192736298d69bc0ca2ecd7b476",
-    "zh-CN": "31925286a3b2080b6a88f4ce9c7966cb"
+    "srcMd5": "aabc0c4d89b83f521de2eef46d70b2c9",
+    "zh-CN": "b837fefdc1edac520be17aedc6e65171"
   },
   "docs/guides/google-gemini.md": {
-    "srcMd5": "79878f344e3ec564738d79c2dd24b9e0",
-    "zh-CN": "254fd4746aea3188abbcee0ddbcab060"
+    "srcMd5": "3558c68ba4b699f321081d65f015ecb0",
+    "zh-CN": "ebe3fc709a78a17acdf793e3d1f94e91"
   },
   "docs/guides/local-ollama-setup.md": {
-    "srcMd5": "27f325b6da01b26443d5c6e68741b45c",
-    "zh-CN": "72fcfbd13ea2282eeb62d1cad2665e95"
+    "srcMd5": "f5eac7fd49fcbd4268cc5e405de01cc9",
+    "zh-CN": "4ae82ccd853ba14293ff8121faac4207"
   },
   "docs/guides/microsoft-graph-app-registration.md": {
     "srcMd5": "090347e6718c00b1e3cf5c4355aa1808",
     "zh-CN": "ab073a801220b5ae2ee8b044de1aaee2"
   },
   "docs/guides/minimax-oauth.md": {
-    "srcMd5": "5d874a5ef693ff811810c45fa0f10e04",
-    "zh-CN": "7c061cb4687d4c500712e87fa703c817"
+    "srcMd5": "2d65dfcfe55d239eb650f853cbe25156",
+    "zh-CN": "33fcc101cd8732d5d7f2b207782e3e63"
   },
   "docs/guides/operate-teams-meeting-pipeline.md": {
-    "srcMd5": "c7caf9f1c939364dc7922ae8050b90f9",
-    "zh-CN": "8795c15ce6eb6632f884e004f578a690"
+    "srcMd5": "48efce0974f34edd463b884f34c29580",
+    "zh-CN": "55b0710be6d8debc1ce71df8995f9aae"
   },
   "docs/user-guide/configuring-models.md": {
-    "srcMd5": "fce82904acbbfd63a5d7f4dae60b6e5c",
-    "zh-CN": "bdf050bc269ab347f27d4341960b3262"
+    "srcMd5": "6eaacb3a13f197aa31144132dbff01ed",
+    "zh-CN": "7595c913a06d92d7b45b97100b846fde"
   },
   "docs/user-guide/features/computer-use.md": {
-    "srcMd5": "03e45c6b21e787ffbd6ef3decc1223b9",
-    "zh-CN": "3f66c392fe875c9ab66e7e6173166eee"
+    "srcMd5": "912c92d39a70c9c3ce7c4991d0ee0055",
+    "zh-CN": "2d8924e165b894a9a5b3d432ccbf8205"
   },
   "docs/user-guide/features/curator.md": {
-    "srcMd5": "8c168cc7db0f99e30d42fe1ae3992276",
-    "zh-CN": "a377cff3edd4e700e2244fa96337e43c"
+    "srcMd5": "b1b6b8a660880d1e953d978b27d14c7d",
+    "zh-CN": "2be453e9701a2853e7d30043b9225f94"
   },
   "docs/user-guide/features/goals.md": {
-    "srcMd5": "112eec85ea35790fc579e4594d70dfd6",
-    "zh-CN": "319a4752d6f6d2013ace4cbc9edd5dfe"
+    "srcMd5": "0a09ca4a43d1d89fa6b5214c94e8a9f3",
+    "zh-CN": "e3ea1df9a2f58298289007b41f00b040"
   },
   "docs/user-guide/features/kanban-tutorial.md": {
-    "srcMd5": "e483253a8c2b29b97d25a9460179ed87",
-    "zh-CN": "540f1386474009331f7b1bd6c538a92d"
+    "srcMd5": "41c71b491898a149553209f0ee6d93de",
+    "zh-CN": "18eba54df15cbb41306792e86951394f"
   },
   "docs/user-guide/features/kanban.md": {
-    "srcMd5": "13e99f5209f65017044013e157fa84e4",
-    "zh-CN": "fd22ec5b64ed5d43af8366a8ed97760b"
+    "srcMd5": "f65c807da5def4702aa88d29def7de84",
+    "zh-CN": "36bd8124fce0162a390f259e52e929c6"
   },
   "docs/user-guide/features/web-search.md": {
-    "srcMd5": "7f7ca9661224a110383704d865a08ea2",
-    "zh-CN": "c6a89b681968228c362548751ce71c32"
+    "srcMd5": "3a0bea7688ac74de4ee27c8cdb68f1b0",
+    "zh-CN": "1098ded942d29f5226d1c0d74e8750fd"
   },
   "docs/user-guide/messaging/google_chat.md": {
     "srcMd5": "f2c951000128421a721c83ad6b2fd781",
     "zh-CN": "ffe418651f1aff0fd4138f0a4a137d16"
   },
   "docs/user-guide/messaging/msgraph-webhook.md": {
-    "srcMd5": "4cc5ec546f6d13f3b9e3cc41b1834f03",
-    "zh-CN": "667dd8cf514bbcbb2ba760362fbf9b38"
+    "srcMd5": "5b7140c0e3a50e3098ac0425eb52ea30",
+    "zh-CN": "064fe194e876dd9ba4d5ea1cbb170fae"
   },
   "docs/user-guide/messaging/teams-meetings.md": {
-    "srcMd5": "0dc7370584374e17988f2cedf6c02707",
-    "zh-CN": "ef22d1402bbf53e82c03d2e791dda6a9"
+    "srcMd5": "bafa8c755b990e4539fd970c8a579365",
+    "zh-CN": "f552f6cfee43b65cdb96e15413682a2e"
   },
   "docs/user-guide/messaging/teams.md": {
-    "srcMd5": "bdc974fa531b5a7544afbd8fbb8a52e8",
-    "zh-CN": "5deeb4d0a3c1486dac830ef0015cac5e"
+    "srcMd5": "cb05bcee9cc98a53b0b38c0fdb6ab2de",
+    "zh-CN": "7233f6b5341af0b99219a76d40a00801"
   },
   "docs/user-guide/profile-distributions.md": {
     "srcMd5": "eab745e0d44e4ebc6be111224c21cd1d",
     "zh-CN": "35f0409220e189002f95caaec308965c"
   },
   "docs/user-guide/skills/bundled/creative/creative-claude-design.md": {
-    "srcMd5": "3fc3858f0a8bf8e355eec3be218e47f1",
-    "zh-CN": "f910992bc8690f8369b1046670c855f4"
+    "srcMd5": "f2f09a8d865e1fa5d7b8ecddf006b5b7",
+    "zh-CN": "ee01e8f8bd272f70e2f26f7544e5c622"
   },
   "docs/user-guide/skills/bundled/creative/creative-comfyui.md": {
-    "srcMd5": "bdd722e5891921610aa2931968c6aebc",
-    "zh-CN": "3ebfdff8f1bc618330c810f115ce359f"
+    "srcMd5": "5cb10373f384dd6b453bcde63d69fca5",
+    "zh-CN": "8dd1690602ef12a9d2aa5434bf0793ec"
   },
   "docs/user-guide/skills/bundled/creative/creative-humanizer.md": {
-    "srcMd5": "55ecbc06f2f3df77a756f1bd666580d4",
-    "zh-CN": "9459e902fbcd5bd7e4431aaf20b75bf7"
+    "srcMd5": "26605a8bd8d119cb236e049909b06560",
+    "zh-CN": "5200db685dde5db63dfab7a5ce48c3e4"
   },
   "docs/user-guide/skills/bundled/creative/creative-pretext.md": {
-    "srcMd5": "c3ac5f361c460464527861b824d20a50",
-    "zh-CN": "57cb900693a131a21ddf1dccf5ae07bc"
+    "srcMd5": "85673b18b5afde3e60fc806866dbb231",
+    "zh-CN": "6a58f2812783e9613b4a88d5b3fbe192"
   },
   "docs/user-guide/skills/bundled/creative/creative-sketch.md": {
-    "srcMd5": "4b16d1a14834d7ca0a2aaaaa44ca02ec",
-    "zh-CN": "41060e3331848532b206dd3c3e0a7ac2"
+    "srcMd5": "06f46ce9f03a81fd2a659b47559910ae",
+    "zh-CN": "4fa82a2b7f20a2f0a9b903f4fa9bc5db"
   },
   "docs/user-guide/skills/bundled/devops/devops-kanban-orchestrator.md": {
-    "srcMd5": "3a3ecd310c9359c3ad3ae08797951484",
-    "zh-CN": "c9dc02b3da325c352a8f2052f0423a23"
+    "srcMd5": "f4bf4e9b9ac8a528b50eb9cc99f811a9",
+    "zh-CN": "2197bf5fe7087c94681d93593b701041"
   },
   "docs/user-guide/skills/bundled/devops/devops-kanban-worker.md": {
-    "srcMd5": "ef287f0ed9ab75bf9774997032c6981b",
-    "zh-CN": "a40cc86ff50b3f17a9ceb47b07850233"
+    "srcMd5": "353c9f74c27a84e1199a36e8d4cd990c",
+    "zh-CN": "f88dbefcb3dc4fd3451c11eb67c47639"
   },
   "docs/user-guide/skills/bundled/productivity/productivity-airtable.md": {
     "srcMd5": "96a2830e5fb39e65a0bf1b193b811b96",
     "zh-CN": "997069500bb5810cba1470f4723aba49"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-debugging-hermes-tui-commands.md": {
-    "srcMd5": "5185548c2559e19f21c4e65b3df36450",
-    "zh-CN": "c7ab0306b0dee3af4a505827d7681193"
+    "srcMd5": "020689c088df48de8ecab1ee8b470773",
+    "zh-CN": "8ab16a128ac66b89607adfd07fb43c34"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md": {
-    "srcMd5": "f16614648a95c545b399b09776ce9391",
-    "zh-CN": "f612be2e0e42f8b06091c5732f6b9c06"
+    "srcMd5": "2b75447ddd262289b4d549a3ece9679c",
+    "zh-CN": "95dafd3b52466e567123f444c17d06a5"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-node-inspect-debugger.md": {
-    "srcMd5": "ab6f446603cf01d1b839b98d72eb9371",
-    "zh-CN": "6a7d96b5e20204558297b9ef898b4ab3"
+    "srcMd5": "c1836a48620438800fb635da07e78a2f",
+    "zh-CN": "ea44c968a4be43ca616f74d9b5cae328"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-python-debugpy.md": {
-    "srcMd5": "00b3cd3b31d0828b3650ba8b035d0004",
-    "zh-CN": "b0a72ed622703249b06f23a6d051ba68"
+    "srcMd5": "c73ad12f475ce3c9f7d0ff262e1525e3",
+    "zh-CN": "1fd9181e1b3559c556405c98f075a021"
   },
   "docs/user-guide/skills/bundled/software-development/software-development-spike.md": {
-    "srcMd5": "23d6c3b8fad47cdc45ddfce68fe110f6",
-    "zh-CN": "7602d2f119876cc0032d5a2f4b67580f"
+    "srcMd5": "0cb17deaf8ce5a72d0af4d389ffc54f5",
+    "zh-CN": "220671027496024a92a7062e3594001d"
   },
   "docs/user-guide/skills/bundled/yuanbao/yuanbao-yuanbao.md": {
     "srcMd5": "0b4eb624369e90bd17947fba8c3679b4",
@@ -1183,20 +1164,20 @@
     "zh-CN": "8b073143da494bc238a30da843ce4185"
   },
   "docs/user-guide/skills/optional/productivity/productivity-shopify.md": {
-    "srcMd5": "d97e7ffd0f5186e6e14640c71c988cd4",
-    "zh-CN": "e3188f78d5b1ca30cc5b29c03f74d939"
+    "srcMd5": "74c0e72be35e333f58f61c5a1999f21c",
+    "zh-CN": "eb9972baf4a267c101a0542e2e678f0b"
   },
   "docs/user-guide/windows-native.md": {
-    "srcMd5": "61bbe46e584d55ebc364b5d65eb9bc6d",
-    "zh-CN": "d5e291ec13fafa2f322a8b0ee1749344"
+    "srcMd5": "66ce82ac54160d4bdae6867b89727ca1",
+    "zh-CN": "7f6185c8aa4313994dae1249655e8e76"
   },
   "docs/user-guide/windows-wsl-quickstart.md": {
-    "srcMd5": "dceed573803ad7dd8e430332d3352ee2",
-    "zh-CN": "ff477a67a2bead88056567eb2195b97f"
+    "srcMd5": "eb3ee84dc05441bbd98283caa53d21c4",
+    "zh-CN": "219471faba6762dfe952564625075686"
   },
   "docs/developer-guide/plugin-llm-access.md": {
-    "srcMd5": "d9545dbf50b79543cdb2fcf519a257be",
-    "zh-CN": "c64e73f9d2c37bcb06bcdbc294a5a370"
+    "srcMd5": "3233725243542293ca4a585bf047d6b4",
+    "zh-CN": "d7cb9f2abc89115404a5844e23f8e34b"
   },
   "docs/user-guide/features/kanban-worker-lanes.md": {
     "srcMd5": "e0f2275b32c830b36f11468de788634e",
@@ -1215,44 +1196,44 @@
     "zh-CN": "efe9270b99eadd8808e18aaa77f9818c"
   },
   "docs/user-guide/skills/optional/creative/creative-hyperframes.md": {
-    "srcMd5": "7d4ef17912a9a76b98b80213855adcd5",
-    "zh-CN": "62062c103ff8c89b4cab9bcca1406ae5"
+    "srcMd5": "92f64b07acaf667e0979de50c7d1eb36",
+    "zh-CN": "babb71f275f390db8d1737a654fdc573"
   },
   "docs/user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md": {
-    "srcMd5": "b4c81d8628b06d9149b8371278de8f53",
-    "zh-CN": "cd374bea21d51e8bcef953f135ef40e2"
+    "srcMd5": "879dce4d3ac5f4de99903fe86b0f6bf0",
+    "zh-CN": "919fc860a2e499b1aac68a5a556ac5fe"
   },
   "docs/user-guide/skills/optional/devops/devops-watchers.md": {
     "srcMd5": "5c3e76dc9cc6acda485511ed9991e8d1",
     "zh-CN": "b10c18ee627fd9a200300c859d89a215"
   },
   "docs/user-guide/skills/optional/finance/finance-3-statement-model.md": {
-    "srcMd5": "71a38180600e095713bbebbc10e9b27a",
-    "zh-CN": "6df762a45f155c26f8d3bc56c4c3ebc6"
+    "srcMd5": "2212c0927ad05be526d10ddf9f6a39f5",
+    "zh-CN": "f89fd3ce06736867ae905f8809441c6d"
   },
   "docs/user-guide/skills/optional/finance/finance-comps-analysis.md": {
-    "srcMd5": "e6cdbfdddeaac109f93daa5771d5bb2c",
-    "zh-CN": "19b0b07165c2f4c2493564f32f45106c"
+    "srcMd5": "419f12b83105216df3c8341c1b2b8f7b",
+    "zh-CN": "b017f276909c999eacf3cc542be188fa"
   },
   "docs/user-guide/skills/optional/finance/finance-dcf-model.md": {
-    "srcMd5": "51dc64a6fa222e5eac34eb70f39ba4d9",
-    "zh-CN": "c2804fdfc8705eddbe89a21c3ba8b858"
+    "srcMd5": "b14f686dd0f5c158ebfbac0b87e811f4",
+    "zh-CN": "533ee1ca91a05f93794827e66537a446"
   },
   "docs/user-guide/skills/optional/finance/finance-excel-author.md": {
-    "srcMd5": "02b1c05ce200067b8596319412edfe74",
-    "zh-CN": "806c21fceb08154bccd609fb04783310"
+    "srcMd5": "0cc50837cc1dac6edbcfa00c4c9ca326",
+    "zh-CN": "25abc67cc7b9ac9d1345339059da5592"
   },
   "docs/user-guide/skills/optional/finance/finance-lbo-model.md": {
-    "srcMd5": "90e35c4422e178c6f6cadce9bd30fe29",
-    "zh-CN": "58f9a268f787fdc35de241057a5e6755"
+    "srcMd5": "a4ae1bd3b2d8215fd3b2dfc83c863698",
+    "zh-CN": "006d9fdb126c26eef4df52ce44747975"
   },
   "docs/user-guide/skills/optional/finance/finance-merger-model.md": {
-    "srcMd5": "dbee049b72fda57d55c8faefe1a2fc2e",
-    "zh-CN": "34ab6dba6e639dcce56f6d8ba92ed180"
+    "srcMd5": "41407d8e2efcd072df36b2c0bc352d47",
+    "zh-CN": "4b19fa6385b3db0fbf20fbee0e1c449f"
   },
   "docs/user-guide/skills/optional/finance/finance-pptx-author.md": {
-    "srcMd5": "a32e1f32d557d19f6d12c977e3453312",
-    "zh-CN": "e2a0237e94ea29c408dc0f8b84cf8473"
+    "srcMd5": "225036f90512e85ad63a6cd2038cd7e0",
+    "zh-CN": "b8985624b04f7bebc059d18f69d86879"
   },
   "docs/user-guide/skills/optional/mlops/mlops-inference-outlines.md": {
     "srcMd5": "ea86e6af7186a6e0f0985e3b9d28735f",
@@ -1271,11 +1252,119 @@
     "zh-CN": "dd7fdeaeee2d325a44e7331f6778bbaa"
   },
   "docs/user-guide/skills/optional/productivity/productivity-shop-app.md": {
-    "srcMd5": "7b40db66cdc384d2c88dda87569464b1",
-    "zh-CN": "ac3b3a7707105c06e2bc3e180f21363b"
+    "srcMd5": "2c7c60decdcbdf6d54021086c34f2baa",
+    "zh-CN": "b15fc14689b9e90c6462b561c24bd18f"
   },
   "docs/user-guide/skills/optional/research/research-searxng-search.md": {
-    "srcMd5": "5b23054b6bbd9125115153c36fa3d5f9",
-    "zh-CN": "0df97477c5c04da58808bd04d7e3dd4b"
+    "srcMd5": "c45714af704b770a847e4e5278ac738a",
+    "zh-CN": "ff98d01e318b7a1aab99e28dca8f6ec4"
+  },
+  "docs/developer-guide/programmatic-integration.md": {
+    "srcMd5": "12034ceb06b53c7ad17ec71d780dcd96",
+    "zh-CN": "3f6c91967b1683c4583b6191782e851e"
+  },
+  "docs/developer-guide/video-gen-provider-plugin.md": {
+    "srcMd5": "3284fd9b18152c6d315cdb8f064e500b",
+    "zh-CN": "e2d46fefe4fa8f4a1c3f237af1877a10"
+  },
+  "docs/developer-guide/web-search-provider-plugin.md": {
+    "srcMd5": "7ee96371d58bc9c0ba3e8b136e9c423a",
+    "zh-CN": "744eb4ff7bcb2c645552d05b4acd854e"
+  },
+  "docs/guides/oauth-over-ssh.md": {
+    "srcMd5": "9b3e46ca29af2fa452754468bdd9d55f",
+    "zh-CN": "0474f38e5c96bd83e81c3cd6c4317279"
+  },
+  "docs/guides/pipe-script-output.md": {
+    "srcMd5": "31398555b8a799e7d36d53fe8572bcfe",
+    "zh-CN": "6e5af635cd70435c24d7a46e7923d922"
+  },
+  "docs/guides/run-hermes-with-nous-portal.md": {
+    "srcMd5": "2ab745e19c6a7fffa6fc91d4bdc83786",
+    "zh-CN": "7ee6f4324b87bb738daf4a90b02e9209"
+  },
+  "docs/guides/xai-grok-oauth.md": {
+    "srcMd5": "8c38ace92bdd135289eb601d43303305",
+    "zh-CN": "d929f9348e1af0242af8b01fbcc9c9e4"
+  },
+  "docs/integrations/nous-portal.md": {
+    "srcMd5": "8cf9b5d464850ca39d4afd171533ed7c",
+    "zh-CN": "47eda0571ef992925f59a9ae897d055b"
+  },
+  "docs/user-guide/features/codex-app-server-runtime.md": {
+    "srcMd5": "852db0f944ba0445eaea68b2a1e72f40",
+    "zh-CN": "22219726c3aacef2fa3f3efb9b2f91d7"
+  },
+  "docs/user-guide/features/deliverable-mode.md": {
+    "srcMd5": "4f8747ae249eecbf22ecf4ff202b122c",
+    "zh-CN": "9570f32afc061ef742fb1531c4c69dc7"
+  },
+  "docs/user-guide/features/lsp.md": {
+    "srcMd5": "dd7d6ed528206c3eb28e241656d7358d",
+    "zh-CN": "db44b496ef6c0a25416d0891ec7541d4"
+  },
+  "docs/user-guide/features/subscription-proxy.md": {
+    "srcMd5": "fa05a9ea06b94d0787ce12b2cad12fda",
+    "zh-CN": "7f4d623f82f8389219d630fe9cc0f281"
+  },
+  "docs/user-guide/features/x-search.md": {
+    "srcMd5": "2996230f4636cbb856ba820ac7bc9a3a",
+    "zh-CN": "7b8e80cd46baa394022a0ea95925e715"
+  },
+  "docs/user-guide/messaging/ntfy.md": {
+    "srcMd5": "96935c9f7c0a8384cbfe478d0dc80997",
+    "zh-CN": "1c3f924dc4b306759628990ce5957302"
+  },
+  "docs/user-guide/messaging/simplex.md": {
+    "srcMd5": "0c0fb55d872c52c7b78f3b71d3570239",
+    "zh-CN": "052eeec22ed04d7b20f59f3e1a89e142"
+  },
+  "docs/user-guide/secrets/bitwarden.md": {
+    "srcMd5": "6cadf9de5892a6f872ca994fc055912b",
+    "zh-CN": "c7dadf18d6855f14cb75c1087c3bf130"
+  },
+  "docs/user-guide/secrets/index.md": {
+    "srcMd5": "ccca98a1380737101b398e882d18013e",
+    "zh-CN": "8fa5e9a8018e0fd630edb5df2e7ceebe"
+  },
+  "docs/user-guide/skills/bundled/creative/creative-baoyu-article-illustrator.md": {
+    "srcMd5": "04acfc7df5f9eb2505e5e214a84f1429",
+    "zh-CN": "eb1d5b3737a67addcbd0f97c4c45eb5a"
+  },
+  "docs/user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md": {
+    "srcMd5": "33f68f25a44459cb4a9aa9944ef3c97f",
+    "zh-CN": "e6578de03bdde9d5305c57601998ba3e"
+  },
+  "docs/user-guide/skills/optional/blockchain/blockchain-evm.md": {
+    "srcMd5": "ae068154d9ac81c3fe9e1672ada2781d",
+    "zh-CN": "df1bfee57c83dd422bd9667596dcf180"
+  },
+  "docs/user-guide/skills/optional/blockchain/blockchain-hyperliquid.md": {
+    "srcMd5": "3396b7a1a8bc7fccc9cd7ae2238787e7",
+    "zh-CN": "b04860ea3f274442d7e55e0bb52e0fb7"
+  },
+  "docs/user-guide/skills/optional/devops/devops-pinggy-tunnel.md": {
+    "srcMd5": "19281e792487b24a3e7f45be330912c3",
+    "zh-CN": "a19503c3f9c8a342659ca855e86434b0"
+  },
+  "docs/user-guide/skills/optional/finance/finance-stocks.md": {
+    "srcMd5": "f512404a3fbd26a4f96c7550b9363f61",
+    "zh-CN": "b5a9fc62430f7d5a97d4377a25ae348b"
+  },
+  "docs/user-guide/skills/optional/research/research-darwinian-evolver.md": {
+    "srcMd5": "cb4b93115e99a4b5180854ab0ff5d469",
+    "zh-CN": "4928205deb55843782c3b63017fcc123"
+  },
+  "docs/user-guide/skills/optional/research/research-osint-investigation.md": {
+    "srcMd5": "f803cb03c49c4649ceb3e3320074303d",
+    "zh-CN": "86e86ce0a6fcf2cc3dc2dc3784c8a5d4"
+  },
+  "docs/user-guide/skills/optional/software-development/software-development-code-wiki.md": {
+    "srcMd5": "23f62086739c5fb6d92c0579c8b96937",
+    "zh-CN": "30e6601182882dbb37e400f16e14ee60"
+  },
+  "docs/user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md": {
+    "srcMd5": "101269b982e4f61138a6a98acaedc113",
+    "zh-CN": "c23d0775d64061afdb8579786d46afde"
   }
 }

@@ -10,6 +10,7 @@
 .docusaurus
 .cache-loader
 # src/data/skills.json
+skills-index.json
 
 # Misc
 .DS_Store

@@ -214,7 +214,7 @@ function getAllMdFiles(dirPath: string): string[] {
       const stat = statSync(fullPath);
       if (stat.isDirectory()) {
         scanDir(fullPath);
-      } else if (['.md', '.json'].includes(extname(fullPath))) {
+      } else if (['.md', '.mdx', '.json'].includes(extname(fullPath))) {
         files.push(fullPath);
       }
     }
@@ -385,7 +385,7 @@ async function main() {
   let filesToTranslate: string[];
 
   if (stat.isFile()) {
-    if (!['.md', '.json'].includes(extname(inputPath))) {
+    if (!['.md', '.mdx', '.json'].includes(extname(inputPath))) {
       logger.error('Input file must be a .md file');
       process.exit(1);
     }
