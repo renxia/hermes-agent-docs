@@ -1,31 +1,31 @@
 ---
 sidebar_position: 8
-title: "内存提供者插件"
-description: "如何为 Hermes Agent 构建内存提供者插件"
+title: "记忆提供者插件"
+description: "如何为Hermes智能体构建记忆提供者插件"
 ---
 
-# 构建内存提供者插件
+# 构建记忆提供者插件
 
-内存提供者插件为 Hermes Agent 提供超越内置 MEMORY.md 和 USER.md 的持久化、跨会话知识。本指南涵盖如何构建一个内存提供者插件。
+记忆提供者插件能为Hermes智能体提供超越内置MEMORY.md和USER.md的持久化、跨会话知识。本指南将介绍如何构建一个。
 
 :::tip
-内存提供者是两种**提供者插件**类型之一。另一种是[上下文引擎插件](/developer-guide/context-engine-plugin)，它替换了内置的上下文压缩器。两者遵循相同的模式：单选、配置驱动，通过 `hermes plugins` 管理。
+记忆提供者是两种**提供者插件**类型之一。另一种是[上下文引擎插件](/developer-guide/context-engine-plugin)，用于替换内置的上下文压缩器。两者遵循相同模式：单一选择、配置驱动、通过 `hermes plugins` 管理。
 :::
 
 ## 目录结构
 
-每个内存提供者位于 `plugins/memory/<名称>/` 目录下：
+每个记忆提供者位于 `plugins/memory/<name>/` 目录下：
 
 ```
 plugins/memory/my-provider/
-├── __init__.py      # MemoryProvider 实现 + register() 入口点
-├── plugin.yaml      # 元数据 (名称，描述，钩子)
-└── README.md        # 设置说明，配置参考，工具
+├── __init__.py      # MemoryProvider实现 + register() 入口点
+├── plugin.yaml      # 元数据（名称、描述、钩子）
+└── README.md        # 设置说明、配置参考、工具
 ```
 
 ## MemoryProvider 抽象基类
 
-你的插件需要实现来自 `agent/memory_provider.py` 的 `MemoryProvider` 抽象基类：
+您的插件需要实现 `agent/memory_provider.py` 中的 `MemoryProvider` 抽象基类：
 
 ```python
 from agent.memory_provider import MemoryProvider
@@ -36,19 +36,19 @@ class MyMemoryProvider(MemoryProvider):
         return "my-provider"
 
     def is_available(self) -> bool:
-        """检查此提供者是否可以激活。禁止网络调用。"""
+        """检查此提供者是否可激活。**禁止**发起网络调用。"""
         return bool(os.environ.get("MY_API_KEY"))
 
     def initialize(self, session_id: str, **kwargs) -> None:
         """在智能体启动时调用一次。
 
         kwargs 始终包含：
-          hermes_home (str): 活动的 HERMES_HOME 路径。用于存储。
+          hermes_home (str): 当前有效的 HERMES_HOME 路径。用于存储。
         """
         self._api_key = os.environ.get("MY_API_KEY", "")
         self._session_id = session_id
 
-    # ... 实现剩余方法
+    # ... 实现其余方法
 ```
 
 ## 必需方法
@@ -56,31 +56,31 @@ class MyMemoryProvider(MemoryProvider):
 ### 核心生命周期
 
 | 方法 | 何时调用 | 必须实现？ |
-|------|---------|-----------|
+|--------|-----------|-----------------|
 | `name` (属性) | 始终 | **是** |
 | `is_available()` | 智能体初始化时，激活前 | **是** — 禁止网络调用 |
 | `initialize(session_id, **kwargs)` | 智能体启动时 | **是** |
-| `get_tool_schemas()` | 初始化后，用于工具注入 | **是** |
-| `handle_tool_call(name, args)` | 当智能体使用你的工具时 | **是** (如果你有工具) |
+| `get_tool_schemas()` | 初始化后，用于注入工具 | **是** |
+| `handle_tool_call(tool_name, args, **kwargs)` | 当智能体使用您的工具时 | **是**（如果您有工具） |
 
-### 配置
+### 配置相关
 
 | 方法 | 目的 | 必须实现？ |
-|------|------|-----------|
+|--------|---------|-----------------|
 | `get_config_schema()` | 为 `hermes memory setup` 声明配置字段 | **是** |
-| `save_config(values, hermes_home)` | 将非机密配置写入本地位置 | **是** (除非仅使用环境变量) |
+| `save_config(values, hermes_home)` | 将非敏感配置写入原生位置 | **是**（除非仅使用环境变量） |
 
 ### 可选钩子
 
-| 方法 | 何时调用 | 用例 |
-|------|---------|------|
-| `system_prompt_block()` | 系统提示组装时 | 静态提供者信息 |
-| `prefetch(query)` | 每次 API 调用前 | 返回已回忆的上下文 |
-| `queue_prefetch(query)` | 每次轮次后 | 为下一轮次预热 |
-| `sync_turn(user, assistant)` | 每个已完成轮次后 | 持久化对话 |
+| 方法 | 何时调用 | 用途 |
+|--------|-----------|----------|
+| `system_prompt_block()` | 组装系统提示词时 | 提供静态提供者信息 |
+| `prefetch(query, *, session_id="")` | 每次API调用前 | 返回召回的上下文 |
+| `queue_prefetch(query)` | 每轮对话后 | 为下一轮预热 |
+| `sync_turn(user, assistant, *, session_id="")` | 每轮对话完成后 | 持久化对话记录 |
 | `on_session_end(messages)` | 对话结束时 | 最终提取/刷新 |
 | `on_pre_compress(messages)` | 上下文压缩前 | 在丢弃前保存洞察 |
-| `on_memory_write(action, target, content)` | 内置内存写入时 | 镜像到你的后端 |
+| `on_memory_write(action, target, content)` | 内置记忆写入时 | 镜像到您的后端 |
 | `shutdown()` | 进程退出时 | 清理连接 |
 
 ## 配置 Schema
@@ -93,10 +93,10 @@ def get_config_schema(self):
         {
             "key": "api_key",
             "description": "My Provider API 密钥",
-            "secret": True,           # -> 写入 .env
+            "secret": True,           # → 写入 .env
             "required": True,
             "env_var": "MY_API_KEY",   # 显式的环境变量名
-            "url": "https://my-provider.com/keys",  # 获取位置
+            "url": "https://my-provider.com/keys",  # 获取地址
         },
         {
             "key": "region",
@@ -112,17 +112,17 @@ def get_config_schema(self):
     ]
 ```
 
-具有 `secret: True` 和 `env_var` 的字段将写入 `.env`。非机密字段传递给 `save_config()`。
+具有 `secret: True` 和 `env_var` 的字段将写入 `.env`。非敏感字段则传递给 `save_config()`。
 
-:::tip 最小化与完整 Schema
-`get_config_schema()` 中的每个字段都会在 `hermes memory setup` 期间被提示。具有众多选项的提供者应保持 schema 最小化——只包含用户**必须**配置的字段（API 密钥、必需凭证）。将可选设置记录在配置文件参考中（例如 `$HERMES_HOME/myprovider.json`），而不是在设置期间提示所有选项。这使得设置向导快速运行，同时仍然支持高级配置。参见 Supermemory 提供者的示例——它只提示 API 密钥；所有其他选项都在 `supermemory.json` 中。
+:::tip 最小化 vs 完整 Schema
+`get_config_schema()` 中的每个字段都会在 `hermes memory setup` 期间被提示输入。拥有众多选项的提供者应保持schema最小化——只包含用户**必须**配置的字段（API密钥、必需的凭证）。可选设置应记录在配置文件参考中（例如 `$HERMES_HOME/myprovider.json`），而不是在设置过程中全部提示。这样可以保持设置向导的快速，同时支持高级配置。例如，请参阅Supermemory提供者——它只提示API密钥；所有其他选项都位于 `supermemory.json` 中。
 :::
 
 ## 保存配置
 
 ```python
 def save_config(self, values: dict, hermes_home: str) -> None:
-    """将非机密配置写入你的本地位置。"""
+    """将非敏感配置写入您的原生位置。"""
     import json
     from pathlib import Path
     config_path = Path(hermes_home) / "my-provider.json"
@@ -135,7 +135,7 @@ def save_config(self, values: dict, hermes_home: str) -> None:
 
 ```python
 def register(ctx) -> None:
-    """由内存插件发现系统调用。"""
+    """由记忆插件发现系统调用。"""
     ctx.register_memory_provider(MyMemoryProvider())
 ```
 
@@ -144,22 +144,22 @@ def register(ctx) -> None:
 ```yaml
 name: my-provider
 version: 1.0.0
-description: "简短描述此提供者的作用。"
+description: "简短描述此提供者的功能。"
 hooks:
-  - on_session_end    # 列出你实现的钩子
+  - on_session_end    # 列出您实现的钩子
 ```
 
-## 线程契约
+## 线程约定
 
-**`sync_turn()` 必须是非阻塞的。** 如果你的后端有延迟（API 调用、LLM 处理），请在守护线程中运行工作：
+**`sync_turn()` 必须是非阻塞的。** 如果您的后端有延迟（API调用、LLM处理），请在守护线程中运行工作：
 
 ```python
-def sync_turn(self, user_content, assistant_content):
+def sync_turn(self, user_content, assistant_content, *, session_id="", messages=None):
     def _sync():
         try:
-            self._api.ingest(user_content, assistant_content)
+            self._api.ingest(user_content, assistant_content, session_id=session_id, messages=messages)
         except Exception as e:
-            logger.warning("同步失败：%s", e)
+            logger.warning("同步失败: %s", e)
 
     if self._sync_thread and self._sync_thread.is_alive():
         self._sync_thread.join(timeout=5.0)
@@ -167,22 +167,26 @@ def sync_turn(self, user_content, assistant_content):
     self._sync_thread.start()
 ```
 
-## 配置隔离
+`messages` 是可选的、OpenAI风格的对话上下文，包含已完成轮次的记录。当存在时，它包括用户/助手消息、助手的工具调用和工具结果消息。不需要原始轮次上下文的提供者可以省略 `messages` 参数；Hermes 将继续使用旧版签名调用它们。
 
-所有存储路径**必须**使用 `initialize()` 中的 `hermes_home` kwarg，而不是硬编码的 `~/.hermes`：
+云服务提供者应记录 `messages` 中哪些部分会被发送到设备外。工具调用和工具结果可能包含文件路径、命令输出或其他工作区数据。
+
+## 配置文件隔离
+
+所有存储路径**必须**使用来自 `initialize()` 的 `hermes_home` 关键字参数，而不是硬编码的 `~/.hermes`：
 
 ```python
-# 正确 — 配置隔离
+# 正确 — 配置文件作用域
 from hermes_constants import get_hermes_home
 data_dir = get_hermes_home() / "my-provider"
 
-# 错误 — 所有配置共享
+# 错误 — 在所有配置文件间共享
 data_dir = Path("~/.hermes/my-provider").expanduser()
 ```
 
 ## 测试
 
-参见 `tests/agent/test_memory_plugin_e2e.py` 以获取使用真实 SQLite 提供者的完整端到端测试模式。
+请参阅 `tests/agent/test_memory_provider.py` 及相关的记忆测试（`tests/agent/test_memory_session_switch.py`, `tests/agent/test_memory_user_id.py`, `tests/run_agent/test_memory_provider_init.py`）了解端到端的测试模式。
 
 ```python
 from agent.memory_manager import MemoryManager
@@ -200,18 +204,18 @@ mgr.on_session_end([])
 mgr.shutdown_all()
 ```
 
-## 添加 CLI 命令
+## 添加CLI命令
 
-内存提供者插件可以注册自己的 CLI 子命令树（例如 `hermes my-provider status`、`hermes my-provider config`）。这使用基于约定的发现系统——无需修改核心文件。
+记忆提供者插件可以注册自己的CLI子命令树（例如 `hermes my-provider status`, `hermes my-provider config`）。这使用基于约定的发现系统——无需修改核心文件。
 
 ### 工作原理
 
-1.  在你的插件目录中添加 `cli.py` 文件
-2.  定义一个 `register_cli(subparser)` 函数来构建 argparse 树
-3.  内存插件系统在启动时通过 `discover_plugin_cli_commands()` 发现它
-4.  你的命令将出现在 `hermes <provider-name> <subcommand>` 下
+1. 在您的插件目录中添加一个 `cli.py` 文件。
+2. 定义一个 `register_cli(subparser)` 函数来构建 argparse 树。
+3. 记忆插件系统在启动时通过 `discover_plugin_cli_commands()` 发现它。
+4. 您的命令将显示在 `hermes <provider-name> <subcommand>` 下。
 
-**活动提供者门控：** 你的 CLI 命令仅在你的提供者是配置中活动的 `memory.provider` 时才会出现。如果用户未配置你的提供者，你的命令将不会显示在 `hermes --help` 中。
+**活跃提供者限制：** 您的CLI命令仅在您的提供者是配置中活跃的 `memory.provider` 时才会出现。如果用户没有配置您的提供者，您的命令将不会出现在 `hermes --help` 中。
 
 ### 示例
 
@@ -219,20 +223,19 @@ mgr.shutdown_all()
 # plugins/memory/my-provider/cli.py
 
 def my_command(args):
-    """由 argparse 分派的处理程序。"""
+    """由 argparse 调度的处理函数。"""
     sub = getattr(args, "my_command", None)
     if sub == "status":
-        print("提供者处于活动状态且已连接。")
+        print("提供者活跃且已连接。")
     elif sub == "config":
-        print("显示配置中...")
+        print("显示配置...")
     else:
-        print("用法：hermes my-provider <status|config>")
+        print("用法: hermes my-provider <status|config>")
 
 def register_cli(subparser) -> None:
     """构建 hermes my-provider argparse 树。
 
-    由 discover_plugin_cli_commands() 在 argparse 设置时调用。
-    """
+    由 discover_plugin_cli_commands() 在 argparse 设置时调用。"""
     subs = subparser.add_subparsers(dest="my_command")
     subs.add_parser("status", help="显示提供者状态")
     subs.add_parser("config", help="显示提供者配置")
@@ -241,18 +244,18 @@ def register_cli(subparser) -> None:
 
 ### 参考实现
 
-参见 `plugins/memory/honcho/cli.py` 以获取包含 13 个子命令、跨配置管理（`--target-profile`）和配置读/写的完整示例。
+请参阅 `plugins/memory/honcho/cli.py` 获取一个完整的示例，包含13个子命令、跨配置文件管理（`--target-profile`）和配置读写。
 
-### 带有 CLI 的目录结构
+### 包含CLI的目录结构
 
 ```
 plugins/memory/my-provider/
-├── __init__.py      # MemoryProvider 实现 + register()
+├── __init__.py      # MemoryProvider实现 + register()
 ├── plugin.yaml      # 元数据
-├── cli.py           # register_cli(subparser) — CLI 命令
+├── cli.py           # register_cli(subparser) — CLI命令
 └── README.md        # 设置说明
 ```
 
 ## 单一提供者规则
 
-同一时间只能有一个外部内存提供者处于活动状态。如果用户尝试注册第二个，MemoryManager 将拒绝并发出警告。这防止了工具 schema 膨胀和后端冲突。
+同一时间只能有**一个**外部记忆提供者处于活跃状态。如果用户尝试注册第二个，MemoryManager将拒绝并发出警告。这可以防止工具schema臃肿和后端冲突。

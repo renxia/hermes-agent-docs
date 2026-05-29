@@ -52,34 +52,37 @@ const MAX_CHUNK_SIZE = Number(process.env.TRANSLATE_MAX_CHUNK_SIZE || 8000);
  * 优先向前查找最近的 ## 作为分割点
  */
 function splitBySection(text: string): string[] {
-  // 按行分割，保留行结构
-  const lines = text.split('\n');
-  const chunks: string[] = [];
-  let currentChunk: string[] = [];
-  let currentLength = 0;
+  const lines = text.split('\n')
+  const chunks: string[] = []
+  let currentChunk: string[] = []
+  let currentLength = 0
+  let insideFence = false
 
   for (const line of lines) {
-    const lineLength = line.length + 1; // +1 for newline
-    const isSectionHeader = /^##\s/.test(line);
+    const lineLength = line.length + 1
+    const isSectionHeader = /^##\s/.test(line)
 
-    // 如果当前行是二级标题，且累积内容已超过阈值
-    if (isSectionHeader && currentLength > MAX_CHUNK_SIZE && currentChunk.length > 0) {
-      // 将当前块推入结果，并重新开始新块
-      chunks.push(currentChunk.join('\n'));
-      currentChunk = [line];
-      currentLength = lineLength;
+    // Track fenced code block state (```, ~~~, etc.)
+    if (/^```/.test(line.trim())) {
+      insideFence = !insideFence
+    }
+
+    // 仅在不在 code block 内部时才按 ## 切分
+    if (isSectionHeader && !insideFence && currentLength > MAX_CHUNK_SIZE && currentChunk.length > 0) {
+      chunks.push(currentChunk.join('\n'))
+      currentChunk = [line]
+      currentLength = lineLength
     } else {
-      currentChunk.push(line);
-      currentLength += lineLength;
+      currentChunk.push(line)
+      currentLength += lineLength
     }
   }
 
-  // 推入最后一块
   if (currentChunk.length > 0) {
-    chunks.push(currentChunk.join('\n'));
+    chunks.push(currentChunk.join('\n'))
   }
 
-  return chunks;
+  return chunks
 }
 
 /**
@@ -87,54 +90,77 @@ function splitBySection(text: string): string[] {
  * 尝试按空行或普通标题 # 分隔
  */
 function splitByParagraph(text: string): string[] {
-  if (process.env.TRANSLATE_MAX_CHUNK_SIZE_STRICT == 'false' || text.length <= MAX_CHUNK_SIZE) {
-    return [text];
+  if (text.length <= MAX_CHUNK_SIZE) {
+    return [text]
   }
 
-  // 优先按 ## 分割
-  const sidx = text.indexOf('\n## ');
+  // Try splitting by ## first
+  const sidx = text.indexOf('\n## ')
   if (sidx > 0) {
-    const nextIdx = text.indexOf('\n## ', sidx + 5);
-    // 第一段长度小于 1/3 阈值，且第二段存在，则合并第一段和第二段
+    const nextIdx = text.indexOf('\n## ', sidx + 5)
     if (sidx <= MAX_CHUNK_SIZE / 3 && nextIdx > -1) {
-      return [text.slice(0, nextIdx), text.slice(nextIdx)];
+      return [text.slice(0, nextIdx), text.slice(nextIdx)]
     }
-
-    return [text.slice(0, sidx), text.slice(sidx)];
+    return [text.slice(0, sidx), text.slice(sidx)]
   }
 
-  const chunks: string[] = [];
-  const paragraphs = text.split(/\n\n+/);
-  let currentChunk = '';
+  // 将原始 text 按段落拆分，但合并 fenced code block 内部的段落
+  const rawParagraphs = text.split(/\n\n+/)
+  const paragraphs: string[] = []
+  let insideFence = false
+  let pending: string[] = []
+
+  for (const para of rawParagraphs) {
+    const lines = para.split('\n')
+    for (const line of lines) {
+      if (/^```/.test(line.trim())) {
+        insideFence = !insideFence
+      }
+    }
+    pending.push(para)
+    // 只有在非 fence 内部时才确认一个真正的段落边界
+    if (!insideFence) {
+      paragraphs.push(pending.join('\n\n'))
+      pending = []
+    }
+  }
+  // 收尾：如果 fence 未闭合，将剩余部分合并到一起
+  if (pending.length > 0) {
+    paragraphs.push(pending.join('\n\n'))
+  }
+
+  const chunks: string[] = []
+  let currentChunk = ''
 
   for (const para of paragraphs) {
     if ((currentChunk + '\n\n' + para).length <= MAX_CHUNK_SIZE) {
-      currentChunk = currentChunk ? currentChunk + '\n\n' + para : para;
+      currentChunk = currentChunk ? currentChunk + '\n\n' + para : para
     } else {
-      if (currentChunk) chunks.push(currentChunk);
-      // 如果单个段落本身就超过阈值，按句子分割
+      if (currentChunk) chunks.push(currentChunk)
       if (para.length > MAX_CHUNK_SIZE) {
-        const sentences = para.split(/(?<=[。！？.!?])\s*/);
-        currentChunk = '';
+        // Split by sentence for very long paragraphs
+        const sentences = para.split(/(?<=[。！？.!?])\s*/)
+        currentChunk = ''
         for (const sentence of sentences) {
           if ((currentChunk + ' ' + sentence).length <= MAX_CHUNK_SIZE) {
-            currentChunk = currentChunk ? currentChunk + ' ' + sentence : sentence;
+            currentChunk = currentChunk ? currentChunk + ' ' + sentence : sentence
           } else {
-            if (currentChunk) chunks.push(currentChunk);
-            currentChunk = sentence;
+            if (currentChunk) chunks.push(currentChunk)
+            currentChunk = sentence
           }
         }
       } else {
-        currentChunk = para;
+        currentChunk = para
       }
     }
   }
 
-  if (currentChunk) chunks.push(currentChunk);
-  return chunks;
+  if (currentChunk) chunks.push(currentChunk)
+  return chunks
 }
 
-async function translateText(text: string, sourceLang: string, targetLang: string): Promise<string> {
+
+async function translateText(text: string, sourceLang: string, targetLang: string, id = ''): Promise<string> {
   // 如果文本长度超过阈值，先分段
   if (text.length > MAX_CHUNK_SIZE) {
     logger.log(`  Content length (${text.length}) exceeds threshold (${MAX_CHUNK_SIZE}), splitting...`);
@@ -164,7 +190,7 @@ async function translateText(text: string, sourceLang: string, targetLang: strin
     const translatedChunks: string[] = [];
     for (let i = 0; i < finalChunks.length; i++) {
       const chunk = finalChunks[i];
-      logger.log(`  Translating chunk ${i + 1}/${finalChunks.length} (${chunk.length} chars)...`);
+      logger.log(`  [${color.cyan(sourceLang)}->${color.green(targetLang)}]Translating chunk ${i + 1}/${finalChunks.length} (${color.green(chunk.length)} chars)... ${color.gray(id)}`);
 
       const translated = await translateSingleChunk(chunk, sourceLang, targetLang);
       translatedChunks.push(translated);
@@ -195,13 +221,68 @@ CRITICAL: Do NOT translate YAML frontmatter keys (keys inside the "---" block at
 
 CRITICAL: Preserve ALL HTML entities exactly as they appear. Do NOT convert \`&lt;\` to \`<\`, \`&gt;\` to \`>\`, \`&amp;\` to \`&\`, \`&#123;\` to \`{\`,, \`&#125;\` to \`}\`, etc. For example, \`&lt;100ms\` must remain \`&lt;100ms\`, not \`<100ms\`.\n\n${text}`;
 
-  const response = await openai.chat.completions.create({
-    model: options.model,
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.5,
-  });
+  const MAX_RETRIES = 10
+  const BASE_DELAY_MS = 1000
 
-  return response.choices[0].message.content || '';
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetch(`${options.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${options.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: options.model,
+          messages: [
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.3,
+        }),
+      })
+
+      if (response.ok) {
+        const json = await response.json()
+        return json.choices[0].message.content.trim()
+      }
+
+      if (response.status === 429 && attempt < MAX_RETRIES) {
+        const delay = Math.min(BASE_DELAY_MS * Math.pow(2, attempt - 1), 60_000)
+        const jitter = Math.random() * 1000
+        const totalDelay = delay + jitter
+        logger.log(`  Rate limited (429), retrying in ${Math.round(totalDelay)}ms (attempt ${attempt}/${MAX_RETRIES})...`)
+        await new Promise(resolve => setTimeout(resolve, totalDelay))
+        continue
+      }
+
+      const text = await response.text()
+      throw new Error(`API error ${response.status}: ${text}`)
+    } catch (err) {
+      // 网络连接错误（如 socket 关闭）也视为临时故障进行重试
+      if (attempt < MAX_RETRIES && err instanceof Error && (
+        err.message.includes('socket connection was closed') ||
+        err.message.includes('ECONNRESET') ||
+        err.message.includes('ETIMEDOUT') ||
+        err.message.includes('fetch failed')
+      )) {
+        const delay = Math.min(BASE_DELAY_MS * Math.pow(2, attempt - 1), 60_000)
+        const jitter = Math.random() * 1000
+        const totalDelay = delay + jitter
+        logger.log(`  Connection error (${err.message}), retrying in ${Math.round(totalDelay)}ms (attempt ${attempt}/${MAX_RETRIES})...`)
+        await new Promise(resolve => setTimeout(resolve, totalDelay))
+        continue
+      }
+      throw err
+    }
+  }
+  throw new Error('Exceeded maximum retry attempts due to rate limiting')
+
+  // const response = await openai.chat.completions.create({
+  //   model: options.model,
+  //   messages: [{ role: 'user', content: prompt }],
+  //   temperature: 0.5,
+  // });
+  // return response.choices[0].message.content || '';
 }
 
 function getAllMdFiles(dirPath: string): string[] {
@@ -262,6 +343,16 @@ async function syncHermesAgentDocs(): Promise<void> {
       cpSync(sourceDir, targetDir, { force: true, recursive: true });
     }
   });
+
+  // 替换 src/pages/skills/index.tsx 中的 `"/docs/api/` 为 `https://hermes-agent.nousresearch.com/docs/api/`
+  const indexFile = join(targetDocsDir, 'src', 'pages', 'skills', 'index.tsx');
+  if (existsSync(indexFile)) {
+    logger.log(`Replacing ${indexFile}...`);
+    let content = readFileSync(indexFile, 'utf8');
+    content = content.replace(/"\/docs\/api\//g, '"https://hermes-agent.nousresearch.com/docs/api/');
+    writeFileSync(indexFile, content);
+  }
+
   logger.log(color.green('Docs sync completed!'));
 
   // 同步完成后，清理已废弃的源文档对应的翻译文件
@@ -320,8 +411,8 @@ async function cleanupStaleTranslations(): Promise<void> {
 
 async function translateFile(srcFile: string, sourceLang: string, targetLang: string, idx: number, total: number) {
   // Calculate relative path from docs/
-  const relativePath = relative('docs', srcFile);
-  const destFile = join('i18n', targetLang, 'docusaurus-plugin-content-docs', 'current', relativePath);
+  const srcFileRelative = relative('docs', srcFile);
+  const destFile = join('i18n', targetLang, 'docusaurus-plugin-content-docs', 'current', srcFileRelative);
   const startTime = Date.now();
   const content = readFileSync(srcFile, 'utf-8');
 
@@ -340,7 +431,7 @@ async function translateFile(srcFile: string, sourceLang: string, targetLang: st
 
 
   console.log(`- [${idx}/${total}] Translating ${color.cyan(srcFile)} (content length: ${color.yellow(content.length)} chars) ...`);
-  let translatedContent = await translateText(content, sourceLang, targetLang);
+  let translatedContent = await translateText(content, sourceLang, targetLang, srcFileRelative);
 
   if (!translatedContent) {
     console.log(color.red(`- [${idx}/${total}] Translating ${color.cyan(srcFile)} failed!`));

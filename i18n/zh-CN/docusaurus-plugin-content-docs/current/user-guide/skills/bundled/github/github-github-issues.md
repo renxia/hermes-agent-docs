@@ -1,40 +1,40 @@
 ---
-title: "Github Issues — 通过 gh 或 REST 创建、分类、标记、分配 GitHub Issues"
+title: "Github Issues — 通过 gh 或 REST 创建、分类、标记、分配 GitHub issues"
 sidebar_label: "Github Issues"
-description: "通过 gh 或 REST 创建、分类、标记、分配 GitHub Issues"
+description: "通过 gh 或 REST 创建、分类、标记、分配 GitHub issues"
 ---
 
-{/* 本页面由网站脚本 `website/scripts/generate-skill-docs.py` 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 根据该技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
 
 # Github Issues
 
-通过 gh 或 REST 创建、分类、标记、分配 GitHub Issues。
+通过 gh 或 REST 创建、分类、标记、分配 GitHub issues。
 
 ## 技能元数据
 
 | | |
 |---|---|
-| 来源 | 内置（默认安装） |
+| 来源 | 内置 (默认安装) |
 | 路径 | `skills/github/github-issues` |
 | 版本 | `1.1.0` |
 | 作者 | 赫尔墨斯智能体 |
 | 许可证 | MIT |
 | 平台 | linux, macos, windows |
 | 标签 | `GitHub`, `Issues`, `项目管理`, `缺陷跟踪`, `分类` |
-| 相关技能 | [`github-auth`](/user-guide/skills/bundled/github/github-github-auth), [`github-pr-workflow`](/user-guide/skills/bundled/github/github-github-pr-workflow) |
+| 相关技能 | [`github-auth`](/docs/user-guide/skills/bundled/github/github-github-auth), [`github-pr-workflow`](/docs/user-guide/skills/bundled/github/github-github-pr-workflow) |
 
 :::info
-以下是 Hermes 在此技能被触发时加载的完整技能定义。这是技能激活时智能体所看到的指令。
+以下是 Hermes 触发此技能时加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
-# GitHub 问题管理
+# GitHub Issues 管理
 
-创建、搜索、分类处理和管理 GitHub 问题。每个部分都先展示 `gh` 命令，然后是 `curl` 的备用方案。
+创建、搜索、分类和管理 GitHub Issues。每个部分首先展示 `gh`，然后是 `curl` 回退方案。
 
-## 前置条件
+## 前提条件
 
 - 已通过 GitHub 认证（参见 `github-auth` 技能）
-- 位于一个具有 GitHub 远程的 git 仓库内，或明确指定仓库
+- 在具有 GitHub 远程仓库的 git 仓库中，或明确指定仓库
 
 ### 设置
 
@@ -60,9 +60,9 @@ REPO=$(echo "$OWNER_REPO" | cut -d/ -f2)
 
 ---
 
-## 1. 查看问题
+## 1. 查看 Issues
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
 gh issue list
@@ -72,21 +72,21 @@ gh issue list --search "authentication error" --state all
 gh issue view 42
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
-# 列出未解决的问题
+# 列出开放 issues
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/$OWNER/$REPO/issues?state=open&per_page=20" \
   | python3 -c "
 import sys, json
 for i in json.load(sys.stdin):
-    if 'pull_request' not in i:  # GitHub API 在 /issues 端点也会返回 PR
+    if 'pull_request' not in i:  # GitHub API 在 /issues 也返回 PRs
         labels = ', '.join(l['name'] for l in i['labels'])
         print(f\"#{i['number']:5}  {i['state']:6}  {labels:30}  {i['title']}\")"
 
-# 按标签筛选
+# 按标签过滤
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/$OWNER/$REPO/issues?state=open&labels=bug&per_page=20" \
@@ -96,7 +96,7 @@ for i in json.load(sys.stdin):
     if 'pull_request' not in i:
         print(f\"#{i['number']}  {i['title']}\")"
 
-# 查看特定问题
+# 查看特定 issue
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/issues/42 \
@@ -106,11 +106,11 @@ i = json.load(sys.stdin)
 labels = ', '.join(l['name'] for l in i['labels'])
 assignees = ', '.join(a['login'] for a in i['assignees'])
 print(f\"#{i['number']}: {i['title']}\")
-print(f\"状态: {i['state']}  标签: {labels}  受指派人: {assignees}\")
-print(f\"作者: {i['user']['login']}  创建时间: {i['created_at']}\")
+print(f\"State: {i['state']}  Labels: {labels}  Assignees: {assignees}\")
+print(f\"Author: {i['user']['login']}  Created: {i['created_at']}\")
 print(f\"\n{i['body']}\")"
 
-# 搜索问题
+# 搜索 issues
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/search/issues?q=authentication+error+repo:$OWNER/$REPO" \
@@ -120,37 +120,37 @@ for i in json.load(sys.stdin)['items']:
     print(f\"#{i['number']}  {i['state']:6}  {i['title']}\")"
 ```
 
-## 2. 创建问题
+## 2. 创建 Issues
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
 gh issue create \
-  --title "登录重定向忽略了 ?next= 参数" \
-  --body "## 描述
-登录后，用户总是被重定向到 /dashboard。
+  --title "Login redirect ignores ?next= parameter" \
+  --body "## Description
+After logging in, users always land on /dashboard.
 
-## 重现步骤
-1. 在未登录状态下导航到 /settings
-2. 被重定向到 /login?next=/settings
-3. 登录
-4. 实际：重定向到 /dashboard（应该跳转到 /settings）
+## Steps to Reproduce
+1. Navigate to /settings while logged out
+2. Get redirected to /login?next=/settings
+3. Log in
+4. Actual: redirected to /dashboard (should go to /settings)
 
-## 预期行为
-应遵守 ?next= 查询参数。" \
+## Expected Behavior
+Respect the ?next= query parameter." \
   --label "bug,backend" \
   --assignee "username"
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/issues \
   -d '{
-    "title": "登录重定向忽略了 ?next= 参数",
-    "body": "## 描述\n登录后，用户总是被重定向到 /dashboard。\n\n## 重现步骤\n1. 在未登录状态下导航到 /settings\n2. 被重定向到 /login?next=/settings\n3. 登录\n4. 实际：重定向到 /dashboard\n\n## 预期行为\n应遵守 ?next= 查询参数。",
+    "title": "Login redirect ignores ?next= parameter",
+    "body": "## Description\nAfter logging in, users always land on /dashboard.\n\n## Steps to Reproduce\n1. Navigate to /settings while logged out\n2. Get redirected to /login?next=/settings\n3. Log in\n4. Actual: redirected to /dashboard\n\n## Expected Behavior\nRespect the ?next= query parameter.",
     "labels": ["bug", "backend"],
     "assignees": ["username"]
   }'
@@ -173,8 +173,8 @@ curl -s -X POST \
 <实际发生了什么>
 
 ## 环境
-- 操作系统: <操作系统>
-- 版本: <版本>
+- OS: <操作系统>
+- Version: <版本>
 ```
 
 ### 功能请求模板
@@ -184,27 +184,27 @@ curl -s -X POST \
 <你想要什么>
 
 ## 动机
-<为什么有用>
+<为什么这很有用>
 
-## 建议解决方案
+## 建议方案
 <如何实现>
 
-## 考虑的替代方案
+## 备选方案
 <其他方法>
 ```
 
-## 3. 管理问题
+## 3. 管理 Issues
 
 ### 添加/移除标签
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
 gh issue edit 42 --add-label "priority:high,bug"
 gh issue edit 42 --remove-label "needs-triage"
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
 # 添加标签
@@ -228,16 +228,16 @@ for l in json.load(sys.stdin):
     print(f\"  {l['name']:30}  {l.get('description', '')}\")"
 ```
 
-### 指派
+### 分配
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
 gh issue edit 42 --add-assignee username
 gh issue edit 42 --add-assignee @me
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
 curl -s -X POST \
@@ -248,24 +248,24 @@ curl -s -X POST \
 
 ### 评论
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
-gh issue comment 42 --body "已调查 —— 根本原因在认证中间件。正在修复。"
+gh issue comment 42 --body "Investigated — root cause is in auth middleware. Working on a fix."
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/issues/42/comments \
-  -d '{"body": "已调查 —— 根本原因在认证中间件。正在修复。"}'
+  -d '{"body": "Investigated — root cause is in auth middleware. Working on a fix."}'
 ```
 
-### 关闭与重新打开
+### 关闭和重新打开
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
 gh issue close 42
@@ -273,7 +273,7 @@ gh issue close 42 --reason "not planned"
 gh issue reopen 42
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
 # 关闭
@@ -289,9 +289,9 @@ curl -s -X PATCH \
   -d '{"state": "open"}'
 ```
 
-### 将问题关联到 PR
+### 将 Issues 关联到 PRs
 
-当 PR 合并时，如果其正文包含正确的关键词，相关问题会自动关闭：
+当 PR 合并且正文中有正确的关键词时，Issue 会自动关闭：
 
 ```
 Closes #42
@@ -299,26 +299,26 @@ Fixes #42
 Resolves #42
 ```
 
-要从一个问题创建分支：
+从 Issue 创建分支：
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
 gh issue develop 42 --checkout
 ```
 
-**使用 git (手动等效操作):**
+**使用 git（手动等效操作）：**
 
 ```bash
 git checkout main && git pull origin main
 git checkout -b fix/issue-42-login-redirect
 ```
 
-## 4. 问题分类处理工作流
+## 4. Issue 分类工作流
 
-当被要求对问题进行分类处理时：
+当被要求分类 issues 时：
 
-1.  **列出未分类的问题：**
+1.  **列出未分类的 issues：**
 
 ```bash
 # 使用 gh
@@ -335,30 +335,27 @@ for i in json.load(sys.stdin):
         print(f\"#{i['number']}  {i['title']}\")"
 ```
 
-2.  **阅读并分类** 每个问题（查看详情，理解错误/功能）
-
-3.  **应用标签和优先级**（参见上面的管理问题部分）
-
-4.  **指派**（如果负责人明确）
-
-5.  **添加分类备注**（如果需要）
+2.  **阅读并分类**每个 issue（查看详情，理解错误/功能）
+3.  **应用标签和优先级**（参见上面的管理 Issues）
+4.  如果所有者明确，则**分配**
+5.  如果需要，**添加分类备注**
 
 ## 5. 批量操作
 
-对于批量操作，可以结合 API 调用和 shell 脚本：
+对于批量操作，将 API 调用与 shell 脚本结合：
 
-**使用 gh:**
+**使用 gh：**
 
 ```bash
-# 关闭所有带有特定标签的问题
+# 关闭所有具有特定标签的 issues
 gh issue list --label "wontfix" --json number --jq '.[].number' | \
   xargs -I {} gh issue close {} --reason "not planned"
 ```
 
-**使用 curl:**
+**使用 curl：**
 
 ```bash
-# 列出带有特定标签的问题编号，然后逐一关闭
+# 列出具有某标签的 issue 编号，然后逐一关闭
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/$OWNER/$REPO/issues?labels=wontfix&state=open" \
@@ -368,19 +365,19 @@ curl -s \
       -H "Authorization: token $GITHUB_TOKEN" \
       https://api.github.com/repos/$OWNER/$REPO/issues/$num \
       -d '{"state": "closed", "state_reason": "not_planned"}'
-    echo "已关闭 #$num"
+    echo "Closed #$num"
   done
 ```
 
 ## 快速参考表
 
 | 操作 | gh | curl 端点 |
-|------|-----|-----------|
-| 列出问题 | `gh issue list` | `GET /repos/{o}/{r}/issues` |
-| 查看问题 | `gh issue view N` | `GET /repos/{o}/{r}/issues/N` |
-| 创建问题 | `gh issue create ...` | `POST /repos/{o}/{r}/issues` |
+|--------|-----|--------------|
+| 列出 issues | `gh issue list` | `GET /repos/{o}/{r}/issues` |
+| 查看 issue | `gh issue view N` | `GET /repos/{o}/{r}/issues/N` |
+| 创建 issue | `gh issue create ...` | `POST /repos/{o}/{r}/issues` |
 | 添加标签 | `gh issue edit N --add-label ...` | `POST /repos/{o}/{r}/issues/N/labels` |
-| 指派 | `gh issue edit N --add-assignee ...` | `POST /repos/{o}/{r}/issues/N/assignees` |
+| 分配 | `gh issue edit N --add-assignee ...` | `POST /repos/{o}/{r}/issues/N/assignees` |
 | 评论 | `gh issue comment N --body ...` | `POST /repos/{o}/{r}/issues/N/comments` |
 | 关闭 | `gh issue close N` | `PATCH /repos/{o}/{r}/issues/N` |
 | 搜索 | `gh issue list --search "..."` | `GET /search/issues?q=...` |

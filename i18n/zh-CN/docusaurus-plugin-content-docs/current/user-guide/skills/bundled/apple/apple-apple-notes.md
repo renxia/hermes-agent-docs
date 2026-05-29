@@ -4,7 +4,7 @@ sidebar_label: "Apple Notes"
 description: "通过 memo CLI 管理 Apple Notes：创建、搜索、编辑"
 ---
 
-{/* 本页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 文件自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源 SKILL.md，而非此页面。 */}
 
 # Apple Notes
 
@@ -14,43 +14,43 @@ description: "通过 memo CLI 管理 Apple Notes：创建、搜索、编辑"
 
 | | |
 |---|---|
-| 来源 | 内置 (默认安装) |
+| 来源 | 内置（默认安装） |
 | 路径 | `skills/apple/apple-notes` |
 | 版本 | `1.0.0` |
 | 作者 | Hermes 智能体 |
-| 许可证 | MIT |
+| 许可 | MIT |
 | 平台 | macos |
-| 标签 | `笔记`、`Apple`、`macOS`、`记笔记` |
-| 相关技能 | [`obsidian`](/user-guide/skills/bundled/note-taking/note-taking-obsidian) |
+| 标签 | `笔记`、`Apple`、`macOS`、`笔记记录` |
+| 相关技能 | [`obsidian`](/docs/user-guide/skills/bundled/note-taking/note-taking-obsidian) |
 
-## 参考：完整的 SKILL.md
+## 参考：完整 SKILL.md
 
 :::info
-以下是此技能被触发时，Hermes 加载的完整技能定义。这是技能激活时智能体所看到的指令。
+以下是当此技能被触发时，Hermes 加载的完整技能定义。这是技能激活时智能体看到的指令。
 :::
 
 # Apple Notes
 
-使用 `memo` 直接在终端管理 Apple Notes。笔记通过 iCloud 在所有 Apple 设备间同步。
+使用 `memo` 从终端直接管理 Apple Notes。笔记通过 iCloud 在所有 Apple 设备间同步。
 
 ## 前提条件
 
-- **macOS** 及 Notes.app
+- 带有 Notes.app 的 **macOS**
 - 安装：`brew tap antoniorodr/memo && brew install antoniorodr/memo/memo`
-- 根据提示授予 Notes.app 自动操作权限 (系统设置 → 隐私与安全性 → 自动操作)
+- 系统提示时授予 Notes.app 自动化访问权限（系统设置 → 隐私与安全性 → 自动化）
 
 ## 何时使用
 
 - 用户要求创建、查看或搜索 Apple Notes
-- 将信息保存到 Notes.app 以实现跨设备访问
-- 将笔记整理到文件夹中
-- 将笔记导出为 Markdown/HTML 格式
+- 将信息保存到 Notes.app 以进行跨设备访问
+- 将笔记组织到文件夹中
+- 将笔记导出为 Markdown/HTML
 
 ## 何时不使用
 
 - Obsidian 知识库管理 → 使用 `obsidian` 技能
-- Bear 笔记 → 独立应用 (此处不支持)
-- 智能体内部的快速笔记 → 请改用 `memory` 工具
+- Bear 笔记 → 独立应用（此处不支持）
+- 快速的智能体专用笔记 → 改用 `memory` 工具
 
 ## 快速参考
 
@@ -58,33 +58,33 @@ description: "通过 memo CLI 管理 Apple Notes：创建、搜索、编辑"
 
 ```bash
 memo notes                        # 列出所有笔记
-memo notes -f "Folder Name"       # 按文件夹筛选
-memo notes -s "query"             # 搜索笔记 (模糊匹配)
+memo notes -f "文件夹名称"         # 按文件夹筛选
+memo notes -s "查询词"             # 搜索笔记（模糊匹配）
 ```
 
 ### 创建笔记
 
 ```bash
 memo notes -a                     # 交互式编辑器
-memo notes -a "Note Title"        # 快速添加带标题的笔记
+memo notes -a "笔记标题"           # 快速添加带标题的笔记
 ```
 
 ### 编辑笔记
 
 ```bash
-memo notes -e                     # 交互式选择以进行编辑
+memo notes -e                     # 交互式选择以编辑
 ```
 
 ### 删除笔记
 
 ```bash
-memo notes -d                     # 交互式选择以进行删除
+memo notes -d                     # 交互式选择以删除
 ```
 
 ### 移动笔记
 
 ```bash
-memo notes -m                     # 将笔记移动到文件夹 (交互式)
+memo notes -m                     # 将笔记移动到文件夹（交互式）
 ```
 
 ### 导出笔记
@@ -96,11 +96,11 @@ memo notes -ex                    # 导出为 HTML/Markdown
 ## 限制
 
 - 无法编辑包含图片或附件的笔记
-- 交互式提示需要终端访问权限 (如有需要，可使用 pty=true)
+- 交互式提示需要终端访问（如需要请使用 pty=true）
 - 仅限 macOS — 需要 Apple Notes.app
 
 ## 规则
 
-1. 当用户希望进行跨设备同步 (iPhone/iPad/Mac) 时，优先选择 Apple Notes
-2. 对于不需要同步的智能体内部笔记，请使用 `memory` 工具
-3. 对于 Markdown 原生知识管理，请使用 `obsidian` 技能
+1. 当用户需要跨设备同步（iPhone/iPad/Mac）时，优先使用 Apple Notes
+2. 对于不需要同步的智能体内部笔记，使用 `memory` 工具
+3. 对于原生 Markdown 的知识管理，使用 `obsidian` 技能
