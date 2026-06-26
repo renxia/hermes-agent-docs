@@ -1,90 +1,140 @@
----
 slug: /
 sidebar_position: 0
 title: "Hermes 智能体文档"
-description: "由 Nous Research 开发的自我改进型 AI 智能体。内置的学习循环，从经验中创建技能，在使用过程中改进它们，并能在跨会话中记忆。"
+description: "由 Nous Research 构建的自我改进型人工智能智能体。它具有内置的学习循环，可以从经验中创建技能、在使用过程中改进这些技能，并在会话之间保持记忆。"
 hide_table_of_contents: true
 displayed_sidebar: docs
 ---
 
-import Link from '@docusaurus/Link';
+import Link from "@docusaurus/Link";
 
 # Hermes 智能体
 
-由 [Nous Research](https://nousresearch.com) 开发的自我改进型 AI 智能体。这是唯一内置学习循环的智能体——它能从经验中创建技能，在使用过程中改进技能，主动推动自己保持知识记忆，并在跨会话中构建一个不断深化的你的用户模型。
+由 [Nous Research](https://nousresearch.com) 构建的自我改进型人工智能智能体。它是唯一具有内置学习循环的智能体——它能从经验中创建技能，在使用过程中改进这些技能，主动促使自己固化知识，并在会话之间构建一个关于你的深入模型。
 
-<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
-  <Link to="/getting-started/installation" style={{display: 'inline-block', padding: '0.6rem 1.2rem', backgroundColor: '#FFD700', color: '#07070d', borderRadius: '8px', fontWeight: 600, textDecoration: 'none'}}>开始使用 →</Link>
-  <a href="https://github.com/NousResearch/hermes-agent" style={{display: 'inline-block', padding: '0.6rem 1.2rem', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '8px', textDecoration: 'none'}}>在 GitHub 上查看</a>
+<div
+  style={{
+    display: "flex",
+    gap: "1rem",
+    marginBottom: "2rem",
+    flexWrap: "wrap",
+  }}
+>
+  <Link
+    to="/getting-started/installation"
+    style={{
+      display: "inline-block",
+      padding: "0.6rem 1.2rem",
+      backgroundColor: "#FFD700",
+      color: "#07070d",
+      borderRadius: "8px",
+      fontWeight: 600,
+      textDecoration: "none",
+    }}
+  >
+    开始使用 →
+  </Link>
+  <a
+    href="https://hermes-agent.nousresearch.com/"
+    style={{
+      display: "inline-block",
+      padding: "0.6rem 1.2rem",
+      border: "1px solid rgba(255,215,0,0.2)",
+      borderRadius: "8px",
+      textDecoration: "none",
+    }}
+  >
+    下载桌面版
+  </a>
+  <a
+    href="https://github.com/NousResearch/hermes-agent"
+    style={{
+      display: "inline-block",
+      padding: "0.6rem 1.2rem",
+      border: "1px solid rgba(255,215,0,0.2)",
+      borderRadius: "8px",
+      textDecoration: "none",
+    }}
+  >
+    在 GitHub 上查看
+  </a>
 </div>
 
 ## 安装
 
-**Linux / macOS / WSL2**
+### Windows 或 macOS
+
+要轻松安装命令行和桌面应用程序，请从我们的网站下载 [Hermes 桌面安装程序](https://hermes-agent.nousresearch.com/) 并运行它。
+
+### 无需 Hermes 桌面版：
+
+对于仅限命令行、不使用 Hermes 桌面版的安装，请运行：
+
+#### Linux / macOS / WSL2 / Android (Termux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
 
-**Windows（原生，PowerShell）** — *早期测试版，[详情 →](/user-guide/windows-native)*
+#### Windows（原生）
+
+在 PowerShell 中运行：
 
 ```powershell
-iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1)
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 ```
 
-**Android (Termux)** — 与 Linux 使用相同的 curl 一行命令；安装程序会自动检测 Termux。
+请参阅完整的[安装指南](/getting-started/installation)，了解安装程序的功能、用户级与根级布局，以及 Windows 特定的注意事项。
 
-有关安装程序具体做什么、用户级与 root 级目录布局以及 Windows 特定说明的完整信息，请参阅 **[安装指南](/getting-started/installation)**。
-
-:::tip 启动并运行智能体的最快途径
-安装后，运行 `hermes setup --portal` —— 一次 OAuth 授权即可覆盖一个模型以及所有四个工具网关工具（网页搜索、图像生成、TTS、浏览器）。详见 [Nous Portal](/integrations/nous-portal)。
+:::tip 通往可用智能体的最快路径
+安装后，运行 `hermes setup --portal` — 一个 OAuth 涵盖了一个模型和所有四个工具网关工具（网络搜索、图像生成、TTS、浏览器）。请参阅 [Nous Portal](/integrations/nous-portal)。
 :::
 
 ## 什么是 Hermes 智能体？
 
-它不是绑定在 IDE 上的编程副驾驶，也不是围绕单个 API 封装的聊天机器人。它是一个**自主智能体**，运行时间越长，能力就越强。它可以部署在任何你选择的地方——一个 5 美元的 VPS、一个 GPU 集群，或者是无服务器基础设施（Daytona, Modal），这些基础设施在闲置时几乎不产生费用。你可以在它为你运行在一个你甚至从未 SSH 登录过的云端虚拟机上时，通过 Telegram 与它交谈。它不受限于你的笔记本电脑。
+它不是一个与 IDE 绑定的编码副驾驶，也不是围绕单个 API 的聊天机器人封装。它是一个**自主智能体**，运行时间越长，能力就越强。它存在于您所在之处——一台 5 美元的 VPS、一个 GPU 集群，或一种几乎不耗电的无服务器基础设施（Daytona, Modal）。您可以从 Telegram 与它对话，而它正在一台您从未通过 SSH 连接过的云虚拟机上工作。它不是绑定在您的笔记本电脑上的。
 
 ## 快速链接
 
 | | |
-|---|---|
-| 🚀 **[安装](/getting-started/installation)** | 在 Linux、macOS、WSL2 或原生 Windows（早期测试版）上 60 秒完成安装 |
-| 📖 **[快速入门教程](/getting-started/quickstart)** | 你的第一次对话和可尝试的关键功能 |
-| 🗺️ **[学习路径](/getting-started/learning-path)** | 根据你的经验水平找到合适的文档 |
+| :--- | :--- |
+| 🚀 **[安装](/getting-started/installation)** | 在 Linux、macOS、WSL2 或原生 Windows 上 60 秒内安装 |
+| 📖 **[快速入门教程](/getting-started/quickstart)** | 您的第一次对话和尝试的关键功能 |
+| 🗺️ **[学习路径](/getting-started/learning-path)** | 找到适合您经验水平的文档 |
 | ⚙️ **[配置](/user-guide/configuration)** | 配置文件、提供商、模型和选项 |
-| 💬 **[消息网关](/user-guide/messaging)** | 设置 Telegram、Discord、Slack、WhatsApp、Teams 等 |
-| 🔧 **[工具与工具集](/user-guide/features/tools)** | 60+ 内置工具及其配置方法 |
-| 🧠 **[记忆系统](/user-guide/features/memory)** | 跨会话增长的持久记忆 |
-| 📚 **[技能系统](/user-guide/features/skills)** | 智能体创建并复用的过程性记忆 |
-| 🔌 **[MCP 集成](/user-guide/features/mcp)** | 连接 MCP 服务器，过滤其工具，并安全地扩展 Hermes |
-| 🧭 **[将 MCP 与 Hermes 配合使用](/guides/use-mcp-with-hermes)** | 实用的 MCP 设置模式、示例和教程 |
-| 🎙️ **[语音模式](/user-guide/features/voice-mode)** | 在 CLI、Telegram、Discord 和 Discord 语音频道中进行实时语音交互 |
-| 🗣️ **[将语音模式与 Hermes 配合使用](/guides/use-voice-mode-with-hermes)** | Hermes 语音工作流的实践设置和使用模式 |
-| 🎭 **[个性与 SOUL.md](/user-guide/features/personality)** | 使用全局 SOUL.md 定义 Hermes 的默认语音 |
-| 📄 **[上下文文件](/user-guide/features/context-files)** | 塑造每次对话的项目上下文文件 |
-| 🔒 **[安全](/user-guide/security)** | 命令审批、授权、容器隔离 |
-| 💡 **[提示与最佳实践](/guides/tips)** | 最大化利用 Hermes 的快速入门技巧 |
-| 🏗️ **[架构](/developer-guide/architecture)** | 底层工作原理 |
-| ❓ **[常见问题与故障排除](/reference/faq)** | 常见问题及解决方案 |
+| 💬 **[消息网关](/user-guide/messaging)** | 设置 Telegram, Discord, Slack, WhatsApp, Teams 或更多 |
+| 🔧 **[工具与工具集](/user-guide/features/tools)** | 60+ 个内置工具及其配置方法 |
+| 🧠 **[记忆系统](/user-guide/features/memory)** | 跨会话持久的记忆 |
+| 📚 **[技能系统](/user-guide/features/skills)** | 智能体创建和重用的程序化记忆 |
+| 🔌 **[MCP 集成](/user-guide/features/mcp)** | 连接到 MCP 服务器，过滤其工具，安全地扩展 Hermes 功能 |
+| 🧭 **[使用 Hermes 的 MCP](/guides/use-mcp-with-hermes)** | 实际的 MCP 设置模式、示例和教程 |
+| 🎙️ **[语音模式](/user-guide/features/voice-mode)** | CLI、Telegram、Discord 和 Discord VC 中的实时语音交互 |
+| 🗣️ **[使用 Hermes 的语音模式](/guides/use-voice-mode-with-hermes)** | Hermes 语音工作流的实操设置和使用模式 |
+| 🎭 **[个性与 SOUL.md](/user-guide/features/personality)** | 使用全局 SOUL.md 定义 Hermes 的默认声音 |
+| 📄 **[上下文文件](/user-guide/features/context-files)** | 塑造每一次对话的项目上下文文件 |
+| 🔒 **[安全](/user-guide/security)** | 命令批准、授权、容器隔离 |
+| 💡 **[技巧与最佳实践](/guides/tips)** | 获取 Hermes 最大价值的快速胜利点 |
+| 🏗️ **[架构](/developer-guide/architecture)** | 工作原理 |
+| ❓ **[FAQ 和故障排除](/reference/faq)** | 常见问题和解决方案 |
 
-## 核心特性
+## 主要功能
 
-- **闭环学习循环** —— 智能体策划的记忆，带有周期性主动提示、自主技能创建、使用中技能自我改进、支持 LLM 摘要的 FTS5 跨会话检索，以及 [Honcho](https://github.com/plastic-labs/honcho) 辩证用户建模
-- **随处运行，不仅限于笔记本电脑** —— 6 种终端后端：本地、Docker、SSH、Daytona、Singularity、Modal。Daytona 和 Modal 提供无服务器持久化——你的环境在闲置时休眠，几乎不产生费用
-- **居住在你的生活中** —— CLI、Telegram、Discord、Slack、WhatsApp、Signal、Matrix、Mattermost、Email、SMS、钉钉、飞书、企业微信、微信、QQ 机器人、元宝、BlueBubbles、Home Assistant、Microsoft Teams、Google Chat 等等——通过一个网关连接 20+ 平台
-- **由模型训练师打造** —— 由 [Nous Research](https://nousresearch.com) 创建，这是 Hermes、Nomos 和 Psyche 背后的实验室。可与 [Nous Portal](https://portal.nousresearch.com)、[OpenRouter](https://openrouter.ai)、OpenAI 或任何端点配合使用
-- **定时自动化** —— 内置 cron，可将结果投递到任何平台
-- **委派与并行** —— 为并行工作流生成隔离的子智能体。通过 `execute_code` 进行的程序化工具调用，可将多步管道压缩为单次推理调用
-- **开放标准技能** —— 兼容 [agentskills.io](https://agentskills.io)。技能是可移植、可共享的，并可通过技能中心由社区贡献
-- **完整的网络控制** —— 搜索、提取、浏览、视觉、图像生成、TTS——通过 [Nous Portal](/integrations/nous-portal) 的单一订阅即可捆绑所有功能
-- **MCP 支持** —— 连接到任何 MCP 服务器以获得扩展的工具能力
-- **研究就绪** —— 批量处理、轨迹导出、使用 Atropos 进行 RL 训练。由 [Nous Research](https://nousresearch.com) 构建——Hermes、Nomos 和 Psyche 模型背后的实验室
+*   **一个封闭的学习循环** — 智能体策展的记忆，定期进行引导，自主技能创建，使用过程中的技能自我改进，FTS5 跨会话召回和 LLM 摘要，以及 [Honcho](https://github.com/plastic-labs/honcho) 方言用户建模
+*   **随处运行，不限于您的笔记本电脑** — 6 个终端后端：本地、Docker、SSH、Daytona、Singularity、Modal。Daytona 和 Modal 提供无服务器持久性——当空闲时，您的环境几乎不耗电。
+*   **存在于您所在之处** — CLI、Telegram、Discord、Slack、WhatsApp、Signal、Matrix、Mattermost、Email、SMS、DingTalk、Feishu、WeCom、Weixin、QQ Bot、Yuanbao、BlueBubbles、Home Assistant、Microsoft Teams、Google Chat 等——来自一个网关的 20+ 个平台。
+*   **由模型训练者构建** — 由 [Nous Research](https://nousresearch.com) 创建，它是 Hermes, Nomos 和 Psyche 的幕后实验室。可与 [Nous Portal](https://portal.nousresearch.com)、[OpenRouter](https://openrouter.ai)、OpenAI 或任何端点配合使用。
+*   **计划自动化** — 内置 cron 定时任务，可投递到任何平台。
+*   **委托和并行化** — 孵化隔离的子智能体以实现并行工作流。通过 `execute_code` 进行程序化工具调用，将多步骤流程合并为单次推理调用。
+*   **开放标准技能** — 与 [agentskills.io](https://agentskills.io) 兼容。技能是可移植、可共享和社区贡献的，通过 Skills Hub 实现。
+*   **完整的网络控制** — 搜索、提取、浏览、视觉、图像生成、TTS——一个 [Nous Portal](/integrations/nous-portal) 订阅即可捆绑所有功能。
+*   **MCP 支持** — 连接到任何 MCP 服务器以获得扩展的工具能力。
+*   **研究就绪** — 批量处理、轨迹导出、使用 Atropos 进行 RL 训练。由 [Nous Research](https://nousresearch.com) 构建——它是 Hermes, Nomos 和 Psyche 模型背后的实验室。
 
-## 面向 LLM 和编码智能体
+## 对于 LLM 和编码智能体
 
-本文档的机器可读入口：
+可供机器读取的文档入口：
 
-- **[`/llms.txt`](/llms.txt)** —— 所有文档页面的精选索引，附带简短描述。约 17 KB，可安全加载到 LLM 上下文中。
-- **[`/llms-full.txt`](/llms-full.txt)** —— 所有文档页面合并成单个 markdown 文件，用于一次性摄入。约 1.8 MB。
+*   **[`/llms.txt`](/llms.txt)** — 包含简短描述的每个文档页策展索引。约 17 KB，安全地加载到 LLM 上下文。
+*   **[`/llms-full.txt`](/llms-full.txt)** — 将所有文档页面拼接成一个 markdown 文件供一次性摄取。约 1.8 MB。
 
-这两个文件也可通过 `/docs/llms.txt` 和 `/docs/llms-full.txt` 解析访问。每次部署时都会重新生成。
+这两个文件也解析为 `/docs/llms.txt` 和 `/docs/llms-full.txt`。每次部署时都会重新生成。

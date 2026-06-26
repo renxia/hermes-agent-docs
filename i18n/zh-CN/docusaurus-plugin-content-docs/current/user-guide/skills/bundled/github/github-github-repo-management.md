@@ -1,37 +1,41 @@
 ---
-title: "Github 仓库管理 —— 克隆/创建/复刻仓库；管理远程仓库、发布版本"
+title: Github Repo Management — 克隆/创建/分叉仓库；管理远程仓库和发布
 sidebar_label: "Github 仓库管理"
-description: "克隆/创建/复刻仓库；管理远程仓库、发布版本"
+description: "克隆/创建/分叉仓库；管理远程仓库和发布"
 ---
 
-{/* 此页面由网站脚本 `website/scripts/generate-skill-docs.py` 根据技能的 `SKILL.md` 自动生成。请编辑源文件 `SKILL.md`，而非此页面。 */}
+{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
 # Github 仓库管理
 
-克隆/创建/复刻仓库；管理远程仓库、发布版本。
+克隆/创建/分叉仓库；管理远程仓库和发布。
 
-## 技能元数据
+## Skill metadata
 
 | | |
 |---|---|
-| 来源 | 内置 (默认安装) |
-| 路径 | `skills/github/github-repo-management` |
-| 版本 | `1.1.0` |
-| 作者 | Hermes 智能体 |
-| 许可证 | MIT |
-| 平台 | linux, macos, windows |
-| 标签 | `GitHub`, `仓库`, `Git`, `发布版本`, `密钥`, `配置` |
-| 相关技能 | [`github-auth`](/docs/user-guide/skills/bundled/github/github-github-auth), [`github-pr-workflow`](/docs/user-guide/skills/bundled/github/github-github-pr-workflow), [`github-issues`](/docs/user-guide/skills/bundled/github/github-github-issues) |
+| Source | Bundled (installed by default) |
+| Path | `skills/github/github-repo-management` |
+| Version | `1.1.0` |
+| Author | Hermes 智能体 |
+| License | MIT |
+| Platforms | linux, macos, windows |
+| Tags | `GitHub`, `Repositories`, `Git`, `Releases`, `Secrets`, `Configuration` |
+| Related skills | [`github-auth`](/docs/user-guide/skills/bundled/github/github-github-auth), [`github-pr-workflow`](/docs/user-guide/skills/bundled/github/github-github-pr-workflow), [`github-issues`](/docs/user-guide/skills/bundled/github/github-issues) |
 
-:::info
-以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时看到的指令。
-:::
+## 密钥路径和配置
+
+```
+~/.hermes/config.yaml       主配置文件
+~/.hermes/.env              API 密钥和秘密信息（如果设置了 $HERMES_HOME）
+$HERMES_HOME
+```
 
 # GitHub 仓库管理
 
-创建、克隆、复刻、配置和管理 GitHub 仓库。每个部分先展示 `gh` 命令，然后是 `git` + `curl` 的备用方案。
+创建、克隆、派生、配置和管理 GitHub 仓库。每个部分都首先显示 `gh`，然后是 `git` + `curl` 的备用方案。
 
-## 前提条件
+## 先决条件
 
 - 已通过 GitHub 认证（参见 `github-auth` 技能）
 
@@ -43,15 +47,15 @@ if command -v gh &>/dev/null && gh auth status &>/dev/null; then
 else
   AUTH="git"
   if [ -z "$GITHUB_TOKEN" ]; then
-    if [ -f ~/.hermes/.env ] && grep -q "^GITHUB_TOKEN=" ~/.hermes/.env; then
-      GITHUB_TOKEN=$(grep "^GITHUB_TOKEN=" ~/.hermes/.env | head -1 | cut -d= -f2 | tr -d '\n\r')
+    if _hermes_env="${HERMES_HOME:-$HOME/.hermes}/.env"; [ -f "$_hermes_env" ] && grep -q "^GITHUB_TOKEN=" "$_hermes_env"; then
+      GITHUB_TOKEN=$(grep "^GITHUB_TOKEN=" "$_hermes_env" | head -1 | cut -d= -f2 | tr -d '\n\r')
     elif grep -q "github.com" ~/.git-credentials 2>/dev/null; then
       GITHUB_TOKEN=$(grep "github.com" ~/.git-credentials 2>/dev/null | head -1 | sed 's|https://[^:]*:\([^@]*\)@.*|\1|')
     fi
   fi
 fi
 
-# 获取你的 GitHub 用户名（多个操作需要使用）
+# 获取您的 GitHub 用户名（用于多项操作）
 if [ "$AUTH" = "gh" ]; then
   GH_USER=$(gh api user --jq '.login')
 else
@@ -59,7 +63,7 @@ else
 fi
 ```
 
-如果你已经在仓库内：
+如果您已经在仓库内部：
 
 ```bash
 REMOTE_URL=$(git remote get-url origin)
@@ -72,26 +76,26 @@ REPO=$(echo "$OWNER_REPO" | cut -d/ -f2)
 
 ## 1. 克隆仓库
 
-克隆操作使用纯 `git` 命令——两种方式完全相同：
+克隆是纯粹的 `git` — 两种方式都完全相同：
 
 ```bash
-# 通过 HTTPS 克隆（适用于凭据助手或嵌入令牌的 URL）
+# 通过 HTTPS 克隆（与凭证助手或嵌入令牌 URL 一起使用）
 git clone https://github.com/owner/repo-name.git
 
-# 克隆到指定目录
+# 克隆到特定的目录
 git clone https://github.com/owner/repo-name.git ./my-local-dir
 
-# 浅克隆（对大型仓库更快）
+# 浅克隆（对于大型仓库更快）
 git clone --depth 1 https://github.com/owner/repo-name.git
 
-# 克隆指定分支
+# 克隆特定分支
 git clone --branch develop https://github.com/owner/repo-name.git
 
-# 通过 SSH 克隆（如果已配置 SSH）
+# 通过 SSH 克隆（如果配置了 SSH）
 git clone git@github.com:owner/repo-name.git
 ```
 
-**使用 gh（简写方式）：**
+**使用 gh (简写):**
 
 ```bash
 gh repo clone owner/repo-name
@@ -100,14 +104,14 @@ gh repo clone owner/repo-name -- --depth 1
 
 ## 2. 创建仓库
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
-# 创建公共仓库并克隆
+# 创建公共仓库并克隆它
 gh repo create my-new-project --public --clone
 
-# 私有仓库，带描述和许可证
-gh repo create my-new-project --private --description "A useful tool" --license MIT --clone
+# 私有，带描述和许可证
+gh repo create my-new-project --private --description "一个实用的工具" --license MIT --clone
 
 # 在组织下创建
 gh repo create my-org/my-new-project --public --clone
@@ -117,7 +121,7 @@ cd /path/to/existing/project
 gh repo create my-project --source . --public --push
 ```
 
-**使用 git + curl：**
+**使用 git + curl:**
 
 ```bash
 # 通过 API 创建远程仓库
@@ -126,13 +130,13 @@ curl -s -X POST \
   https://api.github.com/user/repos \
   -d '{
     "name": "my-new-project",
-    "description": "A useful tool",
+    "description": "一个实用的工具",
     "private": false,
     "auto_init": true,
     "license_template": "mit"
   }'
 
-# 克隆仓库
+# 克隆它
 git clone https://github.com/$GH_USER/my-new-project.git
 cd my-new-project
 
@@ -140,12 +144,12 @@ cd my-new-project
 cd /path/to/existing/project
 git init
 git add .
-git commit -m "Initial commit"
+git commit -m "初始提交"
 git remote add origin https://github.com/$GH_USER/my-new-project.git
 git push -u origin main
 ```
 
-在组织下创建：
+要在组织下创建：
 
 ```bash
 curl -s -X POST \
@@ -156,13 +160,13 @@ curl -s -X POST \
 
 ### 从模板创建
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
 gh repo create my-new-app --template owner/template-repo --public --clone
 ```
 
-**使用 curl：**
+**使用 curl:**
 
 ```bash
 curl -s -X POST \
@@ -171,42 +175,42 @@ curl -s -X POST \
   -d '{"owner": "'"$GH_USER"'", "name": "my-new-app", "private": false}'
 ```
 
-## 3. 复刻仓库
+## 3. 派生仓库
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
 gh repo fork owner/repo-name --clone
 ```
 
-**使用 git + curl：**
+**使用 git + curl:**
 
 ```bash
-# 通过 API 创建复刻
+# 通过 API 创建派生版本
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/owner/repo-name/forks
 
-# 等待 GitHub 创建完成，然后克隆
+# 等待片刻，让 GitHub 完成创建，然后克隆
 sleep 3
 git clone https://github.com/$GH_USER/repo-name.git
 cd repo-name
 
-# 将原始仓库添加为 "upstream" 远程仓库
+# 将原始仓库添加为 "upstream" 远程
 git remote add upstream https://github.com/owner/repo-name.git
 ```
 
-### 保持复刻同步
+### 使派生版本保持同步
 
 ```bash
-# 纯 git 命令——在任何地方都适用
+# 纯 git — 在任何地方都有效
 git fetch upstream
 git checkout main
 git merge upstream/main
 git push origin main
 ```
 
-**使用 gh（快捷方式）：**
+**使用 gh (快捷方式):**
 
 ```bash
 gh repo sync $GH_USER/repo-name
@@ -214,7 +218,7 @@ gh repo sync $GH_USER/repo-name
 
 ## 4. 仓库信息
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
 gh repo view owner/repo-name
@@ -222,7 +226,7 @@ gh repo list --limit 20
 gh search repos "machine learning" --language python --sort stars
 ```
 
-**使用 curl：**
+**使用 curl:**
 
 ```bash
 # 查看仓库详情
@@ -234,11 +238,11 @@ import sys, json
 r = json.load(sys.stdin)
 print(f\"名称: {r['full_name']}\")
 print(f\"描述: {r['description']}\")
-print(f\"星标: {r['stargazers_count']}  复刻: {r['forks_count']}\")
+print(f\"星标数: {r['stargazers_count']}  派生数: {r['forks_count']}\")
 print(f\"默认分支: {r['default_branch']}\")
 print(f\"语言: {r['language']}\")"
 
-# 列出你的仓库
+# 列出您的仓库
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/user/repos?per_page=20&sort=updated" \
@@ -259,30 +263,30 @@ for r in json.load(sys.stdin)['items']:
 
 ## 5. 仓库设置
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
-gh repo edit --description "Updated description" --visibility public
+gh repo edit --description "更新后的描述" --visibility public
 gh repo edit --enable-wiki=false --enable-issues=true
 gh repo edit --default-branch main
 gh repo edit --add-topic "machine-learning,python"
 gh repo edit --enable-auto-merge
 ```
 
-**使用 curl：**
+**使用 curl:**
 
 ```bash
 curl -s -X PATCH \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO \
   -d '{
-    "description": "Updated description",
+    "description": "更新后的描述",
     "has_wiki": false,
     "has_issues": true,
     "allow_auto_merge": true
   }'
 
-# 更新主题标签
+# 更新话题
 curl -s -X PUT \
   -H "Authorization: token $GITHUB_TOKEN" \
   -H "Accept: application/vnd.github.mercy-preview+json" \
@@ -293,7 +297,7 @@ curl -s -X PUT \
 ## 6. 分支保护
 
 ```bash
-# 查看当前保护设置
+# 查看当前的保护设置
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/branches/main/protection
@@ -317,7 +321,7 @@ curl -s -X PUT \
 
 ## 7. 密钥管理（GitHub Actions）
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
 gh secret set API_KEY --body "your-secret-value"
@@ -326,17 +330,17 @@ gh secret list
 gh secret delete API_KEY
 ```
 
-**使用 curl：**
+**使用 curl:**
 
-密钥需要使用仓库的公钥进行加密——通过 API 操作更复杂：
+秘密需要使用仓库的公钥进行加密——通过 API 操作更复杂：
 
 ```bash
-# 获取仓库的公钥用于加密密钥
+# 获取用于加密密钥的仓库公钥
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/actions/secrets/public-key
 
-# 加密并设置（需要安装 PyNaCl 的 Python）
+# 加密并设置（需要 Python 和 PyNaCl）
 python3 -c "
 from base64 import b64encode
 from nacl import encoding, public
@@ -355,13 +359,13 @@ print(json.dumps({
     'key_id': key_id
 }))"
 
-# 然后 PUT 加密后的密钥
+# 然后 PUT 加密的秘密
 curl -s -X PUT \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/actions/secrets/API_KEY \
-  -d '<python 脚本的输出>'
+  -d '<output from python script above>'
 
-# 列出密钥（仅显示名称，值已隐藏）
+# 列出秘密（仅名称，值被隐藏）
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/actions/secrets \
@@ -371,31 +375,31 @@ for s in json.load(sys.stdin)['secrets']:
     print(f\"  {s['name']:30}  更新时间: {s['updated_at']}\")"
 ```
 
-注意：对于密钥管理，`gh secret set` 明显更简单。如果需要设置密钥且 `gh` 不可用，建议仅为该操作安装 `gh`。
+注意：对于秘密，`gh secret set` 要简单得多。如果需要设置秘密但没有 `gh` 可用，建议安装它来完成该操作。
 
-## 8. 发布版本
+## 8. 发布版本 (Releases)
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
 gh release create v1.0.0 --title "v1.0.0" --generate-notes
 gh release create v2.0.0-rc1 --draft --prerelease --generate-notes
-gh release create v1.0.0 ./dist/binary --title "v1.0.0" --notes "Release notes"
+gh release create v1.0.0 ./dist/binary --title "v1.0.0" --notes "发布说明"
 gh release list
 gh release download v1.0.0 --dir ./downloads
 ```
 
-**使用 curl：**
+**使用 curl:**
 
 ```bash
-# 创建发布版本
+# 创建一个发布版本
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/releases \
   -d '{
     "tag_name": "v1.0.0",
     "name": "v1.0.0",
-    "body": "## 更新日志\n- 功能 A\n- 修复 B",
+    "body": "## 变更日志\n- 功能 A\n- Bug 修复 B",
     "draft": false,
     "prerelease": false,
     "generate_release_notes": true
@@ -408,10 +412,10 @@ curl -s \
   | python3 -c "
 import sys, json
 for r in json.load(sys.stdin):
-    tag = r.get('tag_name', '无标签')
-    print(f\"  {tag:15}  {r['name']:30}  {'草稿' if r['draft'] else '已发布'}\")"
+    tag = r.get('tag_name', 'no tag')
+    print(f\"  {tag:15}  {r['name']:30}  {'draft' if r['draft'] else 'published'}\")"
 
-# 上传发布资源（二进制文件）
+# 上传发布资产（二进制文件）
 RELEASE_ID=<id_from_create_response>
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
@@ -422,7 +426,7 @@ curl -s -X POST \
 
 ## 9. GitHub Actions 工作流
 
-**使用 gh：**
+**使用 gh:**
 
 ```bash
 gh workflow list
@@ -435,7 +439,7 @@ gh workflow run ci.yml --ref main
 gh workflow run deploy.yml -f environment=staging
 ```
 
-**使用 curl：**
+**使用 curl:**
 
 ```bash
 # 列出工作流
@@ -447,16 +451,16 @@ import sys, json
 for w in json.load(sys.stdin)['workflows']:
     print(f\"  {w['id']:10}  {w['name']:30}  {w['state']}\")"
 
-# 列出最近的运行
+# 列出最近的运行记录
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/$OWNER/$REPO/actions/runs?per_page=10" \
   | python3 -c "
 import sys, json
 for r in json.load(sys.stdin)['workflow_runs']:
-    print(f\"  Run {r['id']}  {r['name']:30}  {r['conclusion'] or r['status']}\")"
+    print(f\"  运行 {r['id']}  {r['name']:30}  {r['conclusion'] or r['status']}\")"
 
-# 下载失败运行的日志
+# 下载失败的运行日志
 RUN_ID=<run_id>
 curl -s -L \
   -H "Authorization: token $GITHUB_TOKEN" \
@@ -469,7 +473,7 @@ curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/actions/runs/$RUN_ID/rerun
 
-# 仅重新运行失败的作业
+# 只重新运行失败的作业
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/repos/$OWNER/$REPO/actions/runs/$RUN_ID/rerun-failed-jobs
@@ -482,31 +486,31 @@ curl -s -X POST \
   -d '{"ref": "main", "inputs": {"environment": "staging"}}'
 ```
 
-## 10. Gists
+## 10. Gists（代码片段）
 
-**使用 gh：**
+**使用 gh 时:**
 
 ```bash
-gh gist create script.py --public --desc "有用的脚本"
+gh gist create script.py --public --desc "Useful script"
 gh gist list
 ```
 
-**使用 curl：**
+**使用 curl 时:**
 
 ```bash
-# 创建一个 Gist
+# Create a gist
 curl -s -X POST \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/gists \
   -d '{
-    "description": "有用的脚本",
+    "description": "Useful script",
     "public": true,
     "files": {
       "script.py": {"content": "print(\"hello\")"}
     }
   }'
 
-# 列出你的 Gists
+# List your gists
 curl -s \
   -H "Authorization: token $GITHUB_TOKEN" \
   https://api.github.com/gists \
@@ -514,19 +518,19 @@ curl -s \
 import sys, json
 for g in json.load(sys.stdin):
     files = ', '.join(g['files'].keys())
-    print(f\"  {g['id']}  {g['description'] or '(无描述)':40}  {files}\")"
+    print(f\"  {g['id']}  {g['description'] or '(no desc)':40}  {files}\")"
 ```
 
 ## 快速参考表
 
 | 操作 | gh | git + curl |
 |--------|-----|-----------|
-| 克隆 | `gh repo clone o/r` | `git clone https://github.com/o/r.git` |
-| 创建仓库 | `gh repo create name --public` | `curl POST /user/repos` |
-| 复刻 | `gh repo fork o/r --clone` | `curl POST /repos/o/r/forks` + `git clone` |
-| 仓库信息 | `gh repo view o/r` | `curl GET /repos/o/r` |
-| 编辑设置 | `gh repo edit --...` | `curl PATCH /repos/o/r` |
-| 创建发行版 | `gh release create v1.0` | `curl POST /repos/o/r/releases` |
-| 列出工作流 | `gh workflow list` | `curl GET /repos/o/r/actions/workflows` |
-| 重新运行 CI | `gh run rerun ID` | `curl POST /repos/o/r/actions/runs/ID/rerun` |
-| 设置密钥 | `gh secret set KEY` | `curl PUT /repos/o/r/actions/secrets/KEY` (+ 加密) |
+| 克隆 (Clone) | `gh repo clone o/r` | `git clone https://github.com/o/r.git` |
+| 创建仓库 (Create repo) | `gh repo create name --public` | `curl POST /user/repos` |
+| 分叉 (Fork) | `gh repo fork o/r --clone` | `curl POST /repos/o/r/forks` + `git clone` |
+| 仓库信息 (Repo info) | `gh repo view o/r` | `curl GET /repos/o/r` |
+| 编辑设置 (Edit settings) | `gh repo edit --...` | `curl PATCH /repos/o/r` |
+| 创建发布版本 (Create release) | `gh release create v1.0` | `curl POST /repos/o/r/releases` |
+| 列出工作流 (List workflows) | `gh workflow list` | `curl GET /repos/o/r/actions/workflows` |
+| 重新运行 CI (Rerun CI) | `gh run rerun ID` | `curl POST /repos/o/r/actions/runs/ID/rerun` |
+| 设置密钥 (Set secret) | `gh secret set KEY` | `curl PUT /repos/o/r/actions/secrets/KEY` (+ encryption) |

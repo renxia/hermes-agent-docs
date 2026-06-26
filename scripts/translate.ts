@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { Command } from 'commander';
-import OpenAI from 'openai';
+// import OpenAI from 'openai';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, cpSync, rmSync } from 'node:fs';
 import fg from 'fast-glob';
 import { join, dirname, relative, extname } from 'node:path';
@@ -18,12 +18,14 @@ const logger = new NLogger('T');
 const RECORD_FILE = join(process.cwd(), './translate-records.json');
 
 const translateRecords: { [filepath: string]: { srcMd5: string; } & { [targetpath: string]: string } } = existsSync(RECORD_FILE) ? JSON.parse(readFileSync(RECORD_FILE, 'utf-8')) : {};
+const FileExtWhiteList = ['.md', '.mdx', '.json']
 
 program
   .name('translate-docs')
   .description('Translate documentation files using LLM')
   .version('1.0.0')
   .requiredOption('-p, --path <path>', 'Path to file or directory to translate', 'docs')
+  .option('--debug', 'Debug mode')
   .option('-s, --source-lang <lang>', 'Source language', 'en')
   .option('-t, --target-lang <lang>', 'Target language', 'zh-CN')
   .option('--timeout <ms>', 'Timeout in milliseconds. default: 300_000')
@@ -38,14 +40,16 @@ program.parse();
 
 const options = program.opts();
 
-const openai = new OpenAI({
-  baseURL: options.baseUrl,
-  apiKey: options.apiKey,
-  timeout: Number(options.timeout || process.env.TRANSLATE_TIMEOUT_MS || 0) || 300_000,
-});
+// const openai = new OpenAI({
+//   baseURL: options.baseUrl,
+//   apiKey: options.apiKey,
+//   timeout: Number(options.timeout || process.env.TRANSLATE_TIMEOUT_MS || 0) || 300_000,
+// });
 
 // 文本分段最大长度阈值，默认 8000 字符
 const MAX_CHUNK_SIZE = Number(process.env.TRANSLATE_MAX_CHUNK_SIZE || 8000);
+
+if (options.debug) logger.updateOptions({ levelType: 'debug' });
 
 /**
  * 按二级标题 ## 分割文本，返回分段数组
@@ -295,7 +299,7 @@ function getAllMdFiles(dirPath: string): string[] {
       const stat = statSync(fullPath);
       if (stat.isDirectory()) {
         scanDir(fullPath);
-      } else if (['.md', '.mdx', '.json'].includes(extname(fullPath))) {
+      } else if (FileExtWhiteList.includes(extname(fullPath))) {
         files.push(fullPath);
       }
     }
@@ -368,7 +372,8 @@ async function cleanupStaleTranslations(): Promise<void> {
   logger.log('Cleaning up stale translations...');
 
   // 使用 fast-glob 获取 docs 目录下的所有文件（相对路径，使用正斜杠）
-  const sourceFiles = await fg('**/*.{md,json}', { cwd: docsDir, onlyFiles: true }) as string[];
+  const extPattern = `**/*.{${FileExtWhiteList.map(e => e.slice(1)).join(',')}}`;
+  const sourceFiles = await fg(extPattern, { cwd: docsDir, onlyFiles: true }) as string[];
   const sourceFilesSet = new Set(sourceFiles.map(f => `docs/${f.replace(/\\/g, '/')}`));
 
   const keysToDelete: string[] = [];
@@ -424,8 +429,7 @@ async function translateFile(srcFile: string, sourceLang: string, targetLang: st
 
   // 目标文件已存在，根据 translateRecord 判断是否需要更新
   if (existsSync(destFile) && translateRecords[fileCacheKey]?.srcMd5 === srcMd5 && translateRecords[fileCacheKey][targetLang]) {
-    // console.log(`- [${idx}/${total}]${color.gray(destFile)} already exists, skipping...`);
-    console.log(`- [${idx}/${total}][${color.gray(srcFile)} -> ${color.cyan(targetLang)}] already exists, skipping...`);
+    if (options.debug) console.log(`- [${idx}/${total}][${color.gray(srcFile)} -> ${color.cyan(targetLang)}] already exists, skipping...`);
     return;
   }
 
@@ -456,7 +460,7 @@ async function translateFile(srcFile: string, sourceLang: string, targetLang: st
   writeFileSync(destFile, translatedContent, 'utf-8');
   translateRecords[fileCacheKey][targetLang] = md5(translatedContent);
   writeFileSync(RECORD_FILE, JSON.stringify(translateRecords, null, 2), 'utf-8');
-  console.log(`  -> Translated to ${color.green(destFile)}. Time Cost: ${color.yellow(Date.now() - startTime)}ms`);
+  console.log(`  -> Translated to ${color.green(destFile)}. length: ${color.yellow(content.length)}->${color.yellow(translatedContent.length)} chars. Time Cost: ${color.yellow(Date.now() - startTime)}ms`);
 }
 
 async function main() {
@@ -476,7 +480,7 @@ async function main() {
   let filesToTranslate: string[];
 
   if (stat.isFile()) {
-    if (!['.md', '.mdx', '.json'].includes(extname(inputPath))) {
+    if (!FileExtWhiteList.includes(extname(inputPath))) {
       logger.error('Input file must be a .md file');
       process.exit(1);
     }

@@ -1,197 +1,169 @@
 ---
 sidebar_position: 5
-title: "计划任务（定时作业）"
-description: "通过自然语言安排自动化任务，使用单一的定时作业工具进行管理，并可附加一项或多项技能"
+title: "定时任务（Cron）"
+description: "使用自然语言安排自动化任务，通过一个 Cron 工具进行管理，并附加一个或多个技能。"
 ---
 
-# 计划任务（定时作业）
+# 定时任务（Cron）
 
-通过自然语言或定时表达式安排任务自动运行。Hermes 通过一个单一的 `cronjob` 工具，以操作式指令来管理定时作业，而非使用独立的计划/列表/移除工具。
+使用自然语言或 Cron 表达式安排任务自动运行。Hermes 通过一个具有操作式操作的 `cronjob` 工具来暴露 Cron 管理功能，而不是使用单独的调度/列表/移除工具。
 
-## 定时作业目前的功能
+## Cron 现在可以做什么
 
-定时作业可以：
+Cron 作业可以：
 
-- 安排一次性或重复性任务
-- 暂停、恢复、编辑、触发和移除作业
-- 为作业附加零项、一项或多项技能
-- 将结果传送回原始对话、本地文件或已配置的平台目标
-- 在包含常规静态工具列表的全新智能体会话中运行
-- 以 **无智能体模式** 运行 —— 一个按计划运行的脚本，其标准输出按原样传送，无需任何大语言模型参与（请参阅下方的[无智能体模式（仅脚本任务）](#无智能体模式（仅脚本任务）)部分）
+- 安排一次性或重复性的任务
+- 暂停、恢复、编辑、触发和移除任务
+- 向任务附加零个、一个或多个技能
+- 将结果交付回原始聊天、本地文件或配置的平台目标
+- 在新的智能体会话中运行，并使用正常的静态工具列表
+- 在 **无智能体模式** 下运行——即一个按计划执行的脚本，其标准输出（stdout）被原样交付，零 LLM 参与（参见下方的 [无智能体模式](#no-agent-mode-script-only-jobs) 部分）。
 
-所有这些功能均可由 Hermes 自身通过 `cronjob` 工具实现，因此您只需用自然语言提问即可创建、暂停、编辑和移除作业 —— 无需命令行界面。
+所有这些功能都可通过 `cronjob` 工具提供给 Hermes 本身，因此您可以通过用普通语言提问来创建、暂停、编辑和移除任务——无需使用命令行界面（CLI）。
 
 :::tip
-定时作业使用 `hermes model` 选定的任何提供商。`hermes setup --portal` 对于无人值守运行是最低阻力的选项，因为 OAuth 刷新是自动的。详见 [Nous Portal](/integrations/nous-portal)。
+在创建时，一个未固定的任务（即您没有明确指定 `provider`/`model` 的任务）将遵循由 `hermes model` 选择的全局默认值——而 Hermes 会在任务上**快照**该提供商和模型。如果全局默认值稍后发生变化，该任务将**安全失败**：它会跳过运行，不会进行任何推理调用，并发送一个警报，告诉您需要明确固定（`cronjob action=update job_id=… provider=… model=…`）提供商/模型才能继续。这可以防止一个无人看管的任务静默地继承切换到付费的提供商/模型并花费您不打算花的钱 (#44585)。要让任务故意跟踪您的全局默认值，请在更改后将其固定到新值上。由于 OAuth 刷新是自动的，`hermes setup --portal` 是无人运行的最佳低摩擦选项。参见 [Nous Portal](/integrations/nous-portal)。
 :::
 
 :::warning
-定时作业运行的会话无法递归地创建更多定时作业。Hermes 会在定时作业执行期间禁用定时作业管理工具，以防止产生失控的调度循环。
+Cron 运行会话不能递归创建更多的 Cron 任务。Hermes 会在 Cron 执行内部禁用 Cron 管理工具，以防止失控的调度循环。
 :::
 
 ## 创建定时任务
 
-### 在聊天中使用 `/cron` 命令
+### 在聊天中使用 `/cron`
 
 ```bash
-/cron add 30m "提醒我检查构建"
-/cron add "每2小时" "检查服务器状态"
-/cron add "每1小时" "总结新的订阅源条目" --skill blogwatcher
-/cron add "每1小时" "同时使用两个技能并合并结果" --skill blogwatcher --skill maps
+/cron add 30m "Remind me to check the build"
+/cron add "every 2h" "Check server status"
+/cron add "every 1h" "Summarize new feed items" --skill blogwatcher
+/cron add "every 1h" "Use both skills and combine the result" --skill blogwatcher --skill maps
 ```
 
-### 通过独立命令行
+### 从独立的 CLI 使用
 
 ```bash
-hermes cron create "每2小时" "检查服务器状态"
-hermes cron create "每1小时" "总结新的订阅源条目" --skill blogwatcher
-hermes cron create "每1小时" "同时使用两个技能并合并结果" \
+hermes cron create "every 2h" "Check server status"
+hermes cron create "every 1h" "Summarize new feed items" --skill blogwatcher
+hermes cron create "every 1h" "Use both skills and combine the result" \
   --skill blogwatcher \
   --skill maps \
-  --name "技能组合"
+  --name "Skill combo"
 ```
 
 ### 通过自然对话
 
-直接向 Hermes 提出要求：
+正常提问 Hermes：
 
 ```text
-每天早上9点，检查 Hacker News 上的 AI 新闻，并将摘要发送到我的 Telegram。
+Every morning at 9am, check Hacker News for AI news and send me a summary on Telegram.
 ```
 
-Hermes 会在内部统一使用 `cronjob` 工具。
+Hermes 会在内部使用统一的 `cronjob` 工具。
 
 ## 基于技能的定时任务
 
-一个定时任务在运行提示词前可以加载一个或多个技能。
+Cron 任务在运行提示词之前可以加载一个或多个技能。
 
-### 单个技能
+### 单一技能
 
 ```python
 cronjob(
     action="create",
     skill="blogwatcher",
-    prompt="检查已配置的订阅源并总结任何新内容。",
+    prompt="Check the configured feeds and summarize anything new.",
     schedule="0 9 * * *",
-    name="晨间订阅",
+    name="Morning feeds",
 )
 ```
 
 ### 多个技能
 
-技能按顺序加载。提示词成为叠加在这些技能之上的任务指令。
+技能是按顺序加载的。提示词成为叠加在这些技能之上的任务指令。
 
 ```python
 cronjob(
     action="create",
     skills=["blogwatcher", "maps"],
-    prompt="寻找新的本地活动和附近有趣的地方，然后将它们合并成一份简短的简报。",
+    prompt="Look for new local events and interesting nearby places, then combine them into one short brief.",
     schedule="every 6h",
-    name="本地简报",
+    name="Local brief",
 )
 ```
 
-当你想让一个定时智能体继承可重用的工作流，而不必将完整的技能文本塞入定时任务提示词本身时，这非常有用。
+当您希望一个定时任务（agent）继承可重用工作流程，而无需将完整的技能文本塞入 cron 提示词本身时，这会非常有用。
 
-## 在项目目录中运行任务
+## 在项目目录内运行任务
 
-定时任务默认与任何代码仓库分离运行——不加载 `AGENTS.md`、`CLAUDE.md` 或 `.cursorrules`，且终端/文件/代码执行工具在网关启动时的工作目录下运行。传递 `--workdir`（CLI）或 `workdir=`（工具调用）可以更改此行为：
+Cron 任务默认是脱离任何仓库运行的——不会加载 `AGENTS.md`、`CLAUDE.md` 或 `.cursorrules`，终端/文件/代码执行工具将从网关启动时的工作目录运行。通过传递 `--workdir` (CLI) 或 `workdir=` (工具调用) 来更改这一点：
 
 ```bash
-# 独立 CLI (schedule 和 prompt 是位置参数)
-hermes cron create "每天 09:00" \
-  "审计待处理的 PR，总结 CI 健康状况，并发布到 #eng 频道" \
+# 独立的 CLI（schedule 和 prompt 是位置参数）
+hermes cron create "every 1d at 09:00" \
+  "Audit open PRs, summarize CI health, and post to #eng" \
   --workdir /home/me/projects/acme
 ```
 
 ```python
-# 在聊天中，通过 cronjob 工具
+# 通过聊天，使用 cronjob 工具
 cronjob(
     action="create",
     schedule="every 1d at 09:00",
     workdir="/home/me/projects/acme",
-    prompt="审计待处理的 PR，总结 CI 健康状况，并发布到 #eng 频道",
+    prompt="Audit open PRs, summarize CI health, and post to #eng",
 )
 ```
 
-当设置 `workdir` 后：
+当设置了 `workdir` 时：
 
-- 该目录下的 `AGENTS.md`、`CLAUDE.md` 和 `.cursorrules` 会被注入到系统提示词中（发现顺序与交互式 CLI 相同）
-- `terminal`、`read_file`、`write_file`、`patch`、`search_files` 和 `execute_code` 都使用该目录作为工作目录（通过 `TERMINAL_CWD`）
-- 该路径必须是一个存在的绝对目录——相对路径和缺失的目录在创建/更新时会被拒绝
-- 编辑时传递 `--workdir ""`（或通过工具传递 `workdir=""`）可以清除它并恢复旧行为
+- 从该目录中获取的 `AGENTS.md`、`CLAUDE.md` 和 `.cursorrules` 会被注入到系统提示词中（与交互式 CLI 相同的发现顺序）。
+- `terminal`、`read_file`、`write_file`、`patch`、`search_files` 和 `execute_code` 都使用该目录作为其工作目录。
+- 该路径必须是一个存在的绝对目录——相对路径和缺失的目录会在创建/更新时被拒绝。
+- 在编辑时，传递 `--workdir ""` (或通过工具调用 `workdir=""`) 来清除它并恢复旧行为。
 
-:::note 序列化
-带有 `workdir` 的任务在调度器节拍时会顺序运行，而非在并行池中运行。这是故意的——`TERMINAL_CWD` 是进程全局的，因此两个 workdir 任务同时运行会相互破坏各自的当前工作目录。没有 workdir 的任务仍然像以前一样并行运行。
-:::
-
-## 在特定配置文件中运行定时任务
-
-默认情况下，定时任务继承创建它的网关/CLI 所属的 Hermes 配置文件。传递 `--profile <name>`（CLI）或 `profile=`（cronjob 工具）可以将任务重新定向到不同的配置文件——调度器会解析该配置文件的 `HERMES_HOME`，在任务运行期间临时切换到其中，加载其 `.env` + `config.yaml`，并在那里执行任务：
-
-```bash
-# 将任务固定到 `night-ops` 配置文件，无论它是在何处被调度的
-hermes cron create "每天 03:00" \
-  "跟踪安全日志并标记异常" \
-  --profile night-ops
-```
-
-```python
-# 在聊天中，通过 cronjob 工具
-cronjob(
-    action="create",
-    schedule="every 1d at 03:00",
-    prompt="跟踪安全日志并标记异常",
-    profile="night-ops",
-)
-```
-
-使用 `--profile default` 可以明确固定到根 Hermes 配置文件。命名的配置文件必须已经存在；调度器不会即时创建配置文件。要在 `cron edit` 期间清除配置文件固定，传递一个空字符串（`--profile ""` 或 `profile=""`）——任务将恢复为在调度器自身所在的配置文件中运行。
-
-如果固定的配置文件后来被删除，调度器会记录警告并回退到在其当前配置文件中运行任务，而不是崩溃——因此过时的 `profile` 引用永远不会卡住任务。
-
-:::note 序列化
-设置了 `profile` 的任务也会顺序运行，原因与 `workdir` 固定的任务相同：切换 `HERMES_HOME` 是一个进程全局的变更，因此两个配置文件固定的并行运行任务会相互竞争。未固定的任务仍然在正常的并行池中运行。
+:::note Serialization
+带有 `workdir` 的任务在调度器滴答（tick）时按顺序运行，而不是在并行池中运行。这是故意的：cron 工作进程通过进程全局终端状态应用工作目录，因此两个同时运行的工作目录任务可能会相互损坏 cwd。没有工作目录的任务仍然像以前一样并行运行。
 :::
 
 ## 编辑任务
 
-你不需要删除并重新创建任务来更改它们。
+您无需删除并重新创建任务来更改它们。
 
-:::tip 任务引用
-下面的 `<job_id>` 占位符（以及在 [生命周期操作](#生命周期操作) 中）也接受任务的名称（不区分大小写）——当你记得 `morning-digest` 但不记得十六进制 ID 时很方便。精确的任务 ID 优先于名称匹配；如果引用的不是 ID 并且一个名称匹配了多个任务，命令会拒绝并打印候选项 ID 以便你进行明确。
+:::tip Job reference
+下面的 `<job_id>` 占位符（以及 [Lifecycle actions](#lifecycle-actions) 中的内容）也接受任务的名称（不区分大小写）——当您记得 `morning-digest` 但不记得十六进制 ID 时，这非常方便。精确的任务 ID 优先于名称匹配；如果引用不是 ID 并且有多个任务匹配名称，命令将拒绝执行并打印候选 ID，以便您可以进行区分。名称并非唯一，因此这个保护机制至关重要——它防止了在两个任务共享同一名称时静默地修改错误的任务。
 :::
 
 ### 聊天
 
 ```bash
-/cron edit <job_id> --schedule "每4小时"
-/cron edit <job_id> --prompt "使用修订后的任务"
+/cron edit <job_id> --schedule "every 4h"
+/cron edit <job_id> --prompt "Use the revised task"
 /cron edit <job_id> --skill blogwatcher --skill maps
 /cron edit <job_id> --remove-skill blogwatcher
 /cron edit <job_id> --clear-skills
 ```
 
-### 独立 CLI
+### 独立的 CLI
 
 ```bash
 hermes cron edit <job_id> --schedule "every 4h"
-hermes cron edit <job_id> --prompt "使用修订后的任务"
+hermes cron edit <job_id> --prompt "Use the revised task"
 hermes cron edit <job_id> --skill blogwatcher --skill maps
 hermes cron edit <job_id> --add-skill maps
 hermes cron edit <job_id> --remove-skill blogwatcher
 hermes cron edit <job_id> --clear-skills
 ```
 
-注意：
-- 重复的 `--skill` 会替换任务关联的技能列表
-- `--add-skill` 会追加到现有列表而不替换
-- `--remove-skill` 会移除特定的关联技能
-- `--clear-skills` 会移除所有关联的技能
+注意事项：
+
+- 重复使用的 `--skill` 会替换任务所附带的技能列表。
+- `--add-skill` 会追加到现有列表，而不是替换它。
+- `--remove-skill` 会移除特定的附带技能。
+- `--clear-skills` 会移除所有附带技能。
 
 ## 生命周期操作
 
-定时任务现在拥有比创建/删除更完整的生命周期。
+Cron 任务现在具有比创建/删除更完整的生命周期。
 
 ### 聊天
 
@@ -203,7 +175,7 @@ hermes cron edit <job_id> --clear-skills
 /cron remove <job_id>
 ```
 
-### 独立 CLI
+### 独立的 CLI
 
 ```bash
 hermes cron list
@@ -216,22 +188,23 @@ hermes cron status
 hermes cron tick
 ```
 
-它们的作用：
-- `pause` — 保留任务但停止调度它
-- `resume` — 重新启用任务并计算下一次未来运行时间
-- `run` — 在下一个调度器节拍时触发任务
-- `remove` — 完全删除它
-- `edit` — 修改计划、提示词、配置文件、交付方式等。
+它们的功能：
 
-**基于名称的查找。** 所有四个变更性动词（`pause`、`resume`、`run`、`remove`、`edit`）以及智能体的 `cronjob` 工具现在都接受任务**名称**（不区分大小写）来代替十六进制 ID。智能体和 CLI 都优先选择精确的 ID 匹配（如果存在）；模糊的名称匹配（多个任务共享同一名称）会被拒绝，并附带候选项 ID 的完整列表，以便你明确选择。名称不是唯一的，因此这种保护是必要的——它防止在两个任务共享一个名称时静默地更改错误的任务。
+- `pause` — 保留任务，但停止调度它。
+- `resume` — 重新启用任务并计算下一次运行时间。
+- `run` — 在下一个调度器滴答时触发任务。
+- `remove` — 完全删除它。
+- `edit` — 修改日程、提示词、交付方式等。
+
+**基于名称的查找。** 所有四个可变动动词（`pause`、`resume`、`run`、`remove`、`edit`）以及智能体（agent）的 `cronjob` 工具现在都接受任务的**名称**（不区分大小写），而不是十六进制 ID。智能体和 CLI 都更喜欢精确的 ID 匹配，如果存在的话；模糊的名称匹配（多个任务共享相同的名称）将被拒绝，并会显示所有候选 ID，以便您可以明确选择一个。名称并非唯一，因此这个保护机制至关重要——它防止了在两个任务共享同一名称时静默地修改错误的任务。
 
 ## 工作原理
 
-**定时任务的执行由网关守护进程处理。** 网关每 60 秒调度器节拍一次，在隔离的智能体会话中运行所有到期的任务。
+**Cron 执行由网关守护进程（gateway daemon）处理。** 网关每 60 秒滴答一次调度器，并在隔离的智能体会话中运行所有到期的任务。
 
 ```bash
-hermes gateway install     # 安装为用户服务
-sudo hermes gateway install --system   # Linux: 用于服务器的启动时系统服务
+hermes gateway install     # 作为用户服务安装
+sudo hermes gateway install --system   # Linux：用于服务器的启动时系统服务
 hermes gateway             # 或在前台运行
 
 hermes cron list
@@ -240,84 +213,84 @@ hermes cron status
 
 ### 网关调度器行为
 
-在每次节拍时，Hermes：
+在每次滴答（tick）中，Hermes 会执行以下操作：
 
-1. 从 `~/.hermes/cron/jobs.json` 加载任务
-2. 检查 `next_run_at` 是否符合当前时间
-3. 为每个到期的任务启动一个新的 `AIAgent` 会话
-4. 可选地将一个或多个关联技能注入该新会话
-5. 运行提示词直至完成
-6. 交付最终响应
-7. 更新运行元数据和下一个计划时间
+1. 从 `~/.hermes/cron/jobs.json` 加载任务。
+2. 将 `next_run_at` 与当前时间进行比对。
+3. 为每个到期的任务启动一个新的 `AIAgent` 会话。
+4. 可选地将一个或多个附带技能注入到该新会话中。
+5. 运行提示词直到完成。
+6. 交付最终响应。
+7. 更新运行元数据和下一次计划时间。
 
-`~/.hermes/cron/.tick.lock` 处的文件锁防止重叠的调度器节拍重复运行同一批任务。
+位于 `~/.hermes/cron/.tick.lock` 的文件锁可以防止重叠的调度器滴答导致同一批任务重复运行。
 
 ## 交付选项
 
-调度任务时，你可以指定输出发送到哪里：
+在安排任务时，您需要指定输出去向：
 
-| 选项 | 描述 | 示例 |
-|------|------|------|
-| `"origin"` | 返回任务创建的地方 | 消息平台上的默认值 |
-| `"local"` | 仅保存到本地文件 (`~/.hermes/cron/output/`) | CLI 上的默认值 |
+| Option | Description | Example |
+|--------|-------------|---------|
+| `"origin"` | 返回到创建该任务的地方 | 消息平台上的默认设置 |
+| `"local"` | 仅保存到本地文件（`~/.hermes/cron/output/`） | CLI 上的默认设置 |
 | `"telegram"` | Telegram 主频道 | 使用 `TELEGRAM_HOME_CHANNEL` |
-| `"telegram:123456"` | 按 ID 指定的 Telegram 聊天 | 直接交付 |
-| `"telegram:-100123:17585"` | 指定的 Telegram 话题 | `chat_id:thread_id` 格式 |
+| `"telegram:123456"` | 特定 ID 的 Telegram 聊天 | 直接交付 |
+| `"telegram:-100123:17585"` | 特定 Telegram 主题 | `chat_id:thread_id` 格式 |
 | `"discord"` | Discord 主频道 | 使用 `DISCORD_HOME_CHANNEL` |
-| `"discord:#engineering"` | 指定的 Discord 频道 | 通过频道名称 |
+| `"discord:#engineering"` | 特定 Discord 频道 | 按频道名称 |
 | `"slack"` | Slack 主频道 | |
-| `"whatsapp"` | WhatsApp 主页 | |
+| `"whatsapp"` | WhatsApp 主频道 | |
 | `"signal"` | Signal | |
 | `"matrix"` | Matrix 主房间 | |
 | `"mattermost"` | Mattermost 主频道 | |
 | `"email"` | 电子邮件 | |
-| `"sms"` | 通过 Twilio 的短信 | |
+| `"sms"` | 通过 Twilio 的 SMS | |
 | `"homeassistant"` | Home Assistant | |
-| `"dingtalk"` | 钉钉 | |
-| `"feishu"` | 飞书 | |
-| `"wecom"` | 企业微信 | |
-| `"weixin"` | 微信 | |
+| `"dingtalk"` | DingTalk | |
+| `"feishu"` | Feishu/Lark | |
+| `"wecom"` | WeCom | |
+| `"weixin"` | Weixin (WeChat) | |
 | `"bluebubbles"` | BlueBubbles (iMessage) | |
-| `"qqbot"` | QQ 机器人 (腾讯 QQ) | |
-| `"all"` | 分发到每个已连接的主频道 | 在触发时解析 |
+| `"qqbot"` | QQ Bot (Tencent QQ) | |
+| `"all"` | 分发到所有已连接的主频道 | 在触发时解析 |
 | `"telegram,discord"` | 分发到特定的一组频道 | 逗号分隔列表 |
-| `"origin,all"` | 交付到原点**加上**每个其他已连接的频道 | 组合任何标记 |
+| `"origin,all"` | 交付给源头**以及**所有其他已连接的频道 | 组合任何令牌 |
 
-智能体的最终响应会自动交付。你无需在定时任务提示词中调用 `send_message`。
+智能体（agent）的最终响应会自动交付。您不需要在 cron 提示词中调用 `send_message`。
 
 ### 路由意图 (`all`)
 
-`all` 让你可以将一个定时任务发送到你已配置的每个消息频道，而无需按名称枚举它们。它**在触发时被解析**，因此在你连接 Telegram 之前创建的任务会在你设置 `TELEGRAM_HOME_CHANNEL` 后的下一个节拍时获取 Telegram。
+`all` 允许您将一个 cron 任务发送到所有已配置的消息频道，而无需按名称枚举它们。它是在**触发时解析**的，因此在一个您设置了 `TELEGRAM_HOME_CHANNEL` 之前的创建的任务，将在您设置该变量后的下一个滴答中捕获 Telegram。
 
-语义：`all` 扩展到每个已配置了主频道的平台。零个是可以的；任务只是不产生交付目标，并在上游记录为交付失败。
+语义：`all` 会扩展为具有配置主频道的每个平台。零（0）是可接受的；任务只需不产生任何交付目标，并被记录为上游的交付失败。
 
-`all` 可以与显式目标组合。`origin,all` 交付到原点聊天*加上*每个其他已连接的主频道，通过 `(platform, chat_id, thread_id)` 进行去重。
+`all` 可以与显式目标组合使用。`origin,all` 交付到源聊天*以及*所有其他已连接的主频道，通过 `(platform, chat_id, thread_id)` 进行去重。
 
-### Telegram 定时任务话题 (`TELEGRAM_CRON_THREAD_ID`)
+### Telegram cron 主题 (`TELEGRAM_CRON_THREAD_ID`)
 
-当 Telegram 话题模式启用时，根私聊被保留为系统大厅——发送到那里的回复会被大厅提醒拒绝，并且 `reply_to_message_id` 会被丢弃，因此你无法回复落入主聊天的定时消息。
+当启用 Telegram 主题模式时，根 DM 被保留为系统大厅——发送到那里的回复会被一个大厅提醒拒绝，并且 `reply_to_message_id` 会被丢弃，因此您无法回复到一个落入主聊天的 cron 消息。
 
-改为将定时任务指向一个专用的论坛话题：
+请改将任务指向一个专用的论坛主题：
 
-1. 在 Telegram 中，打开机器人私聊并创建一个话题，例如命名为 `Cron`。长按话题标题 → **复制链接**；末尾的整数就是该话题的 `message_thread_id`。
-2. 在你的 `.env` 中设置 `TELEGRAM_CRON_THREAD_ID=<那个 id>`。
+1. 在 Telegram 中，打开机器人 DM 并创建一个名为例如 `Cron` 的主题。长按主题标题 → **复制链接**；末尾的整数是该主题的 `message_thread_id`。
+2. 在您的 `.env` 文件中设置 `TELEGRAM_CRON_THREAD_ID=<that id>`。
 
-这仅适用于定时任务交付。`TELEGRAM_HOME_CHANNEL_THREAD_ID`（在其他地方使用，例如重启通知）保持不变。显式的 `deliver="telegram:chat_id:thread_id"` 目标继续优先于环境变量。对定时消息的回复现在会到达现有的话题会话中，因此你可以直接对其采取行动。
+这仅适用于 cron 交付。`TELEGRAM_HOME_CHANNEL_THREAD_ID`（在其他地方使用，例如重启通知）保持不变。显式的 `deliver="telegram:chat_id:thread_id"` 目标仍然具有优先权。对 cron 消息的回复现在会到达现有的主题会话中，因此您可以直接处理它们。
 
 ### 响应包装
 
-默认情况下，交付的定时输出会被包裹在一个页眉和页脚中，这样接收者就知道它来自一个计划任务：
+默认情况下，交付的 cron 输出会被一个头部和尾部包裹起来，以便接收者知道它来自一个定时任务：
 
 ```
-定时任务响应：晨间订阅
+Cronjob Response: Morning feeds
 -------------
 
-<此处为智能体输出>
+<agent output here>
 
-注意：智能体无法看到此消息，因此无法对其做出回应。
+Note: The agent cannot see this message, and therefore cannot respond to it.
 ```
 
-要交付原始的智能体输出而不带包装，请将 `cron.wrap_response` 设置为 `false`：
+要交付原始的智能体输出而不带包装器，请将 `cron.wrap_response` 设置为 `false`：
 
 ```yaml
 # ~/.hermes/config.yaml
@@ -325,34 +298,53 @@ cron:
   wrap_response: false
 ```
 
-### 静默抑制
+### 可续接的任务（回复 cron 交付）
 
-如果智能体的最终响应以 `[SILENT]` 开头，则交付会被完全抑制。输出仍然会保存在本地以供审计（在 `~/.hermes/cron/output/` 中），但不会向交付目标发送任何消息。
+默认情况下，cron 交付是“发送即忘”（fire-and-forget）：消息被发送了，但它不保存在聊天的对话历史中，因此如果您回复它，智能体就不知道它说了什么。设置一个**可续接**的任务，交付的简报就会成为您可以回复的内容——智能体将拥有上下文，而不是询问“任务 #2 是什么？”。
 
-这对于仅应在出现问题时才报告的监控任务非常有用：
-
-```text
-检查 nginx 是否正在运行。如果一切健康，则仅以 [SILENT] 响应。
-否则，报告该问题。
-```
-
-失败的任务无论是否有 `[SILENT]` 标记都会被交付——只有成功的运行才能被静默。
-
-## 脚本超时时间
-
-通过 `script` 参数附加的预运行脚本默认超时时间为 120 秒。如果你的脚本需要更长时间 —— 例如包含随机延迟以避免机器人式的计时模式 —— 你可以增加这个时间：
+选择加入，**默认关闭**。可以在配置中全局启用，或通过 `cronjob` 工具的 `attach_to_session`（它会覆盖该单个任务的全局设置）进行按任务启用：
 
 ```yaml
 # ~/.hermes/config.yaml
 cron:
-  script_timeout_seconds: 300   # 5 分钟
+  mirror_delivery: false   # 设置为 true 可使 cron 交付可续接
 ```
 
-或者设置 `HERMES_CRON_SCRIPT_TIMEOUT` 环境变量。解析顺序为：环境变量 → config.yaml → 120 秒默认值。
+行为是**线程优先**的，范围限定于任务的源聊天：
 
-## 无智能体模式（纯脚本任务）
+- **支持主题的平台**（Telegram 主题、Discord/Slack 线程）：每次交付都会打开一个专用的线程，简报会被播种到该线程的会话中，因此在线程内回复可以保持完整的上下文。一个重复的任务（例如每日简报）会在每次运行时打开一个新的线程，使每一次交付的后续讨论保持隔离。
+- **仅支持 DM 的平台**（WhatsApp、Signal、SMS）：不存在线程，因此简报会被镜像到源 DM 会话中——DM 本身就是续接表面。
 
-对于不需要 LLM 推理的周期性任务 —— 经典的监视器、磁盘/内存告警、心跳检测、CI 探针 —— 在创建时传递 `no_agent=True`。调度器将按计划运行你的脚本，并直接传递其标准输出，完全跳过智能体：
+只有源聊天会被触及：扇出/广播目标（`all`、显式的其他聊天交付）永远不会被设置为可续接。镜像内容以一个带标签的用户回合（`[Cron delivery: <task name>]`）形式写入，这使得对话历史在所有模型提供商之间保持安全。
+
+### 静默抑制
+
+如果智能体的最终响应包含 `[SILENT]`，则交付将被完全抑制。输出仍然会保存在本地进行审计（在 `~/.hermes/cron/output/` 中），但不会向交付目标发送任何消息。
+
+这对于仅应报告错误情况的任务非常有用：
+
+```text
+检查 nginx 是否正在运行。如果一切正常，只回复 [SILENT]。
+否则，报告问题。
+```
+
+失败的任务无论是否包含 `[SILENT]` 标记都会总是交付——只有成功的运行才能被静音。对于安静的监控任务，请提示智能体在没有需要报告时只回复 `[SILENT]`。
+
+## 脚本超时
+
+通过 `script` 参数附加的预运行脚本默认超时时间为 120 秒。如果您的脚本需要更长的时间——例如，为了包含避免机器人式定时模式的随机延迟——您可以增加此值：
+
+```yaml
+# ~/.hermes/config.yaml
+cron:
+  script_timeout_seconds: 300   # 5 minutes
+```
+
+或者设置 `HERMES_CRON_SCRIPT_TIMEOUT` 环境变量。解析顺序为：环境变量 → config.yaml → 120秒默认值。
+
+## 无智能体模式（脚本专用任务）
+
+对于不需要 LLM 推理的重复性任务——经典的看门狗、磁盘/内存警报、心跳、CI ping——请在创建时传入 `no_agent=True`。调度器会按计划运行您的脚本并直接交付其标准输出（stdout），完全跳过智能体：
 
 ```bash
 hermes cron create "every 5m" \
@@ -362,22 +354,22 @@ hermes cron create "every 5m" \
   --name "memory-watchdog"
 ```
 
-语义：
+语义说明：
 
-- 脚本标准输出（修剪后）→ 原样作为消息传递。
-- **空的标准输出 → 静默标记**，不进行传递。这就是监视器模式：“只在有问题时才说话”。
-- 非零退出码或超时 → 会发送错误警报，因此故障的监视器不能无声无息地失效。
-- 最后一行 `{"wakeAgent": false}` → 静默标记（与 LLM 任务使用的相同门控）。
-- 无令牌、无模型、无提供商回退 —— 该任务从不接触推理层。
+- 脚本标准输出（已修剪）→ 作为消息原样交付。
+- **空标准输出 → 静默滴答**，不进行交付。这是看门狗模式：“只有出问题时才说些什么”。
+- 非零退出或超时→ 会发送错误警报，因此一个损坏的看门狗不能静默失败。
+- 最后一行有 `{"wakeAgent": false}` → 静默滴答（与 LLM 任务使用的同一机制）。
+- 没有 token，没有模型，没有提供商回退——该任务永远不会触及推理层。
 
-`.sh` / `.bash` 文件在 `/bin/bash` 下运行；其他文件则使用当前的 Python 解释器（`sys.executable`）。脚本必须位于 `~/.hermes/scripts/` 中（与预运行脚本门控相同的沙盒规则）。
+`.sh` / `.bash` 文件在 `/bin/bash` 下运行；其他文件则在当前的 Python 解释器（`sys.executable`）下运行。脚本必须位于 `~/.hermes/scripts/` 下（与预运行脚本的沙箱规则相同）。
 
-### 智能体会为你设置这些
+### 智能体为您设置这些内容
 
-`cronjob` 工具的模式直接向 Hermes 暴露了 `no_agent`，因此你可以在聊天中描述一个监视器，让智能体来配置它：
+`cronjob` 工具的模式将 `no_agent` 直接暴露给 Hermes，因此您可以在聊天中描述一个看门狗，然后让智能体进行配置：
 
 ```text
-如果内存占用超过 85%，每 5 分钟通过 Telegram 提醒我。
+Ping me on Telegram if RAM is over 85%, every 5 minutes.
 ```
 
 Hermes 将通过 `write_file` 将检查脚本写入 `~/.hermes/scripts/`，然后调用：
@@ -388,37 +380,37 @@ cronjob(action="create", schedule="every 5m",
         deliver="telegram", name="memory-watchdog")
 ```
 
-当消息内容完全由脚本决定时（监视器、阈值告警、心跳），它会自动选择 `no_agent=True`。同一个工具还允许智能体暂停、恢复、编辑和删除任务 —— 因此整个生命周期都是聊天驱动的，无需任何人操作命令行。
+当消息内容完全由脚本确定时（看门狗、阈值警报、心跳），它会自动选择 `no_agent=True`。该工具还允许智能体暂停、恢复、编辑和删除任务——因此整个生命周期都是由聊天驱动的，而无需任何人操作命令行界面（CLI）。
 
-请参阅[纯脚本定时任务指南](/guides/cron-script-only)获取实际示例。
+请参阅 [脚本专用定时任务指南](/guides/cron-script-only) 以获取示例。
 
-## 使用 `context_from` 链式执行任务
+## 使用 `context_from` 进行任务链式调用
 
-定时任务在隔离的会话中运行，不保留任何前次运行的记忆。但有时一个任务的输出恰好是另一个任务所需的输入。`context_from` 参数能够自动建立这种连接——任务 B 的提示词将在运行时自动前置任务 A 的最近一次输出作为上下文。
+Cron 作业在隔离的会话中运行，不会记住以前的运行记录。但有时一个作业的输出恰好是下一个作业所需要的。`context_from` 参数会自动建立这种连接——Job B 的提示词会在运行时自动加上 Job A 最新的输出作为上下文。
 
 ```python
-# 任务 1：收集原始数据
+# Job 1: 收集原始数据
 cronjob(
     action="create",
-    prompt="从 Hacker News 获取前 10 条 AI/ML 新闻故事。将其以 markdown 格式保存到 ~/.hermes/data/briefs/raw.md，包含标题、URL 和评分。",
+    prompt="从 Hacker News 获取排名前 10 的 AI/ML 故事。将它们保存到 ~/.hermes/data/briefs/raw.md，使用 markdown 格式，包含标题、URL 和评分。",
     schedule="0 7 * * *",
     name="AI 新闻收集器",
 )
 
-# 任务 2：筛选 — 接收任务 1 的输出作为上下文
-# 从以下命令获取任务 1 的 ID: cronjob(action="list")
+# Job 2: 分类 — 以 Job 1 的输出作为上下文
+# 从 cronjob(action="list") 获取 Job 1 的 ID
 cronjob(
     action="create",
-    prompt="读取 ~/.hermes/data/briefs/raw.md。为每个故事的互动潜力和新颖性打 1–10 分。将前 5 名输出到 ~/.hermes/data/briefs/ranked.md。",
+    prompt="读取 ~/.hermes/data/briefs/raw.md。为每个故事评分 1-10，评估其参与度和新颖性。将排名前 5 的结果输出到 ~/.hermes/data/briefs/ranked.md。",
     schedule="30 7 * * *",
     context_from="<job1_id>",
-    name="AI 新闻筛选",
+    name="AI 新闻分类",
 )
 
-# 任务 3：发送 — 接收任务 2 的输出作为上下文
+# Job 3: 发送 — 以 Job 2 的输出作为上下文
 cronjob(
     action="create",
-    prompt="读取 ~/.hermes/data/briefs/ranked.md。撰写 3 条推文草稿（吸引点 + 正文 + 话题标签）。发送至 telegram:7976161601。",
+    prompt="读取 ~/.hermes/data/briefs/ranked.md。撰写 3 个推文草稿（钩子 + 正文 + 标签）。发送到 telegram:7976161601。",
     schedule="0 8 * * *",
     context_from="<job2_id>",
     name="AI 新闻简报",
@@ -427,80 +419,80 @@ cronjob(
 
 **工作原理：**
 
-- 当任务 2 触发时，Hermes 会从 `~/.hermes/cron/output/{job1_id}/*.md` 读取任务 1 的最近一次输出。
-- 该输出会自动前置到任务 2 的提示词之前。
-- 任务 2 无需硬编码“读取此文件”——它会将内容作为上下文接收。
-- 该链可以是任意长度：任务 1 → 任务 2 → 任务 3 → ...
+- 当 Job 2 触发时，Hermes 会从 `~/.hermes/cron/output/{job1_id}/*.md` 读取 Job 1 最新的输出。
+- 该输出会自动附加到 Job 2 的提示词中。
+- Job 2 无需硬编码“读取此文件”——它会接收内容作为上下文。
+- 链条的长度可以是任意的：Job 1 → Job 2 → Job 3 → ...
 
-**`context_from` 接受的格式：**
+**`context_from` 支持的格式：**
 
 | 格式 | 示例 |
-|------|------|
-| 单个任务 ID（字符串） | `context_from="a1b2c3d4"` |
-| 多个任务 ID（列表） | `context_from=["job_a", "job_b"]` |
+|--------|---------|
+| 单个作业 ID (字符串) | `context_from="a1b2c3d4"` |
+| 多个作业 ID (列表) | `context_from=["job_a", "job_b"]` |
 
-输出将按列表顺序进行拼接。
+输出将按列出的顺序连接起来。
 
-**使用场景：**
+**何时使用：**
 
-- 多阶段流水线（收集 → 过滤 → 格式化 → 交付）
-- 依赖性任务，其中步骤 N 的工作依赖于步骤 N-1 的输出
-- 扇出/扇入模式，其中一个任务汇总来自多个其他任务的结果
+- 多阶段管道（收集 → 过滤 → 格式化 → 发送）
+- 依赖任务，其中步骤 N 的工作取决于步骤 N−1 的输出
+- 分布式/集中式模式，即一个作业从多个其他作业中聚合结果
 
-## 提供商恢复
+## 提供者恢复机制
 
-定时任务继承您配置的备用提供商和凭据池轮换策略。如果主 API 密钥受到速率限制或提供商返回错误，定时智能体可以：
+Cron 作业会继承你配置的备用提供者和凭证池轮换。如果主 API 密钥被限速或提供者返回错误，cron **智能体**可以：
 
-- **回退到备用提供商**，前提是在 `config.yaml` 中配置了 `fallback_providers`（或旧版 `fallback_model`）
-- **轮换到同一提供商的下一个凭据**，参见您的[凭据池](/user-guide/configuration#credential-pool-strategies)
+- 如果你在 `config.yaml` 中配置了 `fallback_providers`（或旧版的 `fallback_model`），则**回退到另一个提供者**
+- 对于同一提供者的凭证，**轮换到下一个凭证** [凭证池](/user-guide/configuration#credential-pool-strategies)
 
-这意味着在高峰时段或高频运行的定时任务更具弹性——单个受速率限制的密钥不会导致整个运行失败。
+这意味着高频率运行或在高峰时段运行的 cron 作业具有更高的弹性——单个被限速的密钥不会导致整个运行失败。
 
 ## 调度格式
 
-智能体的最终响应会自动发送——您**无需**为同一目标地址在定时任务的提示词中包含 `send_message`。如果一次定时运行向调度器本身将发送到的完全相同的目标调用了 `send_message`，Hermes 会跳过该重复发送，并告知模型将面向用户的内容放在最终响应中。仅当需要向其他或不同目标发送时才使用 `send_message`。
+**智能体**的最终回复会自动发送——你不需要在 cron 提示词中包含 `send_message`，使其发送到相同的目标。如果一次 cron 运行调用了 `send_message` 发送到调度器将要发送的精确目标，Hermes 会跳过这次重复发送，并指示模型将面向用户的内容放入最终回复中。请仅在需要额外的或不同的目标时才使用 `send_message`。
 
 ### 相对延迟（一次性）
 
 ```text
-30m     → 30 分钟后运行一次
-2h      → 2 小时后运行一次
-1d      → 1 天后运行一次
+30m     → 运行一次，间隔 30 分钟
+2h      → 运行一次，间隔 2 小时
+1d      → 运行一次，间隔 1 天
 ```
 
-### 间隔（周期性）
+### 间隔（重复性）
 
 ```text
-every 30m    → 每 30 分钟
-every 2h     → 每 2 小时
-every 1d     → 每天
+every 30m    → 每 30 分钟运行一次
+every 2h     → 每 2 小时运行一次
+every 1d     → 每天运行一次
 ```
 
 ### Cron 表达式
 
 ```text
-0 9 * * *       → 每天上午 9:00
-0 9 * * 1-5     → 工作日上午 9:00
-0 */6 * * *     → 每 6 小时
-30 8 1 * *      → 每月 1 日上午 8:30
-0 0 * * 0       → 每周日午夜
+0 9 * * *       → 每日上午 9:00 运行
+0 9 * * 1-5     → 工作日（周一到周五）上午 9:00 运行
+0 */6 * * *     → 每 6 小时运行一次
+30 8 1 * *      → 每月的第一天上午 8:30 运行
+0 0 * * 0       → 每周日午夜运行
 ```
 
 ### ISO 时间戳
 
 ```text
-2026-03-15T09:00:00    → 一次性，2026 年 3 月 15 日上午 9:00
+2026-03-15T09:00:00    → 一次性运行，在 2026 年 3 月 15 日上午 9:00
 ```
 
 ## 重复行为
 
 | 调度类型 | 默认重复次数 | 行为 |
-|----------|--------------|------|
-| 一次性 (`30m`，时间戳) | 1 | 运行一次 |
-| 间隔 (`every 2h`) | forever | 运行直到被移除 |
-| Cron 表达式 | forever | 运行直到被移除 |
+|--------------|----------------|----------|
+| 一次性（`30m`，时间戳） | 1 | 只运行一次 |
+| 间隔式（`every 2h`） | 永远 | 持续运行直到被移除 |
+| Cron 表达式 | 永远 | 持续运行直到被移除 |
 
-您可以覆盖它：
+你可以进行覆盖：
 
 ```python
 cronjob(
@@ -511,9 +503,9 @@ cronjob(
 )
 ```
 
-## 以编程方式管理任务
+## 编程管理作业
 
-面向智能体的 API 是一个工具：
+面向 **智能体** 的 API 是其中一种工具：
 
 ```python
 cronjob(action="create", ...)
@@ -525,58 +517,58 @@ cronjob(action="run", job_id="...")
 cronjob(action="remove", job_id="...")
 ```
 
-对于 `update`，传入 `skills=[]` 可移除所有附加的技能。
+对于 `update` 操作，请传入 `skills=[]` 以移除所有已附加的技能。
 
-## 定时任务可用的工具集
+## 可用于 Cron 作业的工具集
 
-定时运行在每个任务都在一个全新的智能体会话中执行，没有连接聊天平台。默认情况下，定时智能体获得的是您在 `hermes tools` 中为 `cron` 平台配置的工具集——不是 CLI 默认值，也不是所有工具。
+Cron 运行每次作业时都处于一个全新的 **智能体** 会话中，并且没有聊天平台附着。默认情况下，cron **智能体** 会获得你在 `hermes tools` 中为 `cron` 平台配置的工具集——而不是 CLI 的默认设置，也不是所有东西。
 
 ```bash
 hermes tools
-# → 在交互式界面中选择 "cron" 平台
-# → 就像为 Telegram/Discord 等平台一样，切换工具集的开关
+# → 在 curses UI 中选择 "cron" 平台
+# → 像你为 Telegram/Discord 等所做的那样，开启/关闭工具集。
 ```
 
-更细粒度的每任务控制可以通过 `cronjob.create`（或通过 `cronjob.update` 更新现有任务）的 `enabled_toolsets` 字段实现：
+可以通过 `cronjob.create`（或通过 `cronjob.update` 对现有作业）上的 `enabled_toolsets` 字段进行更精细的单次作业控制：
 
 ```text
 cronjob(action="create", name="weekly-news-summary",
         schedule="every sunday 9am",
-        enabled_toolsets=["web", "file"],      # 仅启用 web 和 file，无 terminal/browser 等
-        prompt="Summarize this week's AI news: ...")
+        enabled_toolsets=["web", "file"],      # 仅 web + file，不包括 terminal/browser 等。
+        prompt="总结本周的 AI 新闻：...")
 ```
 
-当任务上设置了 `enabled_toolsets` 时，它优先；否则由 `hermes tools` 的 cron 平台配置决定；否则 Hermes 回退到内置默认值。这对成本控制很重要：将 `moa`、`browser`、`delegation` 带入每个微小的“获取新闻”任务，会在每次 LLM 调用时膨胀工具模式提示词。
+如果设置了 `enabled_toolsets`，它将优先；否则，`hermes tools` 的 cron 平台配置将生效；否则，Hermes 将回退到内置默认值。这对于成本控制很重要：将 `browser`、`delegation` 等包含进每一个微小的“获取新闻”作业都会使 LLM 调用中的工具模式提示词变得臃肿。
 
 ### 完全跳过智能体：`wakeAgent`
 
-如果您的定时任务附加了预检脚本（通过 `script=`），该脚本可以在运行时决定 Hermes 是否应该调用智能体。在最后一行输出如下格式的标准输出：
+如果你的 cron 作业附带了一个预检查脚本（通过 `script=`），该脚本可以在运行时决定 Hermes 是否应该调用 **智能体**。发出一个格式为以下内容的最终 stdout 行：
 
 ```text
 {"wakeAgent": false}
 ```
 
-…那么定时任务将完全跳过该次的智能体运行。这对于频繁轮询（每 1-5 分钟）且仅在状态实际改变时才需要唤醒 LLM 的情况非常有用——否则您会为一次又一次内容为空的智能体回合付费。
+……然后 cron 会跳过本次的 **智能体** 运行。这对于需要唤醒 LLM 而不是持续进行零内容型 **智能体** 轮次的频繁轮询（每 1-5 分钟）非常有用——否则你会为这些零内容型的 **智能体** 轮次付费。
 
 ```python
-# 预检脚本
+# 预检查脚本
 import json, sys
 latest = fetch_latest_issue_count()
 prev = read_state("issue_count")
 if latest == prev:
-    print(json.dumps({"wakeAgent": False}))   # 跳过本次
+    print(json.dumps({"wakeAgent": False}))   # 跳过本次 tick
     sys.exit(0)
 write_state("issue_count", latest)
 print(json.dumps({"wakeAgent": True, "context": {"new_issues": latest - prev}}))
 ```
 
-当省略 `wakeAgent` 时，默认值为 `true`（照常唤醒智能体）。
+当省略 `wakeAgent` 时，默认值是 `true`（照常唤醒 **智能体**）。
 
-#### 配方：低成本运行前门控
+#### 廉价的预运行门控方案
 
-`wakeAgent` 门控为您提供了一种零成本的方式，以决定计划任务是否应该消耗任何 LLM token。三种模式涵盖了大多数用例。
+`wakeAgent` 门控机制提供了一种 $0 的方式来决定一个计划作业是否需要消耗任何 LLM token。以下三种模式涵盖了大多数用例。
 
-**文件变更门控** — 仅当被监视的文件自上次成功执行以来有新内容时运行。调度器记录每个任务的 `last_run_at`；将其与文件的修改时间 (mtime) 进行比较。
+**文件更改门控** — 仅当被监控的文件自上次成功的 tick 以来有新内容时才运行。调度器会记录每个作业的 `last_run_at`；将其与文件的 mtime 进行比较。
 
 ```bash
 #!/bin/bash
@@ -598,10 +590,10 @@ fi
 cronjob(action="create", name="process-feed",
         schedule="every 30m",
         script="feed-changed.sh",
-        prompt="A new ~/data/feed.json has landed. Summarize what changed.")
+        prompt="一个新的 ~/data/feed.json 文件已到达。总结一下变化内容。")
 ```
 
-**外部标志门控** — 仅当其他进程已发出就绪信号时运行（例如，部署钩子放置一个文件，CI 任务在您的状态存储中设置一个值）。
+**外部标志门控** — 仅当其他进程发出就绪信号时才运行（例如，一个部署钩子投递文件，一个 CI 作业在状态存储中设置了一个值）。
 
 ```bash
 #!/bin/bash
@@ -618,10 +610,10 @@ fi
 cronjob(action="create", name="nightly-analysis",
         schedule="0 9 * * *",
         script="flag-ready.sh",
-        prompt="Run the nightly analysis over today's batch.")
+        prompt="对今天的批次运行夜间分析。")
 ```
 
-**SQL 计数门控** — 仅当您的数据库中有需要处理的新行时运行。脚本还可以通过 `context` 将计数传递给智能体，这样智能体无需重新查询就知道自己要处理多少数据。
+**SQL 计数门控** — 仅当数据库中有新行需要处理时才运行。脚本还可以通过 `context` 将计数传递给 **智能体**，这样 **智能体** 在无需重新查询的情况下就知道自己正在查看多少内容。
 
 ```python
 #!/usr/bin/env python
@@ -641,48 +633,47 @@ else:
 cronjob(action="create", name="summarize-new-msgs",
         schedule="every 2h",
         script="new-rows.py",
-        prompt="Summarize the new messages from the last 2 hours.")
+        prompt="总结过去 2 小时内的新消息。")
 ```
 
-同样的模式适用于您可以通过脚本查询的任何数据源——Postgres、HTTP API、您自己的状态存储——而无需在定时子系统中内嵌 SQL 评估器。
+相同的模式适用于任何你可以从脚本查询的数据源——Postgres、HTTP API、你自己的状态存储——而无需将 SQL 评估器烘焙到 cron 子系统中。
 
 :::tip
-Hermes 自己的 `~/.hermes/state.db` 是一个内部模式，会在不同版本之间发生变化。不要从运行前门控脚本查询它——请指向您自己的数据库或数据源。
+Hermes 自身的 `~/.hermes/state.db` 是一个内部模式，不同版本之间可能会发生变化。不要从预运行门控中查询它——请指向你自己的数据库或数据源。
 :::
 
-致谢：此配方集由 @iankar8 在 [#2654](https://github.com/NousResearch/hermes-agent/pull/2654) 中的探索所启发，该提议添加了 sql/file/command 触发器作为并行机制。`script` + `wakeAgent` 门控已经以零成本覆盖了所有三种情况，因此该工作最终转化为文档。
+鸣谢：这套方案是 @iankar8 在 [#2654](https://github.com/NousResearch/hermes-agent/pull/2654) 中的探索所启发，该 PR 提出了将 SQL/文件/命令触发器作为一种并行机制添加。`script` + `wakeAgent` 门控已经涵盖了所有三种情况，并且成本为 $0，因此工作成果以文档形式交付。
 
-### 链式执行任务：`context_from`
+### 任务链式调用：`context_from`
 
-一个定时任务可以通过在 `context_from` 中列出其他任务的名称（或 ID）来使用它们最近一次成功输出的上下文：
+cron 作业可以通过在 `context_from` 中列出其他一个或多个作业的名称（或 ID）来消耗它们最近一次成功的输出：
 
 ```text
 cronjob(action="create", name="daily-digest",
         schedule="every day 7am",
         context_from=["ai-news-fetch", "github-prs-fetch"],
-        prompt="Write the daily digest using the outputs above.")
+        prompt="使用上述输出撰写每日简报。")
 ```
 
-被引用的任务的最近一次已完成输出会作为上下文注入到本次运行的提示词之前。每个上游条目必须是有效的任务 ID 或名称（参见 `cronjob action="list"`）。注意：链式读取使用的是*最近一次已完成*的输出——它不会等待在同一执行周期内正在运行的上游任务。
+被引用的作业的最近一次完成输出会被注入到提示词上方作为本次运行的上下文。每个上游条目都必须是一个有效的作业 ID 或名称（参见 `cronjob action="list"`）。注意：链式调用读取的是**最近一次已完成**的输出——它不会等待在同一 tick 中正在运行的上游作业。
+## 作业存储
 
-## 任务存储
+作业存储在 `~/.hermes/cron/jobs.json` 中。作业运行的输出保存在 `~/.hermes/cron/output/{job_id}/{timestamp}.md` 中。
 
-任务存储在 `~/.hermes/cron/jobs.json` 中。任务运行的输出保存到 `~/.hermes/cron/output/{job_id}/{timestamp}.md`。
+作业中可能包含 `model` 和 `provider` 为 `null` 的情况。当这些字段被省略时，Hermes 会在执行时从全局配置中解析它们。只有当设置了单次作业覆盖时，它们才会出现在作业记录中。
 
-任务可能会将 `model` 和 `provider` 存储为 `null`。当这些字段被省略时，Hermes 会在执行时从全局配置中解析它们。它们仅在设置了任务级别的覆盖时才会出现在任务记录中。
+存储使用原子文件写入，以确保中断的写入不会留下部分完成的作业文件。
 
-该存储使用原子文件写入，因此中断的写入不会留下部分写入的任务文件。
-
-## 自包含的提示词仍然重要
+## 自包含提示词仍然重要
 
 :::warning 重要
-定时任务在一个完全独立的智能体会话中运行。提示词必须包含智能体运行所需的一切，这些内容并非由附加技能提供。
+Cron 作业在一个完全全新的 **智能体** 会话中运行。提示词必须包含 **智能体** 所需的一切信息，而这些信息尚未由附加的技能提供。
 :::
 
-**错误示例：** `"Check on that server issue"`
+**错误示例：** "检查一下那个服务器问题"
 
-**正确示例：** `"以用户 'deploy' 的身份通过 SSH 登录服务器 192.168.1.100，使用 'systemctl status nginx' 命令检查 nginx 是否正在运行，并验证 https://example.com 是否返回 HTTP 200。"`
+**正确示例：** "SSH 登录到 192.168.1.100 服务器，以 'deploy' 用户身份，检查 nginx 是否正在运行（使用 'systemctl status nginx'），并验证 https://example.com 返回 HTTP 200。"
 
 ## 安全性
 
-计划任务的提示词在创建和更新时会进行提示注入和凭证窃取模式的扫描。包含不可见 Unicode 技巧、SSH 后门尝试或明显密钥窃取有效载荷的提示词将被阻止。
+定时任务提示词在创建和更新时都会被扫描是否存在提示注入和凭证泄露模式。包含隐形 Unicode 技巧、SSH 后门尝试或明显的秘密泄露载荷的提示词将被阻止。

@@ -1,73 +1,69 @@
----
-title: "Hyperliquid — Hyperliquid 市场数据、账户历史与交易回顾"
-sidebar_label: "Hyperliquid"
-description: "Hyperliquid 市场数据、账户历史与交易回顾"
+```yaml
+title: Hyperliquid — Hyperliquid market data, account history, trade review
+sidebar_label: Hyperliquid
+description: Hyperliquid 市场数据、账户历史记录和交易回顾
 ---
 
-{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
 
 # Hyperliquid
 
-Hyperliquid 市场数据、账户历史与交易回顾。
+Hyperliquid 市场数据、账户历史记录和交易回顾。
 
-## 技能元数据
+## Skill metadata (技能元数据)
 
 | | |
 |---|---|
-| 来源 | 可选 — 通过 `hermes skills install official/blockchain/hyperliquid` 安装 |
-| 路径 | `optional-skills/blockchain/hyperliquid` |
-| 版本 | `0.1.0` |
-| 作者 | Hugo Sequier (Hugo-SEQUIER), Hermes Agent |
-| 许可证 | MIT |
-| 平台 | linux, macos, windows |
-| 标签 | `Hyperliquid`, `区块链`, `加密货币`, `交易`, `永续合约`, `现货`, `DeFi` |
+| Source | 可选 — 使用 `hermes skills install official/blockchain/hyperliquid` 进行安装 |
+| Path | `optional-skills/blockchain/hyperliquid` |
+| Version | `0.1.0` |
+| Author | Hugo Sequier (Hugo-SEQUIER), Hermes 智能体 |
+| License | MIT |
+| Platforms | linux, macos, windows |
+| Tags | `Hyperliquid`, `Blockchain`, `Crypto`, `Trading`, `Perpetuals`, `Spot`, `DeFi` |
 
-## 参考：完整 SKILL.md
+## Reference: full SKILL.md (参考：完整的SKILL.md)
 
 :::info
-以下是 Hermes 加载此技能时使用的完整技能定义。这是技能激活时智能体所看到的指令。
+以下是 Hermes 在触发此技能时加载的完整技能定义。这是智能体在技能激活时所看到的指令。
 :::
 
-# Hyperliquid 技能
+# Hyperliquid Skill (Hyperliquid 技能)
 
-通过公共 `/info` 端点查询 Hyperliquid 市场与账户数据。
-只读 — 无需 API 密钥，无需签名，不支持下单。
+通过公共 `/info` 端点查询 Hyperliquid 的市场和账户数据。
+只读 — 无需 API 密钥，无需签名，无需下单。
 
-12 个命令：`dexs`, `markets`, `spots`, `candles`, `funding`, `l2`, `state`,
-`spot-balances`, `fills`, `orders`, `review`, `export`。仅使用标准库
-（`urllib`, `json`, `argparse`）。
+12 个命令：`dexs`（去中心化交易所）, `markets`（市场）, `spots`（现货）, `candles`（蜡烛图）, `funding`（资金费率）, `l2`（二级市场）, `state`（状态）,
+`spot-balances`（现货余额）, `fills`（成交记录）, `orders`（订单）, `review`（回顾）, `export`（导出）。仅使用 Stdlib (标准库) (`urllib`, `json`, `argparse`)。
 
 ---
 
-## 何时使用
+## When to Use (何时使用)
 
-- 用户询问 Hyperliquid 永续或现货市场数据、K 线、资金费率或订单簿深度
+- 用户询问 Hyperliquid 的永续合约或现货市场数据、蜡烛图、资金费率或 L2 订单簿
 - 用户希望检查钱包的永续仓位、现货余额、成交记录或订单
-- 用户希望进行交易后回顾，结合近期成交和市场背景
-- 用户希望检查构建者部署的永续 DEX 或 HIP-3 市场
-- 用户希望导出标准化的 JSON 数据（K 线 + 资金费率）用于回测准备
+- 用户需要一份结合近期成交记录和市场背景的交易回顾报告
+- 用户希望检查由构建者部署的永续 DEX 或 HIP-3 市场
+- 用户需要一份用于回测准备的蜡烛图 + 资金费率标准化 JSON 导出文件
 
 ---
 
-## 前置条件
+## Prerequisites (先决条件)
 
-仅使用标准库 — 无需外部包，无需 API 密钥。
+仅使用 Stdlib — 无需外部包，无需 API 密钥。
 
-脚本会读取 `~/.hermes/.env` 中的两个可选默认值：
+脚本会读取 `${HERMES_HOME:-~/.hermes}/.env` 文件以获取两个可选默认值：
 
-- `HYPERLIQUID_API_URL` — 默认为 `https://api.hyperliquid.xyz`。如需使用测试网，请设置为
-  `https://api.hyperliquid-testnet.xyz`。
-- `HYPERLIQUID_USER_ADDRESS` — 用于 `state`, `spot-balances`,
-  `fills`, `orders`, 和 `review` 的默认地址。如果未设置，请将地址作为第一个
-  位置参数传递。
+- `HYPERLIQUID_API_URL` — 默认为 `https://api.hyperliquid.xyz`。若使用测试网，则设置为 `https://api.hyperliquid-testnet.xyz`。
+- `HYPERLIQUID_USER_ADDRESS` — 用于 `state`、`spot-balances`、`fills`、`orders` 和 `review` 的默认地址。如果未设置，请将其作为第一个位置参数传递。
 
-当前工作目录下的项目 `.env` 文件将作为开发备用配置。
+当前工作目录中的项目 `.env` 文件将被视为开发备用选项。
 
 辅助脚本：`~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py`
 
 ---
 
-## 如何运行
+## How to Run (如何运行)
 
 通过 `terminal` 工具调用：
 
@@ -75,11 +71,11 @@ Hyperliquid 市场数据、账户历史与交易回顾。
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py <command> [args]
 ```
 
-在任何命令后添加 `--json` 以获得机器可读的输出。
+对任何命令添加 `--json` 选项，以获得机器可读的输出。
 
 ---
 
-## 快速参考
+## Quick Reference (快速参考)
 
 ```bash
 hyperliquid_client.py dexs
@@ -96,13 +92,13 @@ hyperliquid_client.py review [address] [--coin COIN] [--hours N] [--fills N]
 hyperliquid_client.py export <coin> [--interval 1h] [--hours N] [--output PATH]
 ```
 
-对于 `state`, `spot-balances`, `fills`, `orders`, 和 `review`，如果在 `~/.hermes/.env` 中设置了 `HYPERLIQUID_USER_ADDRESS`，则地址参数是可选的。
+对于 `state`、`spot-balances`、`fills`、`orders` 和 `review`，如果 `${HERMES_HOME:-~/.hermes}/.env` 中设置了 `HYPERLIQUID_USER_ADDRESS`，则地址是可选的。
 
 ---
 
-## 流程
+## Procedure (操作流程)
 
-### 1. 发现 DEX 和市场
+### 1. Discover DEXs and Markets (发现去中心化交易所和市场)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py dexs
@@ -114,11 +110,11 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   spots --limit 15
 ```
 
-- `--dex` 仅适用于永续端点；省略则使用第一个永续 DEX。
-- 现货交易对可能显示为 `PURR/USDC` 或别名如 `@107`。
-- HIP-3 市场的代币名称前会带有 DEX 前缀，例如 `mydex:BTC`。
+- `--dex` 只适用于永续合约端点；对于第一个永续 DEX，请省略此选项。
+- 现货对可能显示为 `PURR/USDC` 或 `@107` 等别名。
+- HIP-3 市场会用 DEX 前缀来标记币种，例如 `mydex:BTC`。
 
-### 2. 获取历史市场数据
+### 2. Pull Historical Market Data (拉取历史市场数据)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
@@ -128,18 +124,18 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   funding BTC --hours 168 --limit 30
 ```
 
-时间范围端点支持分页。对于更大的时间窗口，请使用较晚的 `startTime` 重复查询，或使用下面的 `export`。
+时间范围端点支持分页。对于更大的时间窗口，请重复使用较晚的 `startTime` 或使用 `export`（如下所示）。
 
-### 3. 检查实时订单簿
+### 3. Inspect Live Order Book (检查实时订单簿)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   l2 BTC --levels 10
 ```
 
-当被问及订单簿深度、近期流动性或大额订单的潜在市场影响时使用。
+当被问及订单簿深度、短期流动性或大额订单的潜在市场影响时，请使用此命令。
 
-### 4. 审查账户
+### 4. Review an Account (回顾账户信息)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
@@ -149,10 +145,9 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   spot-balances
 ```
 
-`state` 返回永续仓位；`spot-balances` 返回现货持仓。
-用于回答 "我的仓位怎么样？"、"我持有什么？"、"可提取多少？" 等问题。
+`state` 返回永续仓位；`spot-balances` 返回现货库存。这些信息可用于回答“我的仓位如何？”、“我持有多少？”、“有多少可以提取？”等问题。
 
-### 5. 审查成交记录和订单
+### 5. Review Fills and Orders (回顾成交记录和订单)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
@@ -162,7 +157,7 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   orders --limit 25
 ```
 
-### 6. 生成交易回顾
+### 6. Generate a Trade Review (生成交易回顾)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
@@ -172,11 +167,11 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   review --coin BTC --hours 168
 ```
 
-报告已实现损益、手续费、盈亏次数、代币分布，以及每个交易过的永续合约的市场趋势和平均资金费率，以及启发式分析（手续费拖累、集中度、逆趋势亏损）。
+报告已实现的盈亏 (PnL)、费用、胜负次数、币种细分、市场趋势以及每个交易永续合约的平均资金费率，同时提供启发式分析（费用拖累、集中度、逆趋势损失）。
 
-进行更深入的交易后分析：首先使用 `review` 找出问题代币或时间窗口 → 获取该时间段的 `fills` 和 `orders` → 获取每个交易代币的 `candles` 和 `funding` → 独立地评估决策质量（而非仅看结果）。
+对于更深入的交易后分析：先使用 `review` 找出存在问题的问题币或时间窗口 → 然后拉取该时期的 `fills` 和 `orders` → 再拉取每个交易币种的 `candles` 和 `funding` → 最后将决策质量与结果质量分开进行判断。
 
-### 7. 导出可复用数据集
+### 7. Export a Reusable Dataset (导出可重用数据集)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
@@ -186,27 +181,28 @@ python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   export BTC --interval 15m --hours 72 --end-time-ms 1760000000000
 ```
 
-输出的 JSON 包含：模式版本、源元数据、精确的时间窗口、标准化的 K 线行、标准化的资金费率行、汇总统计。使用 `--end-time-ms` 以获得可复现的时间窗口。
+输出的 JSON 文件包含：模式版本、来源元数据、精确时间窗口、标准化蜡烛图行和标准化资金费率行、摘要统计信息。使用 `--end-time-ms` 来确保结果的可复现性。
 
 ---
 
-## 注意事项
+## Pitfalls (潜在问题)
 
-- 公共信息端点有速率限制。大型历史查询可能会返回受限制的时间窗口；请使用较晚的 `startTime` 值进行迭代。
-- `fills --hours ...` 使用 `userFillsByTime`，它只暴露近期的滚动窗口，而非完整的归档历史。
-- `historicalOrders` 仅返回近期订单；不是完整的导出。
-- `review` 命令基于启发式分析。仅凭成交记录，它无法重建下单意图、下单质量或真实的滑点。
-- `export` 命令写入的是标准化的数据集，而非回测引擎。你仍然需要自己的滑点/成交模型。
-- 现货别名如 `@107` 是有效的标识符，即使用户界面显示更友好的名称。
-- `l2` 是时间点快照，而非时间序列。
+- 公共信息端点有速率限制。大型历史查询可能会返回受限的窗口；请尝试使用较晚的 `startTime` 值进行迭代。
+- `fills --hours ...` 使用的是 `userFillsByTime`，它只暴露一个近期的滚动窗口——而非完整的存档历史记录。
+- `historicalOrders` 只返回最近的订单；并非完整导出。
+- `review` 命令是启发式的。它不能仅凭成交记录来重建意图、下单质量或真实的滑点。
+- `export` 命令写入的是一个标准化数据集，而不是回测引擎。您仍然需要自己的滑点/填充模型。
+- 现货别名（如 `@107`）即使在 UI 中显示了更友好的名称也是有效的标识符。
+- `l2` 是一个某一时刻的快照，而非时间序列。
 
 ---
 
-## 验证
+## Verification (验证)
 
 ```bash
 python3 ~/.hermes/skills/blockchain/hyperliquid/scripts/hyperliquid_client.py \
   markets --limit 5
 ```
 
-应打印出按 24 小时名义成交量排序的顶级 Hyperliquid 永续市场。
+应打印出按 24 小时名义交易量排名的前 5 个 Hyperliquid 永续合约市场。
+```

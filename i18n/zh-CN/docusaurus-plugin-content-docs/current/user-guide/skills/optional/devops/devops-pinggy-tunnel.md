@@ -1,55 +1,58 @@
----
-title: "Pinggy Tunnel — 通过Pinggy的SSH零安装本地隧道"
+title: Pinggy Tunnel — Zero-install localhost tunnels over SSH via Pinggy
 sidebar_label: "Pinggy Tunnel"
-description: "通过Pinggy的SSH零安装本地隧道"
+description: "Zero-install localhost tunnels over SSH via Pinggy"
 ---
 
-{/* 此页面由网站脚本 generate-skill-skill.py 根据技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而非此页面。 */}
+{/* 此页面由 website/scripts/generate-skill-docs.py 从技能的 SKILL.md 自动生成。请编辑源文件 SKILL.md，而不是此页面。 */}
 
 # Pinggy Tunnel
 
-通过 Pinggy 的 SSH 零安装本地隧道。
+通过 Pinggy 零安装的 SSH 本地主机隧道。
 
-## 技能元数据
+## Skill metadata
 
 | | |
 |---|---|
-| 来源 | 可选 — 使用 `hermes skills install official/devops/pinggy-tunnel` 安装 |
-| 路径 | `optional-skills/devops/pinggy-tunnel` |
-| 版本 | `0.1.0` |
-| 作者 | Teknium (teknium1), Hermes 智能体 |
-| 许可证 | MIT |
-| 平台 | linux, macos, windows |
-| 标签 | `Pinggy`, `隧道`, `网络`, `SSH`, `Webhook`, `本地主机` |
-| 相关技能 | `cloudflared-quick-tunnel`, [`webhook-subscriptions`](/docs/user-guide/skills/bundled/devops/devops-webhook-subscriptions) |
+| Source | Optional — install with `hermes skills install official/devops/pinggy-tunnel` |
+| Path | `optional-skills/devops/pinggy-tunnel` |
+| Version | `0.1.0` |
+| Author | Teknium (teknium1)，Hermes 智能体 |
+| License | MIT |
+| Platforms | linux, macos, windows |
+| Tags | `Pinggy`, `Tunnel`, `Networking`, `SSH`, `Webhook`, `Localhost` |
+| Related skills | `cloudflared-quick-tunnel`, `webhook-subscriptions` |
 
-:::info
-以下是 Hermes 加载此技能时看到的完整技能定义。这是该技能激活时智能体看到的说明。
-:::
+## Key Paths & Config
 
-# Pinggy 隧道技能
+```
+~/.hermes/config.yaml       Main configuration
+~/.hermes/.env              API keys and secrets (under $HERMES_HOME if set)
+$HERMES_HOME
+```
 
-使用 Pinggy SSH 反向隧道将本地服务（开发服务器、Webhook 接收器、MCP 端点、演示）暴露到公共互联网。无需安装守护程序 —— 用户的原生 SSH 客户端连接到 `a.pinggy.io:443`，Pinggy 会返回一个公共 HTTP/HTTPS URL。
+# Pinggy Tunnel Skill
 
-免费套餐：60 分钟隧道、随机子域名、无需注册。Pro 套餐（$3/月）是一个需要令牌的可选升级。
+将本地服务（开发服务器、webhook 接收器、MCP 端点、演示）通过 Pinggy SSH 反向隧道暴露给公网。无需安装守护进程——用户的标准 SSH 客户端连接到 `a.pinggy.io:443`，Pinggy 则返回一个公共的 HTTP/HTTPS URL。
 
-## 何时使用
+免费套餐：60 分钟隧道，随机子域名，无需注册。专业版（$3/月）需要令牌才能选择加入。
 
-- 用户要求“在本地暴露”、“共享我的开发服务器”、“使此 URL 公开”、“隧道端口 N”、“为 Webhook 获取公共 URL”
-- 需要在本地任务期间接收 Webhook 回调（Stripe、GitHub、Discord、AgentMail）
-- 与远程方共享一次性 HTTP 演示（MCP 服务器、Ollama/vLLM 端点、仪表板）
-- 主机上有 SSH 但没有 `cloudflared` / `ngrok` 二进制文件，并且安装它们显得小题大做
+## 使用场景
 
-如果主机已配置 `cloudflared`，请优先使用 `cloudflared-quick-tunnel` 技能 —— Cloudflare 快速隧道不会在 60 分钟后过期。
+- 用户要求“暴露本地服务”、“分享我的开发服务器”、“让这个 URL 公开”、“隧道端口 N”、“获取 webhook 的公共 URL”。
+- 在本地任务中需要接收 webhook 回调（Stripe、GitHub、Discord、AgentMail）。
+- 与远程方分享一次性的 HTTP 演示（MCP 服务器、Ollama/vLLM 端点、仪表板）。
+- 主机拥有 SSH 但没有 `cloudflared` / `ngrok` 二进制文件，安装这些工具过于繁琐。
 
-## 前提条件
+如果主机已配置 `cloudflared`，请优先使用 `cloudflared-quick-tunnel` 技能——Cloudflare quick tunnels 不会过期。
 
-- PATH 中有 `ssh`（`ssh -V`）。在 Linux、macOS 和 Windows 10+ 上默认可用。无需其他安装。
-- 隧道启动前，本地服务正在监听 `127.0.0.1:<port>`。Pinggy 会返回 URL，但在本地源服务启动前它们会返回 502。
+## 先决条件
+
+- PATH 中有 `ssh` (`ssh -V`)。Linux、macOS 和 Windows 10 及更高版本均默认自带。无需其他安装。
+- 在隧道启动之前，本地服务必须监听在 `127.0.0.1:<port>` 上。Pinggy 会返回 URL，但在本地源启动前会显示 502 错误。
 
 可选：
 
-- `PINGGY_TOKEN` 环境变量用于付费 Pro 功能（持久子域名、自定义域名、多隧道、无 60 分钟限制）。免费套餐无需凭据。
+- 用于付费专业版功能的 `PINGGY_TOKEN` 环境变量（持久化子域名、自定义域名、多个隧道、无 60 分钟限制）。免费套餐无需凭证。
 
 ## 快速参考
 
@@ -61,14 +64,14 @@ ssh -p 443 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 \
 # TCP 隧道（数据库、原始 SSH 等）
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:5432 tcp@a.pinggy.io
 
-# TLS 隧道（Pinggy 无法解密 —— 需要在源端使用自己的证书）
+# TLS 隧道（Pinggy 无法解密——请在源端提供自己的证书）
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:443 tls@a.pinggy.io
 
 # 基本身份验证网关 (b:user:pass)
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:8000 \
     "b:admin:secret+free@a.pinggy.io"
 
-# Bearer 令牌网关 (k:token)
+# Bearer token 网关 (k:token)
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:8000 \
     "k:mysecrettoken+free@a.pinggy.io"
 
@@ -76,30 +79,30 @@ ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:8000 \
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:8000 \
     "w:203.0.113.0/24+free@a.pinggy.io"
 
-# 启用 CORS 并强制 HTTPS 重定向
+# 启用 CORS + 强制 HTTPS 重定向
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:8000 \
     "co+x:https+free@a.pinggy.io"
 
-# Pro 套餐（持久 URL，无 60 分钟限制）
+# 专业版（持久 URL，无 60 分钟限制）
 ssh -p 443 -o StrictHostKeyChecking=no -R0:localhost:8000 "$PINGGY_TOKEN+a.pinggy.io"
 ```
 
-## 过程 —— 启动隧道并获取 URL
+## 流程 — 启动隧道并获取 URL
 
-模型应使用 `terminal` 工具。隧道必须在共享期间保持运行，因此应将其作为后台进程运行，并从 stdout 解析公共 URL。
+模型应该使用 `terminal` 工具。隧道必须在分享期间保持活动状态，因此应将其作为后台进程运行，并从标准输出解析公共 URL。
 
-### 1. 确认本地源服务正在运行
+### 1. 确认本地源已启动
 
 ```bash
 curl -sI http://127.0.0.1:8000/ | head -1
-# 预期返回 HTTP/1.x 200（或任何非连接拒绝的响应）
+# 预期返回 HTTP/1.x 200（或任何非连接被拒绝的响应）
 ```
 
-如果尚无服务在监听，请先启动它（例如 `python3 -m http.server 8000 --bind 127.0.0.1`）。Pinggy 会欣然返回一个指向空服务的 URL —— 在源服务启动前，用户会看到 502 错误。
+如果还没有服务在监听，请先启动它（例如：`python3 -m http.server 8000 --bind 127.0.0.1`）。Pinggy 会愉快地返回一个指向虚无的 URL——直到本地源启动，用户才会看到 502 错误。
 
-### 2. 以后台进程启动隧道
+### 2. 将隧道作为后台进程启动
 
-使用 `terminal(background=True)` 并将输出捕获到日志文件（Pinggy 在 stdout 上打印 URL，然后保持连接打开）：
+使用 `terminal(background=True)` 并将输出捕获到一个日志文件（Pinggy 在标准输出上打印 URL，然后保持连接打开）：
 
 ```bash
 LOG=/tmp/pinggy-8000.log
@@ -113,7 +116,7 @@ nohup ssh -p 443 \
 echo $! > /tmp/pinggy-8000.pid
 ```
 
-`StrictHostKeyChecking=no` + `UserKnownHostsFile=/dev/null` 跳过首次运行的主机密钥提示。`ServerAliveInterval=30` 防止 SSH 会话因空闲 NAT 而被断开。
+`StrictHostKeyChecking=no` + `UserKnownHostsFile=/dev/null` 跳过了首次运行时的主机密钥提示。`ServerAliveInterval=30` 防止 SSH 会话被空闲 NAT 终止。
 
 ### 3. 从日志中解析 URL
 
@@ -122,7 +125,7 @@ sleep 4
 grep -oE 'https://[a-z0-9-]+\.[a-z]+\.pinggy\.link' /tmp/pinggy-8000.log | head -1
 ```
 
-预期输出类似：
+预期输出如下：
 
 ```
 You are not authenticated.
@@ -137,12 +140,12 @@ https://yqycl-98-162-69-48.a.free.pinggy.link
 
 ```bash
 curl -sI https://<the-url>/ | head -3
-# 预期返回 200/302 或实际本地源服务返回的状态码
+# 预期返回 200/302/本地源实际返回的任何状态码
 ```
 
-如果收到 `502 Bad Gateway`，说明 SSH 会话已建立但本地源服务未监听 —— 请先解决步骤 1 的问题。
+如果收到 `502 Bad Gateway`，则 SSH 会话已启动，但本地源未监听——请先修复步骤 1。
 
-### 5. 拆卸
+### 5. 清理
 
 ```bash
 kill "$(cat /tmp/pinggy-8000.pid)"
@@ -150,58 +153,58 @@ kill "$(cat /tmp/pinggy-8000.pid)"
 pkill -f 'ssh -p 443 .* free@a\.pinggy\.io'
 ```
 
-如果你有来自 `terminal(background=True)` 的 session_id，请优先使用 `process(action='kill', session_id=...)`。
+如果从 `terminal(background=True)` 中获得了 `session_id`，请优先使用 `process(action='kill', session_id=...)`。
 
-## 通过用户名关键字进行访问控制
+## 通过用户名关键词进行访问控制
 
-Pinggy 使用 `+` 分隔的控制标志组合到 SSH 用户名中。当用户名包含 `+` 时，请始终用引号括起整个 `user@host` 参数：
+Pinggy 将控制标志堆叠到 SSH 用户名中，用 `+` 分隔。当包含 `+` 时，始终引用整个 `user@host` 参数：
 
-| 关键字 | 效果 |
+| 关键词 | 作用 |
 |---------|--------|
 | `b:user:pass` | HTTP 基本身份验证网关 |
-| `k:token` | Bearer 令牌头网关 (`Authorization: Bearer <token>`) |
+| `k:token` | Bearer-token 头网关（`Authorization: Bearer <token>`） |
 | `w:CIDR` | IP 白名单（单个 IP 或 CIDR，可重复） |
 | `co` | 添加 `Access-Control-Allow-Origin: *` (CORS) |
-| `x:https` | 强制 HTTPS —— 自动将 HTTP 重定向到 HTTPS |
+| `x:https` | 强制 HTTPS — HTTP 到 HTTPS 的自动重定向 |
 | `a:Name:Value` | 添加请求头 |
 | `u:Name:Value` | 更新请求头 |
 | `r:Name` | 移除请求头 |
-| `qr` | 将 URL 的 QR 码打印到 stdout（方便移动共享） |
+| `qr` | 将 URL 以二维码形式打印到标准输出（对移动端分享很有用） |
 
-可自由组合：`"b:admin:secret+co+x:https+free@a.pinggy.io"`。
+自由组合使用：`"b:admin:secret+co+x:https+free@a.pinggy.io"`。
 
-## Web 调试器（可选）
+## Web Debugger（可选）
 
-Pinggy 可以将入站流量镜像到 `localhost:4300` 以供检查。在 SSH 命令中添加一个本地转发：
+Pinggy 可以将入站流量镜像到 `localhost:4300` 进行检查。向 SSH 命令添加一个本地转发：
 
 ```bash
 ssh -p 443 -L4300:localhost:4300 -R0:localhost:8000 free@a.pinggy.io
 ```
 
-然后在浏览器中打开 `http://localhost:4300` 查看实时的请求/响应对。
+然后打开浏览器中的 `http://localhost:4300`，即可查看实时的请求/响应对。
 
-## 陷阱
+## 陷阱（Pitfalls）
 
-- **免费套餐有 60 分钟的硬性限制。** SSH 会话在 60 分钟时终止；URL 失效。对于更长的共享，要么使用 `PINGGY_TOKEN`（Pro），要么使用 shell 循环自动重启（注意免费套餐每次重启 URL 都会变化）。
-- **免费套餐 URL 是随机的，重启后会变化。** 不要将其加入书签，不要粘贴到配置文件中。每次从日志中重新解析。
-- **并发免费隧道限制为每个源 IP 一个。** 从同一台机器启动第二个隧道通常会杀死第一个。Pro 套餐无此限制。
-- **用户名中的 `+` 必须用引号括起。** 裸的 `ssh ... b:admin:secret+free@a.pinggy.io` 在 bash 中有效，但在将 `+` 视为特殊字符的 shell 中或编程式组装时会失败。请始终用双引号括起。
-- **如果没有访问控制标志，请勿隧道传输任何敏感内容。** 裸 HTTP 隧道对任何拥有 URL 的人都可达。对于非公共服务，请使用 `b:`、`k:` 或 `w:`。
-- **`process(action='log')` 可能会遗漏 SSH 横幅输出。** Pinggy 打印 URL 后，SSH 会话变为交互式。请始终重定向到日志文件并直接 `grep` 文件 —— 与 `cloudflared-quick-tunnel` 的模式相同。
-- **首次运行时的主机密钥提示。** 默认的 OpenSSH 配置会要求用户接受 Pinggy 的主机密钥。对于无人值守的运行，请始终传递 `-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null`。
-- **TCP 和 TLS 隧道返回 `<subdomain>.a.pinggy.online:<port>` 对，而不是 https URL。** 使用不同的正则表达式解析（`tcp://` 和端口）。不要假设每个 Pinggy 隧道都是 HTTP。
-- **Pro 模式要求令牌作为用户名，而不是标志。** 使用 `"$PINGGY_TOKEN+a.pinggy.io"`（没有 `free@`）。使用令牌时，你还可以添加 `:persistent` 以获得稳定的子域名 —— 请参阅 `pinggy.io/docs/`。
+- **免费套餐的 60 分钟硬限制。** SSH 会话将在 60 分钟时终止；URL 将失效。对于更长的分享，请使用 `PINGGY_TOKEN`（专业版）或使用 Shell 循环自动重启（请注意，免费套餐每次重启 URL 都会改变）。
+- **免费套餐的 URL 是随机的，并且在重启后会改变。** 不要收藏它，不要将其粘贴到配置文件中。每次都从日志重新解析。
+- **并发免费隧道限制为每个源 IP 一个。** 从同一台机器启动第二个隧道通常会杀死第一个。专业版可以解除此限制。
+- **用户名中的 `+` 必须被引用。** 裸的 `ssh ... b:admin:secret+free@a.pinggy.io` 在 bash 中有效，但在处理 `+` 的 shell 或在程序化组装时会出错。始终用双引号包裹。
+- **不要在没有访问控制标志的情况下隧道传输任何敏感数据。** 裸的 HTTP 隧道任何人只要有 URL 就可以访问。对于非公共服务，请使用 `b:`、`k:` 或 `w:`。
+- **`process(action='log')` 可能会错过 SSH 横幅输出。** Pinggy 会打印 URL，然后 SSH 会话进入交互模式。始终重定向到日志文件并直接 `grep` 该文件——与 `cloudflared-quick-tunnel` 相同的模式。
+- **首次运行时的主机密钥提示。**默认的 OpenSSH 配置会要求用户接受 Pinggy 的主机密钥。对于无人值守（unattended）运行，请始终传递 `-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null`。
+- **TCP 和 TLS 隧道返回 `<subdomain>.a.pinggy.online:<port>` 对，而不是 HTTPS URL。** 需要使用不同的正则表达式（`tcp://` 和端口）进行解析。不要假设所有 Pinggy 隧道都是 HTTP。
+- **专业模式需要令牌作为用户名，而不仅仅是一个标志。** 使用 `"$PINGGY_TOKEN+a.pinggy.io"`（不要加 `free@`）。有了令牌，您还可以添加 `:persistent` 以获得稳定的子域名——请参阅 `pinggy.io/docs/`。
 
-## 方案
+## 菜谱 (Recipes)
 
-将本地源服务与 Pinggy 隧道相结合的组合模式。每个方案都是独立的 —— 启动源服务，启动隧道，解析 URL，将其返回给用户。
+将本地源与 Pinggy 隧道结合的复合模式。每个菜谱都是自包含的——启动源，启动隧道，解析 URL，将其返回给用户。
 
-### 方案 1 —— 接收 Webhook 回调
+### 菜谱 1 — 接收 webhook 回调
 
-当外部服务（Stripe、GitHub、Discord、AgentMail 等）需要在本地任务期间向公共可访问 URL 发送 POST 请求时使用此方案。
+当外部服务（Stripe、GitHub、Discord、AgentMail 等）需要在本地任务期间向可公开访问的 URL 发送 POST 请求时使用此菜谱。
 
 ```bash
-# 1. 微型捕获服务器：每个请求都追加到 /tmp/webhook-hits.log
+# 1. 微型捕获服务器：每个请求都会被追加到 /tmp/webhook-hits.log
 cat >/tmp/webhook-server.py <<'PY'
 import http.server, json, datetime, pathlib
 LOG = pathlib.Path("/tmp/webhook-hits.log")
@@ -222,7 +225,7 @@ PY
 nohup python3 /tmp/webhook-server.py >/tmp/webhook-server.log 2>&1 &
 echo $! >/tmp/webhook-server.pid
 
-# 2. 隧道 —— 使用 Bearer 令牌网关，防止随机用户污染捕获日志
+# 2. 隧道 — 使用 bearer-token 网关，以防止随机用户污染捕获日志
 nohup ssh -p 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     -o ServerAliveInterval=30 \
     -R0:localhost:18080 "k:$(openssl rand -hex 12)+free@a.pinggy.io" \
@@ -232,23 +235,23 @@ sleep 5
 URL=$(grep -oE 'https://[a-z0-9-]+\.[a-z]+\.pinggy\.link' /tmp/webhook-pinggy.log | head -1)
 echo "Webhook URL: $URL"
 
-# 3. 在智能体工作期间，监控请求到达
+# 3. 在智能体工作期间，观察请求是否到达
 tail -f /tmp/webhook-hits.log
 ```
 
-将 `$URL` 提供给需要调用你的服务。拆卸：`kill $(cat /tmp/webhook-server.pid) $(cat /tmp/webhook-pinggy.pid)`。
+将 `$URL` 提供给需要调用您的服务。清理：`kill $(cat /tmp/webhook-server.pid) $(cat /tmp/webhook-pinggy.pid)`。
 
-### 方案 2 —— 通过 HTTP/SSE 暴露 MCP 服务器
+### 菜谱 2 — 通过 HTTP/SSE 暴露 MCP 服务器
 
-当远程 MCP 客户端（另一台机器上的 Claude Desktop、队友的编辑器等）需要访问运行在本地机器上的 MCP 服务器时使用。仅适用于使用 HTTP 传输的 MCP 服务器 —— stdio 模式的服务器无法被隧道传输。
+当远程 MCP 客户端（另一台机器上的 Claude Desktop、队友的编辑器等）需要访问本地机器上运行的 MCP 服务器时使用此菜谱。仅适用于支持 HTTP 传输的 MCP 服务器——不支持 stdio 模式的服务器。
 
 ```bash
-# 1. 以 HTTP 模式启动 MCP 服务器（示例：端口 8765 上的 FastMCP 服务器）
+# 1. 以 HTTP 模式启动 MCP 服务器（示例：端口 8765 的 FastMCP 服务器）
 nohup python3 my_mcp_server.py --transport http --port 8765 \
     >/tmp/mcp-server.log 2>&1 &
 echo $! >/tmp/mcp-server.pid
 
-# 2. 使用 Bearer 令牌隧道 —— MCP 流量不应向互联网开放
+# 2. 使用 bearer token 进行隧道——MCP 流量不应该对互联网开放
 TOKEN=$(openssl rand -hex 16)
 nohup ssh -p 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     -o ServerAliveInterval=30 \
@@ -263,12 +266,12 @@ echo "Bearer token: $TOKEN"
 
 远程客户端使用 `Authorization: Bearer $TOKEN` 连接到 `$URL`。Hermes 自身的原生 MCP 客户端配置：`{"transport": "http", "url": "<URL>", "headers": {"Authorization": "Bearer <TOKEN>"}}`。
 
-### 方案 3 —— 暴露本地 LLM 端点（Ollama / vLLM / llama.cpp）
+### 菜谱 3 — 暴露本地 LLM 端点（Ollama / vLLM / llama.cpp）
 
-与远程调用者（另一个智能体、手机、队友）共享本地模型。Ollama 监听 `:11434`，vLLM 和 llama.cpp 通常监听 `:8000`。
+将本地模型与远程调用者（另一个智能体、手机、队友）分享。Ollama 监听 `:11434`，vLLM 和 llama.cpp 通常监听 `:8000`。
 
 ```bash
-# 前提：模型服务器已在 127.0.0.1:11434（Ollama 默认端口）上运行
+# 前提条件：模型服务器已在 127.0.0.1:11434 上运行（Ollama 默认）
 TOKEN=$(openssl rand -hex 16)
 nohup ssh -p 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     -o ServerAliveInterval=30 \
@@ -284,11 +287,11 @@ echo "Token:    $TOKEN"
 curl -s "$URL/api/tags" -H "Authorization: Bearer $TOKEN" | head
 ```
 
-`co` 启用 CORS，以便浏览器调用者可以访问该端点。对于仅后端调用者，可以省略 `co`。对于兼容 OpenAI 的 vLLM/llama.cpp 端点，调用者使用基础 URL `$URL/v1` 和 `Authorization: Bearer $TOKEN` —— 但请注意，Pinggy 不会对请求体进行任何剥离或替换，因此模型服务器本身会看到 Pinggy 的令牌；本地服务器应配置为忽略认证（因为它在 `127.0.0.1` 上），并让 Pinggy 来处理网关功能。
+`co` 启用了 CORS，因此浏览器调用者可以访问该端点。对于仅后端使用的调用者，请去掉 `co`。对于 OpenAI 兼容的 vLLM/llama.cpp 端点，调用者使用基础 URL `$URL/v1` 并带上 `Authorization: Bearer $TOKEN`——但请注意，Pinggy 会剥离/替换请求体中的内容，因此模型服务器本身会看到 Pinggy 的令牌；本地服务器应配置为忽略身份验证（它已经在 `127.0.0.1` 上）并让 Pinggy 进行网关控制。
 
-### 方案 4 —— 使用一次性密码共享开发服务器
+### 菜谱 4 — 使用一次性密码分享开发服务器
 
-最快捷的“让队友访问我正在运行的应用”模式。随机密码，打印一次，按 Ctrl-C 时终止。
+这是“让队友试用我正在运行的应用程序”的最快模式。随机密码，打印一次，在你按 Ctrl-C 时终止。
 
 ```bash
 PASS=$(openssl rand -base64 12 | tr -d '+/=' | head -c 12)
@@ -296,15 +299,15 @@ echo "Dev server password: $PASS"
 ssh -p 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     -o ServerAliveInterval=30 \
     -R0:localhost:3000 "b:dev:$PASS+co+x:https+free@a.pinggy.io"
-# URL 打印到终端。共享 URL 和密码。按 Ctrl-C 拆卸。
+# URL 会打印到终端。分享 URL + 密码。按 Ctrl-C 进行清理。
 ```
 
-`b:dev:$PASS` 使用 HTTP 基本身份验证保护 URL。`x:https` 强制使用 TLS。`co` 为 SPA 前端添加 CORS。
+`b:dev:$PASS` 使用 HTTP 基本身份验证网关来保护 URL。`x:https` 强制 TLS。`co` 为 SPA 前端添加 CORS。
 
 ## 验证
 
 ```bash
-# 端到端测试：启动一个简单的源服务器，创建隧道，发送请求，然后关闭
+# 端到端测试：启动一个简单的源站，隧道化它，访问它，然后关闭
 python3 -m http.server 18000 --bind 127.0.0.1 >/tmp/origin.log 2>&1 &
 ORIGIN_PID=$!
 
@@ -322,4 +325,4 @@ curl -sI "$URL/" | head -1
 kill "$SSH_PID" "$ORIGIN_PID"
 ```
 
-预期结果：获得一个 `pinggy.link` URL，并且 curl 头部返回 `HTTP/2 200`。
+预期结果：一个 `pinggy.link` URL 和 curl 头信息中的 `HTTP/2 200`。

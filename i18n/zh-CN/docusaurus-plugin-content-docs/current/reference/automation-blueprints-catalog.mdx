@@ -1,0 +1,25 @@
+---
+sidebar_position: 7
+title: "自动化蓝图目录"
+description: "即开即用的自动化蓝图——可从仪表板、CLI、TUI、任何消息传递应用或桌面应用中设置。"
+---
+
+import AutomationBlueprintsCatalog from '@site/src/components/AutomationBlueprintsCatalog';
+
+# 自动化蓝图
+
+自动化蓝图是即开即用（ready-to-run）的自动化功能。选择一个，填写一些字段，Hermes就会将其安排为定时任务——无需掌握Cron语法。
+
+每个蓝图都可以在**所有界面**上运行：
+
+- **仪表板/桌面应用** — 打开Cron页面，切换到**蓝图**选项卡，填写表格，然后点击*安排它*。
+- **CLI、TUI和消息传递应用** — 输入`/blueprint <名称>`（例如：`/blueprint morning-brief`），Hermes会逐个问题地询问所需信息，然后进行安排。名称匹配具有容错性——前缀或近似拼写均可识别。高级用户可以通过内联传递值来跳过提问：`/blueprint morning-brief time=08:00`。
+- **桌面应用** — 在任何蓝图上点击**发送到应用**，它就会在你的合成器（composer）中预加载好命令并打开。
+
+蓝图绝不会静默地安排任何任务——在作业创建之前，你总是需要确认。随时使用`/cron`来管理已创建的作业。
+
+<AutomationBlueprintsCatalog />
+
+## 创建你自己的
+
+蓝图只是一个具有`metadata.hermes.blueprint`块的技能，该块位于其`SKILL.md`的前置元数据中。请参阅[创建技能 → 自动化蓝图](../developer-guide/creating-skills.md)以了解槽位模式（slot schema）和发布方法。

@@ -1,32 +1,32 @@
 # ntfy
 
-[ntfy](https://ntfy.sh/) 是一个简单的基于 HTTP 的发布-订阅通知服务。它可与免费的公共服务器 `ntfy.sh` 或任何自托管实例配合使用，并支持任何能够发起 HTTP 请求的客户端——手机、浏览器、脚本、手表。
+[ntfy](https://ntfy.sh/) 是一个基于 HTTP 的简单发布订阅通知服务。它与 `ntfy.sh` 上的免费公共服务器或任何自托管实例配合使用，支持任何可以发起 HTTP 请求的客户端——手机、浏览器、脚本、手表等。
 
-ntfy 是 Hermes 的出色轻量级推送通道：通过 [ntfy 移动应用](https://ntfy.sh/docs/subscribe/phone/) 订阅一个主题，向该主题发送消息即可与智能体对话，并在手机上收到回复。
+ntfy 为 Hermes 提供了一个出色的轻量级推送通道：从 [ntfy 移动应用](https://ntfy.sh/docs/subscribe/phone/) 订阅一个主题，向该主题发送消息以与智能体（agent）对话，然后在手机上接收回复。
 
-> 运行 `hermes gateway setup` 并选择 **ntfy** 以获得引导式设置流程。
+> 运行 `hermes gateway setup` 并选择 **ntfy** 以获得引导式操作流程。
 
-## 先决条件
+## 先决条件 (Prerequisites)
 
-- 一个主题名称（任何唯一字符串——`hermes-myname-2026` 即可）
-- 安装并已订阅该主题的 [ntfy 移动应用](https://ntfy.sh/docs/subscribe/phone/)
-- 可选：一个自托管的 ntfy 服务器，或者用于私有/保留主题的 `ntfy.sh` 账户令牌
+- 一个主题名称（任何唯一的字符串——`hermes-myname-2026` 都可以）
+- 已安装 [ntfy 移动应用](https://ntfy.sh/docs/subscribe/phone/) 并订阅该主题
+- 可选：自托管的 ntfy 服务器，或用于私有/保留主题的 `ntfy.sh` 账户令牌
 
-就这些。无需 SDK、守护进程或 Node.js。适配器使用 `httpx`，它已经是 Hermes 的依赖项。
+就是这些。不需要 SDK、不需要守护进程（daemon）、也不需要 Node.js。适配器使用 `httpx`，而 `httpx` 本身就是 Hermes 的一个依赖项。
 
 ## 配置 Hermes
 
-### 通过设置向导
+### 通过设置向导 (Via setup wizard)
 
 ```bash
-hermes setup gateway
+hermes gateway setup
 ```
 
 选择 **ntfy** 并按照提示操作。
 
-### 通过环境变量
+### 通过环境变量 (Via environment variables)
 
-将以下内容添加到 `~/.hermes/.env`：
+将这些变量添加到 `~/.hermes/.env`：
 
 ```
 NTFY_TOPIC=hermes-myname-2026
@@ -34,47 +34,47 @@ NTFY_ALLOWED_USERS=hermes-myname-2026
 NTFY_HOME_CHANNEL=hermes-myname-2026
 ```
 
-| 变量 | 必需 | 描述 |
+| 变量 (Variable) | 是否必需 (Required) | 描述 (Description) |
 |---|---|---|
-| `NTFY_TOPIC` | 是 | 订阅的主题（接收传入消息） |
-| `NTFY_SERVER_URL` | 可选 | 服务器 URL（默认：`https://ntfy.sh`）——指向自托管的 ntfy 以保护隐私 |
-| `NTFY_TOKEN` | 可选 | 持有者令牌（例如 `tk_xyz`）或用于基本认证的 `user:pass` |
-| `NTFY_PUBLISH_TOPIC` | 可选 | 用于发送回复的不同主题（默认为 `NTFY_TOPIC`） |
-| `NTFY_MARKDOWN` | 可选 | 设置为 `true` 以在回复中发送 `X-Markdown: true` 头 |
-| `NTFY_ALLOWED_USERS` | 推荐 | 允许的逗号分隔主题名称（被视为用户 ID；见下文） |
-| `NTFY_ALLOW_ALL_USERS` | 可选 | 设置为 `true` 以允许所有发布者——仅对使用读取令牌的私有主题安全 |
-| `NTFY_HOME_CHANNEL` | 可选 | cron / 通知投递的默认主题 |
-| `NTFY_HOME_CHANNEL_NAME` | 可选 | 主页通道的人类可读标签 |
+| `NTFY_TOPIC` | 是 (Yes) | 订阅的主题（接收消息） |
+| `NTFY_SERVER_URL` | 可选 (Optional) | 服务器 URL（默认：`https://ntfy.sh`）— 指向自托管的 ntfy 以确保隐私 |
+| `NTFY_TOKEN` | 可选 (Optional) | Bearer 令牌（例如 `tk_xyz`）或用于基本身份验证的 `user:pass` |
+| `NTFY_PUBLISH_TOPIC` | 可选 (Optional) | 用于发送回复的不同主题（默认为 `NTFY_TOPIC`） |
+| `NTFY_MARKDOWN` | 可选 (Optional) | 设置为 `true` 以使用 `X-Markdown: true` 标头发送回复 |
+| `NTFY_ALLOWED_USERS` | 推荐 (Recommended) | 允许的逗号分隔主题名称（被视为用户 ID；参见下文） |
+| `NTFY_ALLOW_ALL_USERS` | 可选 (Optional) | 设置为 `true` 以允许所有发布者——仅适用于带有读取令牌的私有主题 |
+| `NTFY_HOME_CHANNEL` | 可选 (Optional) | 用于定时任务/通知交付的默认主题 |
+| `NTFY_HOME_CHANNEL_NAME` | 可选 (Optional) | 主题的人类标签 |
 
-## 身份模型 — 部署前请先阅读
+## 身份模型（Identity model）—部署前请阅读
 
-ntfy 没有原生的经过身份验证的用户身份。发布消息的 `title` 字段是**由发布者控制的**，可以是发送者想要的任何内容。Hermes 适配器**不**使用 `title` 进行授权——那会让任何知道该主题的发布者冒充允许的用户。
+ntfy 没有原生的经过身份验证的用户身份。发布消息时的 `title` 字段是**由发布者控制的**，可以是什么发送者想要的。Hermes 适配器不会使用 `title` 进行授权——它会允许任何知道该主题的发布者冒充一个被允许的用户。
 
-相反，**主题名称本身就是身份**。发布到该主题的每条消息都被视为来自同一个逻辑用户（该主题）。因此，`NTFY_ALLOWED_USERS` 通常只是主题名称本身——一个控制整个通道的单一允许列表条目。
+相反，**主题名称本身就是身份**。所有发布到该主题的消息都被视为来自同一个逻辑用户（即该主题）。因此，`NTFY_ALLOWED_USERS` 通常就是主题名称本身——一个限制整个通道的单项白名单。
 
-这意味着**任何知道该主题的人都可以与智能体对话**。为了使其成为一个真正的信任边界：
+这意味着**任何知道该主题的人都可以与智能体对话**。要使其成为真正的信任边界：
 
-- **自托管 ntfy** 并使用[访问控制](https://docs.ntfy.sh/config/#access-control)锁定该主题。只有具有读/写令牌的授权客户端才能发布。
-- 或者**在 ntfy.sh 上使用私有主题**（[保留主题](https://docs.ntfy.sh/publish/#reserved-topics)需要账户）并使用 `NTFY_TOKEN` 进行保护。
-- 或者**选择一个长且难以猜测的主题名称**（`hermes-7d4f9c8b-2026`），并将其视为共享密钥。这是最轻量级的设置，但主题名称会通过任何日志或截图泄露。
+- **自托管 ntfy** 并使用 [访问控制](https://docs.ntfy.sh/config/#access-control) 锁定该主题。只有拥有读取/写入令牌的授权客户端才能发布消息。
+- 或者在 ntfy.sh 上**使用私有主题**（[保留主题](https://docs.ntfy.sh/publish/#reserved-topics) 需要账户）并使用 `NTFY_TOKEN` 进行保护。
+- 或者**选择一个长且不可猜测的主题名称**（例如 `hermes-7d4f9c8b-2026`），并将其视为共享密钥。这是最轻量级的设置，但主题名称可能会通过任何日志或截图泄露。
 
-在所有情况下，除非底层主题受到访问控制，否则不要通过 ntfy 传输敏感数据。
+在所有情况下，除非底层主题是受访问控制的，否则请勿将敏感数据通过 ntfy 传输。
 
-## 快速开始 — 从手机与你的智能体对话
+## 快速入门 (Quick start) —从手机与智能体对话
 
-1.  选择一个主题名称：`hermes-myname-2026`
-2.  在你的手机上：安装 [ntfy 应用](https://ntfy.sh/docs/subscribe/phone/)，点击 **+**，输入 `hermes-myname-2026`
-3.  在主机上：
-    ```bash
-    echo 'NTFY_TOPIC=hermes-myname-2026' >> ~/.hermes/.env
-    echo 'NTFY_ALLOWED_USERS=hermes-myname-2026' >> ~/.hermes/.env
-    hermes gateway restart
-    ```
-4.  从 ntfy 应用向该主题发送一条消息。智能体的回复会作为推送通知到达。
+1. 选择一个主题名称：`hermes-myname-2026`
+2. 在您的手机上：安装 [ntfy 应用](https://ntfy.sh/docs/subscribe/phone/)，点击 **+**，输入 `hermes-myname-2026`
+3. 在主机上：
+   ```bash
+   echo 'NTFY_TOPIC=hermes-myname-2026' >> ~/.hermes/.env
+   echo 'NTFY_ALLOWED_USERS=hermes-myname-2026' >> ~/.hermes/.env
+   hermes gateway restart
+   ```
+4. 从 ntfy 应用发送消息到该主题。智能体的回复将以推送通知的形式送达。
 
-## 将 ntfy 与 cron 作业配合使用
+## 与定时任务 (cron jobs) 配合使用 ntfy
 
-一旦设置了 `NTFY_HOME_CHANNEL`，cron 作业即可投递到 ntfy：
+一旦设置了 `NTFY_HOME_CHANNEL`，定时任务就可以向 ntfy 发送交付：
 
 ```python
 cronjob(
@@ -85,23 +85,23 @@ cronjob(
 )
 ```
 
-或者显式指定一个特定主题：
+或者明确指定一个主题：
 
 ```python
 send_message(target="ntfy:alerts-channel", message="Done!")
 ```
 
-即使 cron 在与网关不同的进程中运行，这也有效——插件注册了一个 `standalone_sender_fn`，它会打开自己的 HTTP 连接。
+即使定时任务是从网关（gateway）进程外部运行的，这仍然有效——该插件会注册一个 `standalone_sender_fn` 来打开自己的 HTTP 连接。
 
-## 自托管 ntfy
+## 自托管 ntfy (Self-hosting ntfy)
 
-如果你想要完全控制：
+如果您需要完全控制：
 
 ```bash
 # Docker
 docker run -p 80:80 -it binwiederhier/ntfy serve
 
-# 原生安装
+# 原生安装 (Native)
 go install heckel.io/ntfy/v2@latest
 ntfy serve
 ```
@@ -111,20 +111,20 @@ ntfy serve
 ```
 NTFY_SERVER_URL=https://ntfy.mydomain.com
 NTFY_TOPIC=hermes
-NTFY_TOKEN=tk_abc123  # 如果你设置了访问控制
+NTFY_TOKEN=tk_abc123  # 如果您已设置访问控制
 ```
 
-自托管为你提供主题访问控制、消息持久化策略、附件和表情符号标签。请参阅 [ntfy 服务器文档](https://docs.ntfy.sh/install/)。
+自托管可以为您提供主题访问控制、消息持久化策略、附件和表情符号标签。请参阅 [ntfy 服务器文档](https://docs.ntfy.sh/install/)。
 
-## Markdown 格式
+## Markdown 格式化 (Markdown formatting)
 
-当发布者设置 `X-Markdown: true` 头时，ntfy 客户端会渲染 Markdown。要为传出的 Hermes 回复启用此功能：
+当发布者设置了 `X-Markdown: true` 标头时，ntfy 客户端会渲染 markdown。要为发送的 Hermes 回复信启用此功能：
 
 ```
 NTFY_MARKDOWN=true
 ```
 
-或在 `config.yaml` 中：
+或者在 `config.yaml` 中：
 
 ```yaml
 platforms:
@@ -133,25 +133,25 @@ platforms:
       markdown: true
 ```
 
-移动应用支持 CommonMark 的一个子集——粗体、斜体、列表、链接、带围栏的代码块。确切支持的格式请参阅 [ntfy 的 Markdown 文档](https://docs.ntfy.sh/publish/#markdown-formatting)。
+移动应用支持 CommonMark 的一部分——粗体、斜体、列表、链接、代码块。请参阅 [ntfy 的 markdown 文档](https://docs.ntfy.sh/publish/#markdown-formatting) 以获取确切的集合。
 
-## 仅出站设置（无入站的通知）
+## 仅发送通知 (Outgoing-only setup)（无入站消息）
 
-如果你只希望 Hermes 向 ntfy *推送*通知（cron 摘要、警报），并且永远不接受回传消息，请将 `NTFY_TOPIC` 和 `NTFY_PUBLISH_TOPIC` 设置为相同的值，并完全跳过 `NTFY_ALLOWED_USERS`。没有允许列表，智能体就永远不会响应入站消息——你的手机会收到推送，但对话是单向的。
+如果您只想让 Hermes 将通知*推送*到 ntfy（例如定时摘要、警报），而绝不接受回复，请将 `NTFY_TOPIC` 和 `NTFY_PUBLISH_TOPIC` 设置为相同的值，并完全跳过 `NTFY_ALLOWED_USERS`。如果没有白名单，智能体将不会对入站消息做出回应——您的手机会收到推送，但对话是单向的。
 
-## 限制
+## 限制 (Limits)
 
-- **消息大小**：ntfy 将消息正文限制在 4096 个字符。当超出此限制时，Hermes 会截断并发出警告。
-- **没有输入指示器**：该协议不提供此功能；`send_typing` 是一个空操作。
-- **没有线程或附件**：ntfy 是纯推送通知。长回复保留在消息正文中，没有线程展开。
-- **没有原生用户身份**：请参阅上面的身份模型章节。
+- **消息大小**：ntfy 将消息体限制在 4096 个字符。超出此限制时，Hermes 会发出警告并截断。
+- **无输入指示器**：协议中没有提供此功能；`send_typing` 是一个空操作（no-op）。
+- **无线程或附件**：ntfy 是纯粹的推送通知。长回复会保留在消息体中，不会进行主题分发（thread fanout）。
+- **无原生用户身份**：请参阅上面的身份模型部分。
 
-## 故障排除
+## 故障排除 (Troubleshooting)
 
-**认证失败 / 401** — `NTFY_TOKEN` 错误，或者令牌在此主题上没有发布/订阅权限。适配器会在 401 错误时停止其重连循环，网关运行时状态将显示 `fatal: ntfy_unauthorized`。修正令牌并重启网关。
+**认证失败 / 401** — `NTFY_TOKEN` 不正确，或者该令牌对该主题没有发布/订阅权限。适配器会在收到 401 时停止重连循环，网关运行时状态将显示 `fatal: ntfy_unauthorized`。请修复令牌并重启网关。
 
-**主题未找到 / 404** — 配置的服务器上不存在 `NTFY_TOPIC`。对于 ntfy.sh，主题在首次发布时自动创建，因此 404 表示你指向的是一个未预置该主题的自托管服务器。适配器将以 `fatal: ntfy_topic_not_found` 停止其重连循环。
+**未找到主题 / 404** — `NTFY_TOPIC` 在配置的服务器上不存在。对于 ntfy.sh，主题会在首次发布时自动创建，因此 404 表示您指向了一个没有预置该主题的自托管服务器。适配器会以 `fatal: ntfy_topic_not_found` 停止重连循环。
 
-**已连接但没有消息** — 检查 `NTFY_ALLOWED_USERS` 是否包含主题名称本身。根据 ntfy 的身份模型，主题就是用户；保留空的允许列表会拒绝所有消息。
+**已连接但无消息** — 请检查 `NTFY_ALLOWED_USERS` 是否包含主题名称本身。根据 ntfy 的身份模型，主题就是用户；如果白名单为空，则所有内容都会被拒绝。
 
-**每 60 秒重连一次** — 流保活默认时间是 55 秒；ntfy 可能存在间歇性网络问题。适配器应用指数退避（2 → 5 → 10 → 30 → 60 秒），并且当一个流保持存活 ≥60 秒后会重置为 0。
+**每 60 秒重连一次** — 流保持活动（stream keepalive）的默认时间是 55 秒；ntfy 可能存在间歇性的网络问题。适配器会应用指数退避（2 → 5 → 10 → 30 → 60s），并且一旦流保持活动 ≥60 秒，就会重置为 0。
